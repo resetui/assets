@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsprint | Light</title>
+<meta name="application-name" content="Newsprint | Light" />
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code." />
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --paper: #f4f1ea;
+  --paper-light: #f7f5ef;
+  --paper-grey: #e8e5dd;
+  --paper-tint: #ddd9cf;
+  --ink: #111110;
+  --ink-soft: #1c1b18;
+  --ink-muted: #4a4843;
+  --ink-faint: #7d7a72;
+  --inverted: #141312;
+  --grey-mid: #9c988e;
+  --grey-light: #c4c0b6;
+  --rule-soft: rgba(17,17,16,0.12);
+  --rule-mid: rgba(17,17,16,0.22);
+  --ease-quiet: cubic-bezier(.22, 1, .36, 1);
+  --ease-precise: cubic-bezier(.4, 0, .2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* faint paper grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(17,17,16,0.015) 0, transparent 1px),
+    radial-gradient(circle at 70% 60%, rgba(17,17,16,0.02) 0, transparent 1px);
+  background-size: 3px 3px, 4px 4px;
+  mix-blend-mode: multiply;
+}
+
+::selection { background: var(--ink); color: var(--paper); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper-grey); }
+::-webkit-scrollbar-thumb { background: var(--ink-muted); border: 2px solid var(--paper-grey); }
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+ul, ol { list-style: none; }
+
+/* Type utilities */
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.sans { font-family: 'Inter', system-ui, sans-serif; }
+.serif-display { font-family: 'Playfair Display', Georgia, serif; }
+.italic { font-style: italic; }
+
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.kicker::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--ink);
+}
+
+/* Rules */
+.rule-heavy { border-top: 3px solid var(--ink); }
+.rule-thin { border-top: 1px solid var(--ink); }
+.rule-soft { border-top: 1px solid var(--rule-mid); }
+.rule-double { border-top: 3px solid var(--ink); box-shadow: 0 4px 0 -3px var(--ink), 0 5px 0 -3px var(--ink); }
+
+/* Layout */
+.page { width: 100%; }
+.sheet {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* === 1. SKYLINE === */
+.skyline {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 7px 0;
+}
+.skyline-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.skyline-inner span { opacity: 0.85; }
+.skyline-inner .late {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 2px 8px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  opacity: 1;
+}
+
+/* === 2. MASTHEAD === */
+.masthead {
+  text-align: center;
+  padding: 32px 0 0;
+  position: relative;
+}
+.masthead-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 0 18px;
+  gap: 24px;
+}
+.masthead-meta-left, .masthead-meta-right {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: left;
+  line-height: 1.7;
+}
+.masthead-meta-right { text-align: right; }
+.motto {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.wordmark {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 124px;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  padding: 6px 0 18px;
+}
+.wordmark .the {
+  display: block;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+  color: var(--ink-muted);
+}
+.masthead-rules {
+  border-top: 4px solid var(--ink);
+  position: relative;
+}
+.masthead-rules::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--ink);
+}
+.masthead-band {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule-mid);
+}
+
+/* === 3. NAV === */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
+  border-top: 1px solid var(--rule-mid);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  gap: 20px;
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+.nav-links a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--ink);
+  transition: color 0.2s;
+}
+.nav-links a sup {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+.nav-links a:hover { color: var(--ink-muted); }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 9px 18px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  transition: all 0.2s var(--ease-precise);
+  text-transform: uppercase;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn.primary:hover { background: var(--ink-soft); }
+.btn.ghost { border-color: var(--rule-mid); color: var(--ink-muted); }
+
+/* === Section rule (numbered) === */
+.section-rule {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 28px 0 14px;
+  border-bottom: 1px solid var(--rule-mid);
+  margin-bottom: 36px;
+}
+.section-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink);
+}
+.section-rule .kicker { color: var(--ink); }
+.section-rule .kicker::before { background: var(--ink); width: 24px; }
+.section-rule .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* === 4. HERO / FRONT-PAGE LEAD === */
+.lead { padding: 8px 0 48px; }
+.lead-kicker { margin-bottom: 16px; }
+.headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+  max-width: 1100px;
+}
+.headline em {
+  font-style: italic;
+  font-weight: 700;
+}
+.deck {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  max-width: 760px;
+  margin-bottom: 28px;
+  font-weight: 400;
+}
+.dateline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.dateline .cursor {
+  display: inline-block;
+  width: 7px;
+  height: 12px;
+  background: var(--ink);
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: blink 1.1s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.lead-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+.lead-body {
+  column-count: 2;
+  column-gap: 28px;
+  column-rule: 1px solid var(--rule-mid);
+  font-size: 15px;
+  line-height: 1.62;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.lead-body p { margin-bottom: 12px; }
+.lead-body p:last-child { margin-bottom: 0; }
+.dropcap::first-letter {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  float: left;
+  font-size: 64px;
+  line-height: 0.85;
+  padding: 6px 8px 0 0;
+  margin: 0;
+}
+
+.lead-aside { display: flex; flex-direction: column; gap: 20px; }
+
+/* Halftone figure */
+.figure {
+  border: 1px solid var(--ink);
+  background: var(--paper-light);
+}
+.figure-frame {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ink);
+}
+.figure img {
+  width: 100%;
+  display: block;
+  filter: grayscale(1) contrast(1.18) brightness(0.96);
+  mix-blend-mode: multiply;
+}
+.figure-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(17,17,16,0.18) 0.5px, transparent 0.6px);
+  background-size: 2px 2px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+.figcaption {
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lead-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-top: 8px;
+}
+.stat {
+  padding: 20px 18px;
+  border-right: 1px solid var(--rule-mid);
+}
+.stat:last-child { border-right: none; }
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+/* === 5. WIRE TICKER === */
+.wire {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 0;
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.wire-label {
+  position: absolute;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  font-weight: 600;
+  z-index: 2;
+  left: 40px;
+  margin-top: -4px;
+}
+.wire-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 80s linear infinite;
+  padding-left: 160px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+.wire-item { display: inline-flex; align-items: center; gap: 10px; padding-right: 36px; }
+.wire-item .handle { color: var(--grey-light); }
+.wire-item .time { opacity: 0.55; }
+.wire-item .sep { color: var(--grey-mid); }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.wire:hover .wire-track { animation-play-state: paused; }
+
+/* === 6. STANDFIRST / ABOUT === */
+.standfirst { padding: 64px 0; }
+.standfirst-headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 52px;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin-bottom: 32px;
+  max-width: 980px;
+}
+.standfirst-headline em { font-style: italic; font-weight: 600; }
+.standfirst-cols {
+  column-count: 3;
+  column-gap: 32px;
+  column-rule: 1px solid var(--rule-mid);
+  font-size: 15px;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+.standfirst-cols p { margin-bottom: 14px; }
+.standfirst-cols p:first-child::first-letter {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  float: left;
+  font-size: 52px;
+  line-height: 0.85;
+  padding: 4px 8px 0 0;
+}
+
+/* === 7. CAPABILITIES / SECTIONS INDEX === */
+.capabilities { padding: 32px 0 64px; }
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.cap-card {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  background: var(--paper-light);
+  transition: background 0.25s;
+}
+.cap-card:hover { background: var(--paper-grey); }
+.cap-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+}
+.cap-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.cap-title em { font-style: italic; }
+.cap-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  flex: 1;
+  margin-bottom: 14px;
+}
+.cap-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 10px;
+}
+
+/* === 8. FEATURE COLUMNS === */
+.features { padding: 32px 0 64px; }
+.feat-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--rule-mid);
+}
+.feat-col {
+  padding: 28px 22px;
+  border-right: 1px solid var(--rule-mid);
+}
+.feat-col:last-child { border-right: none; }
+.feat-col-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 12px;
+}
+.feat-col h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+}
+.feat-col h3 em { font-style: italic; }
+.feat-col p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  text-align: justify;
+  hyphens: auto;
+}
+.feat-stat {
+  border-top: 1px solid var(--rule-mid);
+  padding-top: 12px;
+  margin-top: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.feat-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+.feat-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+.feat-figure {
+  border: 1px solid var(--ink);
+  margin: 14px 0;
+}
+.feat-figure img {
+  width: 100%; display: block;
+  filter: grayscale(1) contrast(1.2) brightness(0.95);
+}
+.feat-figcap {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 5px 8px;
+  border-top: 1px solid var(--ink);
+}
+
+/* === 9. HALFTONE GALLERY === */
+.gallery { padding: 32px 0 64px; }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.gallery-item { position: relative; }
+.gallery-frame {
+  border: 1px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: var(--paper-light);
+}
+.gallery-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(1.22) brightness(0.92);
+  mix-blend-mode: multiply;
+}
+.gallery-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(17,17,16,0.2) 0.5px, transparent 0.6px);
+  background-size: 2px 2px;
+  mix-blend-mode: multiply;
+  opacity: 0.65;
+  pointer-events: none;
+}
+/* crop marks */
+.gallery-item::before, .gallery-item::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  border: 1px solid var(--ink);
+  opacity: 0.5;
+}
+.gallery-item::before { top: -4px; left: -4px; border-right: none; border-bottom: none; }
+.gallery-item::after { bottom: 32px; right: -4px; border-left: none; border-top: none; }
+.gallery-cap {
+  margin-top: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* === 10. METHOD / PROCESS === */
+.method { padding: 32px 0 64px; }
+.method-rows {
+  border-top: 1px solid var(--ink);
+}
+.method-row {
+  display: grid;
+  grid-template-columns: 80px 200px 1fr 160px;
+  align-items: center;
+  gap: 28px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--rule-mid);
+  transition: background 0.25s;
+}
+.method-row:hover { background: var(--paper-light); }
+.method-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.method-step-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.method-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.015em;
+}
+.method-title em { font-style: italic; }
+.method-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.method-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* === 11. INVERTED FEATURE === */
+.inverted {
+  background: var(--inverted);
+  color: var(--paper);
+  margin: 32px 0;
+  padding: 72px 0;
+  position: relative;
+}
+.inverted .section-rule { border-bottom-color: rgba(244,241,234,0.18); }
+.inverted .section-num { color: var(--paper); }
+.inverted .kicker { color: var(--paper); }
+.inverted .kicker::before { background: var(--paper); }
+.inverted .meta { color: var(--grey-light); }
+.inverted-headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
+  max-width: 900px;
+}
+.inverted-headline em { font-style: italic; }
+.inverted-deck {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--grey-light);
+  max-width: 720px;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+.inverted-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(244,241,234,0.2);
+}
+.inverted-col {
+  padding: 28px 24px;
+  border-right: 1px solid rgba(244,241,234,0.18);
+}
+.inverted-col:last-child { border-right: none; }
+.inverted-col-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--grey-mid);
+  margin-bottom: 14px;
+}
+.inverted-col h4 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.inverted-col p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--grey-light);
+}
+
+/* === 12. PULL QUOTE === */
+.pullquote { padding: 80px 0; text-align: center; }
+.pullquote-mark {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 120px;
+  line-height: 0.6;
+  color: var(--ink);
+  margin-bottom: 16px;
+  letter-spacing: -0.05em;
+}
+.pullquote-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 38px;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  max-width: 920px;
+  margin: 0 auto 28px;
+}
+.pullquote-attr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.pullquote-attr .name { color: var(--ink); font-weight: 600; }
+.pullquote-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--ink);
+  margin: 0 auto 18px;
+}
+
+/* === 13. PROOF / BUILDER NOTES === */
+.proof { padding: 32px 0 64px; }
+.proof-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.clippings {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+}
+.clipping {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule-mid);
+  transition: background 0.2s;
+}
+.clipping:hover { background: var(--paper-light); padding-left: 8px; padding-right: 8px; }
+.clipping-pub {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 16px;
+  font-style: italic;
+}
+.clipping-headline {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.clipping-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.stat-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.stat-tile {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 24px 20px;
+  background: var(--paper-light);
+}
+.stat-tile-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  margin-bottom: 8px;
+}
+.stat-tile-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.stat-tile-note {
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* === 14. PRICING / SUBSCRIPTIONS === */
+.pricing { padding: 32px 0 64px; }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--ink);
+}
+.price-tier {
+  padding: 32px 28px;
+  border-right: 1px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-light);
+}
+.price-tier:last-child { border-right: none; }
+.price-tier.recommended {
+  background: var(--ink);
+  color: var(--paper);
+}
+.price-tier-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--ink-faint);
+}
+.price-tier.recommended .price-tier-label { color: var(--grey-light); }
+.price-tier-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 32px;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+}
+.price-tier-price {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+.price-tier-price .per {
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-muted);
+  letter-spacing: 0;
+}
+.price-tier.recommended .price-tier-price .per { color: var(--grey-light); }
+.price-tier-cadence {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 24px;
+}
+.price-tier.recommended .price-tier-cadence { color: var(--grey-light); }
+.price-tier-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  margin-bottom: 22px;
+  font-style: italic;
+}
+.price-tier.recommended .price-tier-desc { color: var(--grey-light); }
+.price-features {
+  list-style: none;
+  margin-bottom: 24px;
+  flex: 1;
+}
+.price-features li {
+  font-size: 13px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.4;
+}
+.price-features li::before {
+  content: '§';
+  font-family: 'Playfair Display', serif;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+}
+.price-tier.recommended .price-features li { border-bottom-color: rgba(244,241,234,0.15); }
+.price-tier.recommended .price-features li::before { color: var(--grey-mid); }
+.price-tier .btn { width: 100%; text-align: center; }
+.price-tier.recommended .btn {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.price-tier.recommended .btn:hover { background: var(--paper-grey); }
+
+/* === 15. FINAL CTA + FOOTER === */
+.final-cta {
+  padding: 96px 0 80px;
+  text-align: center;
+  border-top: 1px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  position: relative;
+}
+.final-cta::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 0; right: 0;
+  height: 1px;
+  background: var(--ink);
+}
+.final-cta .kicker { margin-bottom: 24px; }
+.final-headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 76px;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin-bottom: 22px;
+}
+.final-headline em { font-style: italic; font-weight: 700; }
+.final-deck {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--ink-muted);
+  max-width: 620px;
+  margin: 0 auto 36px;
+  line-height: 1.5;
+}
+.final-ctas {
+  display: inline-flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Footer / Colophon */
+.colophon {
+  padding: 56px 0 32px;
+  background: var(--paper-grey);
+}
+.colophon-wordmark {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 88px;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.colophon-motto {
+  text-align: center;
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin-bottom: 40px;
+}
+.colophon-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 36px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule-mid);
+  padding: 32px 0;
+  margin-bottom: 24px;
+}
+.colophon-col h5 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+}
+.colophon-col a {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.colophon-col a:hover { color: var(--ink); font-style: italic; }
+.colophon-brand p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+  max-width: 320px;
+}
+.colophon-social { display: flex; gap: 8px; }
+.colophon-social a {
+  width: 34px; height: 34px;
+  border: 1px solid var(--ink);
+  display: grid;
+  place-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.colophon-social a:hover { background: var(--ink); color: var(--paper); }
+.colophon-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule-mid);
+  padding-top: 16px;
+}
+
+/* Reveal */
+.reveal {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.9s var(--ease-quiet), transform 0.9s var(--ease-quiet);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* Responsive */
+@media (max-width: 980px) {
+  .sheet { padding: 0 24px; }
+  .skyline-inner { padding: 0 24px; font-size: 9px; gap: 12px; }
+  .nav-inner { padding: 0 24px; }
+  .nav-links { display: none; }
+  .wordmark { font-size: 64px; }
+  .masthead-top { grid-template-columns: 1fr; }
+  .masthead-meta-left, .masthead-meta-right { text-align: center; }
+  .headline { font-size: 44px; }
+  .deck { font-size: 17px; }
+  .lead-layout { grid-template-columns: 1fr; }
+  .lead-body { column-count: 1; }
+  .standfirst-headline { font-size: 34px; }
+  .standfirst-cols { column-count: 1; }
+  .cap-grid { grid-template-columns: 1fr 1fr; }
+  .feat-layout { grid-template-columns: 1fr 1fr; }
+  .feat-col { border-bottom: 1px solid var(--rule-mid); }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .method-row { grid-template-columns: 50px 1fr; gap: 16px; }
+  .method-row > .method-desc, .method-row > .method-meta { grid-column: 2; }
+  .inverted-headline { font-size: 34px; }
+  .inverted-grid { grid-template-columns: 1fr; }
+  .inverted-col { border-right: none; border-bottom: 1px solid rgba(244,241,234,0.18); }
+  .pullquote-text { font-size: 24px; }
+  .proof-layout { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .price-tier { border-right: none; border-bottom: 1px solid var(--ink); }
+  .final-headline { font-size: 42px; }
+  .colophon-wordmark { font-size: 44px; }
+  .colophon-grid { grid-template-columns: 1fr 1fr; }
+  .stats-strip { grid-template-columns: 1fr 1fr; }
+  .stat { border-bottom: 1px solid var(--rule-mid); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .wire-track { animation: none; }
+  .cursor { animation: none; }
+}
+@media (hover: none) {
+  .wire:hover .wire-track { animation-play-state: running; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- 1. SKYLINE -->
+  <div class="skyline">
+    <div class="skyline-inner">
+      <span>VOL. IV — NO. 287</span>
+      <span>EST. 2026</span>
+      <span class="late">LATE EDITION</span>
+      <span>TUE · MAR 18 · 2026</span>
+      <span>$0.00 — DIGITAL</span>
+      <span>57°F · OVERCAST · SF</span>
+    </div>
+  </div>
+
+  <!-- 2. MASTHEAD -->
+  <header class="masthead sheet">
+    <h1 class="wordmark"><span class="the">The</span>ResetUI</h1>
+    <div class="masthead-rules"></div>
+    <div class="masthead-band">
+      <span>FRONT PAGE</span>
+      <span>AI &amp; PRODUCT</span>
+      <span>ENGINEERING DESK</span>
+      <span>SUBSCRIBERS: 142,800</span>
+      <span>PAGES: A1–A16</span>
+    </div>
+  </header>
+
+  <!-- 3. NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#lead" class="nav-brand" style="display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" style="width:30px;height:30px;border-radius:999px;object-fit:cover;">ResetUI</a>
+      <div class="nav-links">
+        <a href="#lead"><sup>01</sup> Front Page</a>
+        <a href="#about"><sup>02</sup> The Report</a>
+        <a href="#capabilities"><sup>03</sup> Sections</a>
+        <a href="#features"><sup>04</sup> Columns</a>
+        <a href="#method"><sup>05</sup> Method</a>
+        <a href="#pricing"><sup>06</sup> Subscriptions</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn ghost">Read the Docs</button>
+        <button class="btn primary">Get Access</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <!-- 4. HERO / FRONT-PAGE LEAD -->
+    <section class="lead" id="lead">
+      <div class="lead-kicker reveal">
+        <span class="kicker">EXCLUSIVE / PRODUCT REPORT</span>
+      </div>
+      <h2 class="headline reveal">A new way to <em>redesign</em> landing pages, by context.</h2>
+      <p class="deck reveal">ResetUI turns an existing landing-page URL and a design direction into a refreshed, editable, production-ready page, preserving the source intent while changing the visual system.</p>
+      <p class="dateline reveal">SAN FRANCISCO, MAR 18 —<span class="cursor"></span></p>
+
+      <div class="lead-layout">
+        <div class="lead-body reveal">
+          <p class="dropcap">The workflow starts with a real website, not a blank prompt. ResetUI captures copy, calls to action, links, media, layout hierarchy, brand colors, fonts, and logo references before generating a redesigned page.</p>
+          <p>ResetUI brings capture, generation, project-aware chat edits, version history, and clean HTML export into one flow, so every section keeps context from source page to final handoff.</p>
+          <p>"The fastest redesigns keep the useful parts of the original page," said Maya Chen, the product lead. "ResetUI preserves context, then gives the visual direction room to change."</p>
+          <p>The product now centers on URL plus prompt project creation, streaming section generation, canvas controls, chat edits, and exportable front-end code.</p>
+          <p>The result is a standalone HTML deliverable builders can inspect, edit, host, or hand off without being locked inside a design tool.</p>
+        </div>
+
+        <div class="lead-aside">
+          <figure class="figure reveal">
+            <div class="figure-frame">
+              <img src="https://picsum.photos/seed/resetui-newsprint-hero/900/640" alt="ResetUI redesign workspace">
+            </div>
+            <figcaption class="figcaption">
+              <span>FIG. 01 — THE REDESIGN DESK</span>
+              <span>ResetUI / DESIGN DESK</span>
+            </figcaption>
+          </figure>
+
+          <div class="lead-ctas reveal">
+            <button class="btn primary">Start Free Trial →</button>
+            <button class="btn">Read the Brief</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-strip reveal" style="margin-top: 36px;">
+        <div class="stat">
+          <div class="stat-value">73%</div>
+          <div class="stat-label">Faster first<br>redesign draft</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">4 min</div>
+          <div class="stat-label">Project-aware chat<br>edit loop</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">$48M</div>
+          <div class="stat-label">Clean export ready<br>for handoff</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">142</div>
+          <div class="stat-label">Sections captured<br>from source pages</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 5. WIRE TICKER -->
+  <div class="wire">
+    <div style="position: relative;">
+      <span class="wire-label">▌ RESETWIRE</span>
+      <div class="wire-track">
+        <span class="wire-item"><span class="time">09:41 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>ResetUI 1.0.3 captures URL context online</span></span>
+        <span class="wire-item"><span class="time">09:33 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>Chat edits keep page context attached</span></span>
+        <span class="wire-item"><span class="time">09:18 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>HTML export assembles standalone files</span></span>
+        <span class="wire-item"><span class="time">08:52 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>Version history restores previous designs</span></span>
+        <span class="wire-item"><span class="time">08:30 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>URL capture extracts copy and media</span></span>
+        <span class="wire-item"><span class="time">08:11 GMT</span><span class="sep">/</span><span class="handle">@substrate</span><span>Prompt plus URL workflow is live</span></span>
+        <span class="wire-item"><span class="time">07:58 GMT</span><span class="sep">/</span><span class="handle">@nullpoint</span><span>Generated sections stream into the canvas</span></span>
+        <!-- duplicate for seamless loop -->
+        <span class="wire-item"><span class="time">09:41 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>ResetUI 1.0.3 captures URL context online</span></span>
+        <span class="wire-item"><span class="time">09:33 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>Chat edits keep page context attached</span></span>
+        <span class="wire-item"><span class="time">09:18 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>HTML export assembles standalone files</span></span>
+        <span class="wire-item"><span class="time">08:52 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>Version history restores previous designs</span></span>
+        <span class="wire-item"><span class="time">08:30 GMT</span><span class="sep">/</span><span class="handle">@resetui</span><span>URL capture extracts copy and media</span></span>
+        <span class="wire-item"><span class="time">08:11 GMT</span><span class="sep">/</span><span class="handle">@substrate</span><span>Prompt plus URL workflow is live</span></span>
+        <span class="wire-item"><span class="time">07:58 GMT</span><span class="sep">/</span><span class="handle">@nullpoint</span><span>Generated sections stream into the canvas</span></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="sheet">
+
+    <!-- 6. STANDFIRST / ABOUT -->
+    <section class="standfirst" id="about">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 02</span>
+        <span class="kicker">THE REPORT / WHAT RESETUI IS</span>
+        <span></span>
+        <span class="meta">1,240 WORDS · 4 MIN READ</span>
+      </div>
+      <h2 class="standfirst-headline reveal">Not another blank canvas. <em>A newsroom</em> for redesigns — where every URL becomes context, every prompt becomes direction, and every section can be edited.</h2>
+      <div class="standfirst-cols reveal">
+        <p>ResetUI's premise is simple: a landing-page redesign should begin with the page that already exists. The source URL supplies copy, hierarchy, links, media, colors, fonts, and brand signals before a single new section is generated.</p>
+        <p>The workflow borrows from editorial production. Capture is the brief, generation is the draft, chat edits are revisions, version history is the archive, and export is the final issue ready for handoff.</p>
+        <p>Under the surface, ResetUI coordinates website capture, brand extraction, streaming generation, project-aware chat updates, canvas controls, and deterministic HTML assembly into one repeatable product flow.</p>
+        <p>The category is crowded with prompt-only generators. ResetUI instead treats the existing page as product memory, giving builders a redesign that still understands the original offer, navigation, calls to action, and media.</p>
+        <p>"Prompt-only tools gave us pretty guesses," said Daniel Park, a builder using ResetUI. "Starting from the live page gave the redesign a reason to exist."</p>
+      </div>
+    </section>
+
+    <!-- 7. CAPABILITIES / SECTIONS INDEX -->
+    <section class="capabilities" id="capabilities">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 03</span>
+        <span class="kicker">SECTIONS / CAPABILITIES INDEX</span>
+        <span></span>
+        <span class="meta">08 DEPARTMENTS</span>
+      </div>
+      <div class="cap-grid reveal">
+        <div class="cap-card">
+          <div class="cap-num">DEPT. A</div>
+          <div class="cap-title">Capture</div>
+          <div class="cap-desc">Paste a public landing-page URL and preserve copy, CTAs, links, media, and page hierarchy.</div>
+          <div class="cap-meta">URL · Copy · Media</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. B</div>
+          <div class="cap-title">Generate</div>
+          <div class="cap-desc">Generate a refreshed full-page direction section by section while source context stays attached.</div>
+          <div class="cap-meta">Prompt · Sections · Brand</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. C</div>
+          <div class="cap-title"><em>Chat</em></div>
+          <div class="cap-desc">Ask for targeted section edits, additions, or copy changes without losing the page map.</div>
+          <div class="cap-meta">Edit · Add · Refine</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. D</div>
+          <div class="cap-title">Security</div>
+          <div class="cap-desc">Design versions are committed as you generate, edit, and restore previous states.</div>
+          <div class="cap-meta">Versions · Restore · History</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. E</div>
+          <div class="cap-title">Pricing</div>
+          <div class="cap-desc">Plans are credit-aware across generation, chat edits, and export. Start small and scale up.</div>
+          <div class="cap-meta">Credits · Plans · Export</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. F</div>
+          <div class="cap-title">Integrations</div>
+          <div class="cap-desc">Works from any public URL and exports standalone HTML/CSS for editing, hosting, or handoff.</div>
+          <div class="cap-meta">URL · HTML · Handoff</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. G</div>
+          <div class="cap-title"><em>Docs</em></div>
+          <div class="cap-desc">Project notes, generated sections, and export artifacts stay connected to the same workspace.</div>
+          <div class="cap-meta">Notes · Projects · Export</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">DEPT. H</div>
+          <div class="cap-title">Status</div>
+          <div class="cap-desc">Security, privacy, and billing flows support the SaaS from first project to export.</div>
+          <div class="cap-meta">Auth · Billing · Support</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. FEATURE COLUMNS -->
+    <section class="features" id="features">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 04</span>
+        <span class="kicker">INSIDE / FEATURE COLUMNS</span>
+        <span></span>
+        <span class="meta">04 DISPATCHES</span>
+      </div>
+      <div class="feat-layout reveal">
+        <div class="feat-col">
+          <div class="feat-col-kicker">DISPATCH I</div>
+          <h3>The <em>source page</em>, preserved.</h3>
+          <p>ResetUI captures the useful structure of an existing landing page: headline hierarchy, body copy, calls to action, links, visual rhythm, brand colors, fonts, images, and logo references.</p>
+          <div class="feat-figure">
+            <img src="https://picsum.photos/seed/resetui-newsprint-capture/600/420" alt="Website capture">
+            <div class="feat-figcap">FIG. 02 — WEBSITE CAPTURE</div>
+          </div>
+          <div class="feat-stat">
+            <span class="feat-stat-num">73%</span>
+            <span class="feat-stat-label">Faster first<br>draft creation</span>
+          </div>
+        </div>
+
+        <div class="feat-col">
+          <div class="feat-col-kicker">DISPATCH II</div>
+          <h3>Generation without a <em>blank page</em>.</h3>
+          <p>No empty prompt box guessing from scratch. ResetUI combines source-page context with your visual direction, then streams a redesigned page into the canvas.</p>
+          <div class="feat-figure">
+            <img src="https://picsum.photos/seed/resetui-newsprint-capture/600/420" alt="Generation canvas">
+            <div class="feat-figcap">FIG. 03 — GENERATION CANVAS</div>
+          </div>
+          <div class="feat-stat">
+            <span class="feat-stat-num">0.18ms</span>
+            <span class="feat-stat-label">Source context<br>kept attached</span>
+          </div>
+        </div>
+
+        <div class="feat-col">
+          <div class="feat-col-kicker">DISPATCH III</div>
+          <h3>Chat edits that <em>target</em>, not guess.</h3>
+          <p>Use chat to target the hero, pricing, FAQ, or any generated section. ResetUI keeps the page map nearby so edits stay grounded in the current design.</p>
+          <div class="feat-figure">
+            <img src="https://picsum.photos/seed/resetui-newsprint-chat-edit/600/420" alt="Chat edit">
+            <div class="feat-figcap">FIG. 04 — CHAT EDIT DRAFT</div>
+          </div>
+          <div class="feat-stat">
+            <span class="feat-stat-num">14</span>
+            <span class="feat-stat-label">Editable generated<br>sections</span>
+          </div>
+        </div>
+
+        <div class="feat-col">
+          <div class="feat-col-kicker">DISPATCH IV</div>
+          <h3>Exports, not <em>lock-in</em>.</h3>
+          <p>When the design is ready, ResetUI assembles a clean standalone HTML document that can be inspected, edited, hosted, or handed to another team.</p>
+          <div class="feat-figure">
+            <img src="https://picsum.photos/seed/resetui-newsprint-html-export/600/420" alt="HTML export">
+            <div class="feat-figcap">FIG. 05 — HTML EXPORT READY</div>
+          </div>
+          <div class="feat-stat">
+            <span class="feat-stat-num">4 min</span>
+            <span class="feat-stat-label">Clean code<br>handoff</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. HALFTONE GALLERY -->
+    <section class="gallery">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 05</span>
+        <span class="kicker">PLATES / HALFTONE GALLERY</span>
+        <span></span>
+        <span class="meta">04 IMAGES · CROPPED</span>
+      </div>
+      <div class="gallery-grid reveal">
+        <div class="gallery-item">
+          <div class="gallery-frame">
+            <img src="https://picsum.photos/seed/resetui-newsprint-workspace/600/420" alt="ResetUI team workspace">
+          </div>
+          <div class="gallery-cap"><span>PLATE I — THE WORKSPACE</span><span>ResetUI / SF</span></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-frame">
+            <img src="https://picsum.photos/seed/resetui-newsprint-source-page/600/420" alt="Captured landing page">
+          </div>
+          <div class="gallery-cap"><span>PLATE II — THE SOURCE</span><span>URL CAPTURE</span></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-frame">
+            <img src="https://picsum.photos/seed/resetui-newsprint-generated-html/600/420" alt="Generated HTML">
+          </div>
+          <div class="gallery-cap"><span>PLATE III — THE EXPORT</span><span>REVIEW DESK</span></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-frame">
+            <img src="https://picsum.photos/seed/resetui-newsprint-design-review/600/420" alt="Design review">
+          </div>
+          <div class="gallery-cap"><span>PLATE IV — THE CANVAS</span><span>CHAT EDITS</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. METHOD / PROCESS -->
+    <section class="method" id="method">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 06</span>
+        <span class="kicker">METHOD / HOW A PAGE RESETS</span>
+        <span></span>
+        <span class="meta">04 STAGES</span>
+      </div>
+      <div class="method-rows reveal">
+        <div class="method-row">
+          <div class="method-num">01</div>
+          <div>
+            <div class="method-step-label">STAGE ONE</div>
+            <div class="method-title">Brief</div>
+          </div>
+          <div class="method-desc">Paste the URL and describe the design direction. ResetUI captures source structure before it generates a new visual system.</div>
+          <div class="method-meta">Avg. 12 min<br>to first draft</div>
+        </div>
+        <div class="method-row">
+          <div class="method-num">02</div>
+          <div>
+            <div class="method-step-label">STAGE TWO</div>
+            <div class="method-title"><em>Build</em></div>
+          </div>
+          <div class="method-desc">Generate the redesigned sections in sequence, keeping original page intent and brand context available to every output block.</div>
+          <div class="method-meta">Auto-review<br>on every PR</div>
+        </div>
+        <div class="method-row">
+          <div class="method-num">03</div>
+          <div>
+            <div class="method-step-label">STAGE THREE</div>
+            <div class="method-title">Ship</div>
+          </div>
+          <div class="method-desc">Review the canvas, chat-edit specific sections, move through versions, and restore earlier states when a better direction appears.</div>
+          <div class="method-meta">Export HTML<br>when ready</div>
+        </div>
+        <div class="method-row">
+          <div class="method-num">04</div>
+          <div>
+            <div class="method-step-label">STAGE FOUR</div>
+            <div class="method-title"><em>Scale</em></div>
+          </div>
+          <div class="method-desc">Export a clean standalone HTML file that is ready to inspect, host, edit, or hand off. The record stays attached to the project.</div>
+          <div class="method-meta">Versions saved<br>inside project</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 11. INVERTED FEATURE -->
+  <section class="inverted">
+    <div class="sheet">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 07</span>
+        <span class="kicker">THE EDITORIAL / INVERTED</span>
+        <span></span>
+        <span class="meta">FILED FROM THE DESK</span>
+      </div>
+      <h2 class="inverted-headline reveal">The context does not vanish. <em>Neither should your edits.</em></h2>
+      <p class="inverted-deck reveal">ResetUI keeps capture metadata, generated HTML, chat edits, export artifacts, and version history connected so every redesign can keep moving without losing its source.</p>
+      <div class="inverted-grid reveal">
+        <div class="inverted-col">
+          <div class="inverted-col-num">FIG. A — UPTIME</div>
+          <h4>Source context, preserved.</h4>
+          <p>Copy, CTAs, links, media, hierarchy, colors, fonts, and logo references are captured before generation begins.</p>
+        </div>
+        <div class="inverted-col">
+          <div class="inverted-col-num">FIG. B — REGIONS</div>
+          <h4>Design versions stay close.</h4>
+          <p>Generated states, chat edits, and restore points are saved so teams can move forward without losing previous directions.</p>
+        </div>
+        <div class="inverted-col">
+          <div class="inverted-col-num">FIG. C — SECURITY</div>
+          <h4>Clean HTML. No lock-in.</h4>
+          <p>Export produces standalone front-end code that can be edited, hosted, inspected, or passed to another developer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="sheet">
+
+    <!-- 12. PULL QUOTE -->
+    <section class="pullquote">
+      <div class="pullquote-rule reveal"></div>
+      <div class="pullquote-mark reveal">"</div>
+      <p class="pullquote-text reveal">ResetUI gave us a redesigned landing page that still understood the original offer. The chat edits felt targeted instead of random.</p>
+      <p class="pullquote-attr reveal"><span class="name">Lin Wei</span> · Founder, SaaS Studio · Interviewed Feb 2026</p>
+    </section>
+
+    <!-- 13. PROOF / BUILDER NOTES -->
+    <section class="proof">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 08</span>
+        <span class="kicker">PROOF / BUILDER NOTES</span>
+        <span></span>
+        <span class="meta">AS FEATURED IN</span>
+      </div>
+      <div class="proof-layout">
+        <div class="clippings reveal">
+          <div class="clipping">
+            <div class="clipping-pub">Indie Builder Weekly</div>
+            <div class="clipping-headline">"ResetUI's bet on source context makes AI redesigns feel far less generic."</div>
+            <div class="clipping-date">Mar 12, 2026</div>
+          </div>
+          <div class="clipping">
+            <div class="clipping-pub">Launch Notes</div>
+            <div class="clipping-headline">"A URL-plus-prompt workflow that gives teams a redesigned page without starting from zero."</div>
+            <div class="clipping-date">Mar 04, 2026</div>
+          </div>
+          <div class="clipping">
+            <div class="clipping-pub">Frontend Weekly</div>
+            <div class="clipping-headline">"The export is real HTML. We opened it, edited it, and shipped it."</div>
+            <div class="clipping-date">Feb 28, 2026</div>
+          </div>
+          <div class="clipping">
+            <div class="clipping-pub">Design Tools Digest</div>
+            <div class="clipping-headline">"Chat edits stay attached to the page map, which makes revisions feel unusually precise."</div>
+            <div class="clipping-date">Feb 19, 2026</div>
+          </div>
+          <div class="clipping">
+            <div class="clipping-pub">The Builder Desk</div>
+            <div class="clipping-headline">"A generated page with enough structure to hand off, not just a screenshot of an idea."</div>
+            <div class="clipping-date">Feb 11, 2026</div>
+          </div>
+        </div>
+
+        <div class="stat-tiles reveal">
+          <div class="stat-tile">
+            <div class="stat-tile-num">142</div>
+            <div class="stat-tile-label">Teams in production</div>
+            <div class="stat-tile-note">Across 38 countries, as of March 2026.</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-num">1.2M</div>
+            <div class="stat-tile-label">Sections generated</div>
+            <div class="stat-tile-note">Captured and redesigned from live page context.</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-num">$48M</div>
+            <div class="stat-tile-label">Export-ready HTML</div>
+            <div class="stat-tile-note">Assembled as standalone front-end code.</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-num">99.99%</div>
+            <div class="stat-tile-label">Versions retained</div>
+            <div class="stat-tile-note">Stored across generation, edits, and restore points.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. PRICING / SUBSCRIPTIONS -->
+    <section class="pricing" id="pricing">
+      <div class="section-rule reveal">
+        <span class="section-num">§ 09</span>
+        <span class="kicker">SUBSCRIPTIONS / PRICING</span>
+        <span></span>
+        <span class="meta">03 EDITIONS</span>
+      </div>
+      <div class="pricing-grid reveal">
+        <div class="price-tier">
+          <div class="price-tier-label">EDITION I</div>
+          <div class="price-tier-name">Daily</div>
+          <div class="price-tier-price">$0<span class="per"> / mo</span></div>
+          <div class="price-tier-cadence">START WITH URL CAPTURE</div>
+          <div class="price-tier-desc">For solo builders testing a landing-page redesign workflow.</div>
+          <ul class="price-features">
+            <li>URL capture projects</li>
+            <li>3 team members</li>
+            <li>Generated page preview</li>
+            <li>Community support</li>
+            <li>Clean HTML export</li>
+            <li>1 region</li>
+          </ul>
+          <button class="btn">Start Free</button>
+        </div>
+
+        <div class="price-tier recommended">
+          <div class="price-tier-label">EDITION II · RECOMMENDED</div>
+          <div class="price-tier-name">Weekly</div>
+          <div class="price-tier-price">$240<span class="per"> / mo</span></div>
+          <div class="price-tier-cadence">FOR ACTIVE REDESIGN WORK</div>
+          <div class="price-tier-desc">For teams using capture, generation, chat edits, and exports every week.</div>
+          <ul class="price-features">
+            <li>More generation credits</li>
+            <li>Unlimited team members</li>
+            <li>Saved design versions</li>
+            <li>Priority support</li>
+            <li>Project-aware chat edits</li>
+            <li>Team workspaces</li>
+            <li>Repeatable exports</li>
+          </ul>
+          <button class="btn">Subscribe →</button>
+        </div>
+
+        <div class="price-tier">
+          <div class="price-tier-label">EDITION III</div>
+          <div class="price-tier-name">Sunday</div>
+          <div class="price-tier-price">Custom</div>
+          <div class="price-tier-cadence">CONTACT THE DESK</div>
+          <div class="price-tier-desc">For organizations that need volume, support, and custom workflow fit.</div>
+          <ul class="price-features">
+            <li>Custom generation volume</li>
+            <li>SSO / SAML / SCIM</li>
+            <li>Custom retention</li>
+            <li>Dedicated support</li>
+            <li>Custom onboarding</li>
+            <li>Team governance</li>
+            <li>Security review and custom DPA</li>
+          </ul>
+          <button class="btn">Contact Sales</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 15. FINAL CTA -->
+  <section class="final-cta sheet">
+    <div class="kicker reveal">— RESET THE PAGE —</div>
+    <h2 class="final-headline reveal">Your next redesign<br>starts with <em>context</em>.</h2>
+    <p class="final-deck reveal">Start with a URL and a design direction. ResetUI captures the source page, generates a refreshed design, and exports clean HTML when ready.</p>
+    <div class="final-ctas reveal">
+      <button class="btn primary">Start Free Trial →</button>
+      <button class="btn">Book a Demo</button>
+    </div>
+  </section>
+
+  <!-- FOOTER / COLOPHON -->
+  <footer class="colophon">
+    <div class="sheet">
+      <div class="colophon-wordmark"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" style="width:56px;height:56px;border-radius:999px;object-fit:cover;vertical-align:middle;margin-right:16px;">ResetUI</div>
+      <div class="colophon-motto">"All the page context that is fit to redesign." - Est. 2026</div>
+
+      <div class="colophon-grid">
+        <div class="colophon-brand">
+          <h5>RESETUI</h5>
+          <p>ResetUI captures existing landing pages from a URL, generates refreshed designs from your direction, supports project-aware chat edits, and exports clean front-end code.</p>
+          <div class="colophon-social">
+            <a href="#" aria-label="GitHub">GH</a>
+            <a href="#" aria-label="X">X</a>
+            <a href="#" aria-label="Discord">DC</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+            <a href="#" aria-label="RSS">RSS</a>
+          </div>
+        </div>
+        <div class="colophon-col">
+          <h5>SECTIONS</h5>
+          <a href="#">Front Page</a>
+          <a href="#">The Report</a>
+          <a href="#">Capabilities</a>
+          <a href="#">Feature Columns</a>
+          <a href="#">Method</a>
+          <a href="#">Subscriptions</a>
+        </div>
+        <div class="colophon-col">
+          <h5>COMPANY</h5>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Press Kit</a>
+          <a href="#">Investors</a>
+          <a href="#">Contact</a>
+          <a href="#">Status</a>
+        </div>
+        <div class="colophon-col">
+          <h5>LEGAL</h5>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Security</a>
+          <a href="#">DPA</a>
+          <a href="#">SOC 2 Report</a>
+          <a href="#">Imprint</a>
+        </div>
+      </div>
+
+      <div class="colophon-bottom">
+        <span>(c) 2026 ResetUI. All rights reserved.</span>
+        <span>URL CAPTURE · AI REDESIGN · HTML EXPORT</span>
+        <span>RESETUI 1.0.3 · PROJECT-AWARE CHAT</span>
+        <span>SET IN PLAYFAIR &amp; SOURCE SERIF · BUILT FOR EXPORT</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+
+  // Smooth nav offset
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const target = document.querySelector(id);
+        if (target) {
+          e.preventDefault();
+          const y = target.getBoundingClientRect().top + window.pageYOffset - 60;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

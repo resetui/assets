@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clean Fluid | Light</title>
+<meta name="application-name" content="Clean Fluid | Light">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ['Playfair Display', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        cream: '#fcfbf9',
+        'warm-white': '#fffefa',
+        'soft-surface': '#f6f3ee',
+        charcoal: '#171717',
+        'soft-black': '#242424',
+        'muted-ink': '#555555',
+        indigo: { DEFAULT: '#4338ca', bright: '#4f46e5', soft: '#c7d2fe' },
+        'purple-mesh': '#ddd6fe',
+        'violet-haze': '#ede9fe',
+      }
+    }
+  }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: #fcfbf9; color: #171717; overflow-x: hidden; }
+
+  /* Mesh drift animations */
+  @keyframes meshDrift1 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    33% { transform: translate(-45%, -55%) scale(1.08) rotate(3deg); }
+    66% { transform: translate(-55%, -48%) scale(0.95) rotate(-2deg); }
+  }
+  @keyframes meshDrift2 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    33% { transform: translate(-55%, -45%) scale(1.05) rotate(-2deg); }
+    66% { transform: translate(-48%, -55%) scale(0.97) rotate(3deg); }
+  }
+  @keyframes meshDrift3 {
+    0%, 100% { transform: translate(0%, 0%) scale(1); }
+    50% { transform: translate(3%, -4%) scale(1.06); }
+  }
+  .mesh-orb-1 { animation: meshDrift1 28s ease-in-out infinite; }
+  .mesh-orb-2 { animation: meshDrift2 34s ease-in-out infinite; }
+  .mesh-orb-3 { animation: meshDrift3 24s ease-in-out infinite; }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1), transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .mesh-orb-1, .mesh-orb-2, .mesh-orb-3 { animation: none !important; }
+    .reveal { transition-duration: 0.01ms !important; transform: none !important; opacity: 1 !important; }
+    .card-lift { transition: none !important; }
+  }
+
+  /* Card lift */
+  .card-lift {
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-lift:hover {
+    transform: scale(1.02) translateY(-16px);
+    box-shadow: 0 24px 48px -12px rgba(67, 56, 202, 0.12), 0 8px 24px -8px rgba(67, 56, 202, 0.08);
+  }
+
+  /* Nav link underline growth */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #171717;
+    transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Accordion */
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms ease;
+    opacity: 0;
+  }
+  .accordion-item.active .accordion-content {
+    opacity: 1;
+  }
+  .accordion-icon {
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .accordion-item.active .accordion-icon {
+    transform: rotate(45deg);
+  }
+
+  /* Divider draw */
+  .divider-draw {
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .divider-draw.revealed {
+    transform: scaleX(1);
+  }
+
+  /* Process line */
+  .process-line {
+    background: linear-gradient(to right, transparent, #c7d2fe, transparent);
+  }
+
+  /* Footer curve */
+  .footer-curve {
+    border-radius: 50% 50% 0 0 / 5rem 5rem 0 0;
+  }
+
+  /* Pulse glow on CTA */
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(67, 56, 202, 0.3); }
+    50% { box-shadow: 0 0 20px 4px rgba(67, 56, 202, 0.15); }
+  }
+  .pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-glow { animation: none !important; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #fcfbf9; }
+  ::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4338ca; }
+
+  /* Mobile menu */
+  .mobile-menu {
+    transform: translateY(-100%);
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mobile-menu.open {
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body class="bg-cream text-charcoal antialiased">
+
+<!-- ==================== HEADER ==================== -->
+<header class="fixed left-1/2 top-6 z-50 flex h-16 w-[min(100%-32px,1200px)] -translate-x-1/2 items-center justify-between rounded-full border border-charcoal/8 bg-cream/90 px-5 shadow-lg shadow-black/[0.04] backdrop-blur-xl md:top-8 md:px-7" id="main-header">
+  <!-- Logo -->
+  <a class="flex items-center gap-3 text-charcoal" href="#top">
+    <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-8 w-8 rounded-full object-cover">
+    <span class="font-serif text-2xl italic tracking-tight">ResetUI</span>
+  </a>
+
+  <!-- Center Nav -->
+  <nav class="hidden items-center gap-8 md:flex">
+    <a class="nav-link font-mono text-[10px] uppercase tracking-[0.4em] text-charcoal" href="#work">Workflow</a>
+    <a class="nav-link font-mono text-[10px] uppercase tracking-[0.4em] text-charcoal" href="#systems">Capabilities</a>
+    <a class="nav-link font-mono text-[10px] uppercase tracking-[0.4em] text-charcoal" href="#process">Process</a>
+    <a class="nav-link font-mono text-[10px] uppercase tracking-[0.4em] text-charcoal" href="#contact">Contact</a>
+  </nav>
+
+  <!-- Right Status -->
+  <div class="flex items-center gap-3">
+    <a class="hidden items-center rounded-full border border-charcoal/8 bg-white px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.3em] text-charcoal transition-colors hover:border-indigo/30 hover:text-indigo sm:flex" href="https://resetui.com">
+      Get Started
+    </a>
+    <!-- Mobile menu button -->
+    <button class="flex h-10 w-10 items-center justify-center rounded-full border border-charcoal/8 bg-white md:hidden" id="menu-toggle" aria-label="Toggle menu">
+      <i data-lucide="menu" class="h-4 w-4 text-charcoal"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-cream/98 backdrop-blur-xl md:hidden" id="mobile-menu">
+  <a class="font-serif text-3xl italic text-charcoal" href="#work" onclick="closeMobileMenu()">Workflow</a>
+  <a class="font-serif text-3xl italic text-charcoal" href="#systems" onclick="closeMobileMenu()">Capabilities</a>
+  <a class="font-serif text-3xl italic text-charcoal" href="#process" onclick="closeMobileMenu()">Process</a>
+  <a class="font-serif text-3xl italic text-charcoal" href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <a class="mt-4 flex items-center rounded-full border border-charcoal/8 bg-white px-6 py-3 font-mono text-[10px] uppercase tracking-[0.3em] text-charcoal transition-colors hover:border-indigo/30 hover:text-indigo" href="https://resetui.com">
+    Get Started
+  </a>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<main id="top">
+  <section class="relative min-h-screen overflow-hidden">
+    <!-- Mesh background (full-bleed from top) -->
+    <div class="absolute inset-0 bg-cream"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,#c7d2fe_0,transparent_35%),radial-gradient(circle_at_78%_22%,#ede9fe_0,transparent_32%)]"></div>
+    <!-- Drifting orbs -->
+    <div class="mesh-orb-1 absolute left-1/2 top-1/2 h-[56vw] w-[56vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-300/25 blur-3xl"></div>
+    <div class="mesh-orb-2 absolute left-[20%] top-[30%] h-[32vw] w-[32vw] rounded-full bg-purple-mesh/30 blur-3xl"></div>
+    <div class="mesh-orb-3 absolute right-[15%] bottom-[25%] h-[28vw] w-[28vw] rounded-full bg-violet-haze/40 blur-3xl"></div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[1200px] flex-col items-center justify-center px-6 pb-[32vh] pt-36 text-center md:pt-40">
+      <!-- Top metadata -->
+      <p class="reveal mb-8 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo md:text-xs">AI website redesign / 01</p>
+
+      <!-- Headline -->
+      <h1 class="reveal mx-auto max-w-[1000px] font-serif text-[clamp(3.5rem,8vw,7.5rem)] leading-[1.03]">
+        A better website,<br>
+        <span class="italic">built from yours</span>
+      </h1>
+
+      <!-- Subheading -->
+      <p class="reveal mx-auto mt-8 max-w-2xl text-base leading-relaxed text-muted-ink md:text-lg md:leading-relaxed">
+        Paste your landing-page URL, describe the visual direction, and get a production-ready redesign you can refine through chat and export as usable front-end code.
+      </p>
+
+      <!-- CTAs -->
+      <div class="reveal mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-5">
+        <button class="pulse-glow rounded-full bg-indigo px-8 py-4 font-mono text-[11px] uppercase tracking-[0.3em] text-white transition-colors duration-300 hover:bg-indigo-bright">
+          Start Redesign
+        </button>
+        <button class="rounded-full border border-charcoal/12 bg-white/80 px-8 py-4 font-mono text-[11px] uppercase tracking-[0.3em] text-charcoal backdrop-blur-sm transition-colors duration-300 hover:border-indigo/30 hover:text-indigo">
+          See Workflow
+        </button>
+      </div>
+
+      <!-- Trust row -->
+      <div class="reveal mt-12 flex flex-wrap items-center justify-center gap-6">
+        <div class="flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">URL + prompt workflow</span>
+        </div>
+        <span class="hidden h-3 w-px bg-charcoal/10 sm:block"></span>
+        <div class="flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-indigo"></span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Version 1.0.3</span>
+        </div>
+        <span class="hidden h-3 w-px bg-charcoal/10 sm:block"></span>
+        <div class="flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-indigo-soft"></span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Clean HTML/CSS export</span>
+        </div>
+      </div>
+
+      <!-- Reference citation -->
+      <a class="reveal mt-8 block font-mono text-[9px] uppercase tracking-[0.35em] text-indigo/70 transition-colors hover:text-indigo" href="#proof">
+        Capture · Redesign · Refine · Export
+      </a>
+    </div>
+
+    <!-- Wave Transition (below all hero content) -->
+    <div class="absolute bottom-0 left-0 h-[22vh] w-full overflow-hidden">
+      <div class="absolute left-1/2 top-0 h-[220%] w-[130%] -translate-x-1/2 translate-y-[22%] rounded-t-[50%] bg-cream"></div>
+    </div>
+  </section>
+
+  <!-- ==================== WORK / PRODUCT GRID ==================== -->
+  <section id="work" class="bg-cream px-6 pb-28 pt-8 md:pt-12">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-16 flex flex-col items-center text-center">
+        <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo">Core workflow / 02</p>
+        <h2 class="font-serif text-4xl leading-tight md:text-5xl md:leading-tight">
+          One URL, a complete <span class="italic">redesign</span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-ink">
+          ResetUI carries your source content and brand context through one connected path from capture to clean front-end code.
+        </p>
+      </div>
+
+      <!-- Staggered Grid -->
+      <div class="grid gap-10 md:grid-cols-2">
+        <!-- Card 1 -->
+        <article class="reveal card-lift group md:translate-y-12">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-indigo-soft/40">
+            <div class="absolute inset-8 rounded-full bg-indigo-400/30 blur-3xl transition duration-700 group-hover:scale-110"></div>
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Laptop displaying a website interface" class="absolute inset-0 h-full w-full object-cover opacity-35 mix-blend-multiply transition-all duration-700 group-hover:scale-105 group-hover:opacity-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="h-24 w-32 rounded-xl border border-indigo/10 bg-white/40 backdrop-blur-sm"></div>
+            </div>
+            <button class="absolute bottom-5 right-5 rounded-full bg-white px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-charcoal opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2">
+              Explore
+            </button>
+          </div>
+          <div class="mt-5 flex items-center gap-4">
+            <h3 class="font-serif text-2xl md:text-3xl">Capture the Source</h3>
+            <span class="divider-draw h-px flex-1 bg-charcoal/10"></span>
+            <p class="font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Capture</p>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="reveal card-lift group md:translate-y-0">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-violet-haze/50">
+            <div class="absolute inset-10 rounded-full bg-purple-mesh/40 blur-3xl transition duration-700 group-hover:scale-110"></div>
+            <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Designer shaping a website interface" class="absolute inset-0 h-full w-full object-cover opacity-35 mix-blend-multiply transition-all duration-700 group-hover:scale-105 group-hover:opacity-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="flex gap-3">
+                <div class="h-16 w-16 rounded-full border border-indigo/10 bg-white/40 backdrop-blur-sm"></div>
+                <div class="h-16 w-16 rounded-full border border-indigo/10 bg-white/40 backdrop-blur-sm translate-y-4"></div>
+                <div class="h-16 w-16 rounded-full border border-indigo/10 bg-white/40 backdrop-blur-sm -translate-y-2"></div>
+              </div>
+            </div>
+            <button class="absolute bottom-5 right-5 rounded-full bg-white px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-charcoal opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2">
+              Explore
+            </button>
+          </div>
+          <div class="mt-5 flex items-center gap-4">
+            <h3 class="font-serif text-2xl md:text-3xl">Direct the Shift</h3>
+            <span class="divider-draw h-px flex-1 bg-charcoal/10"></span>
+            <p class="font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Prompt</p>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="reveal card-lift group md:translate-y-0">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-soft-surface">
+            <div class="absolute inset-8 rounded-full bg-indigo-soft/25 blur-3xl transition duration-700 group-hover:scale-110"></div>
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Developer workspace with code and live preview" class="absolute inset-0 h-full w-full object-cover opacity-35 mix-blend-multiply transition-all duration-700 group-hover:scale-105 group-hover:opacity-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="space-y-3">
+                <div class="h-3 w-40 rounded-full bg-indigo/8"></div>
+                <div class="h-3 w-32 rounded-full bg-indigo/5"></div>
+                <div class="h-3 w-36 rounded-full bg-indigo/8"></div>
+              </div>
+            </div>
+            <button class="absolute bottom-5 right-5 rounded-full bg-white px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-charcoal opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2">
+              Explore
+            </button>
+          </div>
+          <div class="mt-5 flex items-center gap-4">
+            <h3 class="font-serif text-2xl md:text-3xl">Refine in Canvas</h3>
+            <span class="divider-draw h-px flex-1 bg-charcoal/10"></span>
+            <p class="font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Edit</p>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="reveal card-lift group md:translate-y-12">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-indigo-soft/25">
+            <div class="absolute inset-12 rounded-full bg-violet-haze/50 blur-3xl transition duration-700 group-hover:scale-110"></div>
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Front-end code prepared for export" class="absolute inset-0 h-full w-full object-cover opacity-35 mix-blend-multiply transition-all duration-700 group-hover:scale-105 group-hover:opacity-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="grid grid-cols-3 gap-2">
+                <div class="h-12 w-12 rounded-lg border border-indigo/10 bg-white/40 backdrop-blur-sm"></div>
+                <div class="h-12 w-12 rounded-lg border border-indigo/10 bg-white/40 backdrop-blur-sm"></div>
+                <div class="h-12 w-12 rounded-lg border border-indigo/10 bg-white/40 backdrop-blur-sm"></div>
+              </div>
+            </div>
+            <button class="absolute bottom-5 right-5 rounded-full bg-white px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-charcoal opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2">
+              Explore
+            </button>
+          </div>
+          <div class="mt-5 flex items-center gap-4">
+            <h3 class="font-serif text-2xl md:text-3xl">Export the Result</h3>
+            <span class="divider-draw h-px flex-1 bg-charcoal/10"></span>
+            <p class="font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Code</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== INTELLIGENCE STRIP ==================== -->
+  <section class="bg-soft-surface px-6 py-28">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-16 text-center">
+        <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo">How it works / 03</p>
+        <h2 class="font-serif text-3xl md:text-4xl">
+          Design intelligence grounded in your <span class="italic">site</span>
+        </h2>
+      </div>
+
+      <div class="grid gap-0 divide-y divide-charcoal/6 md:grid-cols-4 md:divide-y-0 md:divide-x">
+        <div class="reveal group px-6 py-8 md:py-0">
+          <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">01 / Capture</p>
+          <p class="font-serif text-xl leading-snug">Reads copy, calls to action, links, media, and <span class="italic">hierarchy</span></p>
+        </div>
+        <div class="reveal group px-6 py-8 md:py-0" style="transition-delay: 100ms">
+          <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">02 / Direct</p>
+          <p class="font-serif text-xl leading-snug">Uses your prompt to define the desired <span class="italic">visual shift</span></p>
+        </div>
+        <div class="reveal group px-6 py-8 md:py-0" style="transition-delay: 200ms">
+          <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">03 / Generate</p>
+          <p class="font-serif text-xl leading-snug">Streams redesigned sections into a <span class="italic">live canvas</span></p>
+        </div>
+        <div class="reveal group px-6 py-8 md:py-0" style="transition-delay: 300ms">
+          <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">04 / Export</p>
+          <p class="font-serif text-xl leading-snug">Delivers the latest version as standalone <span class="italic">HTML/CSS</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICE ACCORDION ==================== -->
+  <section id="systems" class="bg-cream px-6 py-28">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="grid gap-16 md:grid-cols-2 md:gap-20">
+        <!-- Left: Sticky heading -->
+        <div class="md:sticky md:top-32 md:self-start">
+          <p class="reveal mb-4 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo">Capabilities / 04</p>
+          <h2 class="reveal font-serif text-4xl leading-tight md:text-5xl md:leading-tight">
+            Built for<br><span class="italic">real redesigns</span>
+          </h2>
+          <p class="reveal mt-6 max-w-sm text-base leading-relaxed text-muted-ink">
+            ResetUI combines source-aware generation, live editing, recoverable history, and clean code delivery in one workspace.
+          </p>
+          <a class="reveal mt-6 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.35em] text-indigo transition-colors hover:text-indigo-bright" href="#contact">
+            Explore all <span>→</span>
+          </a>
+        </div>
+
+        <!-- Right: Accordion -->
+        <div class="space-y-0 divide-y divide-charcoal/8">
+          <!-- Item 1 -->
+          <div class="accordion-item active reveal" data-accordion>
+            <button class="flex w-full items-center justify-between py-6 text-left" onclick="toggleAccordion(this)">
+              <h3 class="font-serif text-2xl text-charcoal transition-colors duration-300 md:text-3xl">Website Capture</h3>
+              <span class="accordion-icon flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-charcoal/10 text-charcoal">+</span>
+            </button>
+            <div class="accordion-content pb-6" style="max-height: 200px; opacity: 1;">
+              <p class="text-base leading-relaxed text-muted-ink">
+                Loads the live landing page and extracts its copy, calls to action, links, media, structure, brand colors, fonts, and visual signals.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Copy + Media]</span>
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Brand Signals]</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="accordion-item reveal" data-accordion style="transition-delay: 80ms">
+            <button class="flex w-full items-center justify-between py-6 text-left" onclick="toggleAccordion(this)">
+              <h3 class="font-serif text-2xl text-muted-ink transition-colors duration-300 hover:text-charcoal md:text-3xl">Streamed Redesign</h3>
+              <span class="accordion-icon flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-charcoal/10 text-muted-ink">+</span>
+            </button>
+            <div class="accordion-content pb-6">
+              <p class="text-base leading-relaxed text-muted-ink">
+                Plans the full page, shows loading skeletons immediately, and streams completed sections into the canvas as generation progresses.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Section Planning]</span>
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Live Progress]</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="accordion-item reveal" data-accordion style="transition-delay: 160ms">
+            <button class="flex w-full items-center justify-between py-6 text-left" onclick="toggleAccordion(this)">
+              <h3 class="font-serif text-2xl text-muted-ink transition-colors duration-300 hover:text-charcoal md:text-3xl">Project-Aware Editing</h3>
+              <span class="accordion-icon flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-charcoal/10 text-muted-ink">+</span>
+            </button>
+            <div class="accordion-content pb-6">
+              <p class="text-base leading-relaxed text-muted-ink">
+                Refine the generated page through chat, navigate with move and select tools, adjust zoom, and restore earlier committed versions.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Chat Editing]</span>
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Version History]</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="accordion-item reveal" data-accordion style="transition-delay: 240ms">
+            <button class="flex w-full items-center justify-between py-6 text-left" onclick="toggleAccordion(this)">
+              <h3 class="font-serif text-2xl text-muted-ink transition-colors duration-300 hover:text-charcoal md:text-3xl">Code Export</h3>
+              <span class="accordion-icon flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-charcoal/10 text-muted-ink">+</span>
+            </button>
+            <div class="accordion-content pb-6">
+              <p class="text-base leading-relaxed text-muted-ink">
+                Converts the latest committed design into a clean standalone document that can be downloaded and continued as usable front-end code.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Standalone HTML]</span>
+                <span class="font-mono text-[9px] uppercase tracking-[0.3em] text-indigo/60">[Clean Delivery]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROCESS FLOW ==================== -->
+  <section id="process" class="bg-soft-surface px-6 py-28">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-16 text-center">
+        <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo">Product flow / 05</p>
+        <h2 class="font-serif text-3xl md:text-4xl">
+          From live URL to <span class="italic">refined</span> front-end
+        </h2>
+      </div>
+
+      <div class="relative">
+        <!-- Flowing connector line -->
+        <div class="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-indigo-soft to-transparent md:block"></div>
+
+        <div class="grid gap-8 md:grid-cols-4">
+          <!-- Step 1 -->
+          <div class="reveal relative text-center">
+            <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-indigo/15 bg-white shadow-lg shadow-indigo/5">
+              <i data-lucide="radar" class="h-6 w-6 text-indigo"></i>
+            </div>
+            <p class="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Step 01</p>
+            <h3 class="font-serif text-xl"><span class="italic">Import</span></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-ink">Paste the website URL and describe your design direction</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="reveal relative text-center md:translate-y-8" style="transition-delay: 100ms">
+            <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-indigo/15 bg-white shadow-lg shadow-indigo/5">
+              <i data-lucide="pen-tool" class="h-6 w-6 text-indigo"></i>
+            </div>
+            <p class="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Step 02</p>
+            <h3 class="font-serif text-xl"><span class="italic">Capture</span></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-ink">Extract structure, content, media, and brand context</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="reveal relative text-center" style="transition-delay: 200ms">
+            <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-indigo/15 bg-white shadow-lg shadow-indigo/5">
+              <i data-lucide="layers" class="h-6 w-6 text-indigo"></i>
+            </div>
+            <p class="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Step 03</p>
+            <h3 class="font-serif text-xl"><span class="italic">Generate</span></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-ink">Stream the full page and refine it through project-aware chat</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="reveal relative text-center md:translate-y-8" style="transition-delay: 300ms">
+            <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-indigo/15 bg-white shadow-lg shadow-indigo/5">
+              <i data-lucide="rocket" class="h-6 w-6 text-indigo"></i>
+            </div>
+            <p class="mb-1 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo">Step 04</p>
+            <h3 class="font-serif text-xl"><span class="italic">Export</span></h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-ink">Download the latest committed design as usable code</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROOF / OUTCOMES ==================== -->
+  <section id="proof" class="bg-cream px-6 py-28">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-16 text-center">
+        <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo">Plans and usage / 06</p>
+        <h2 class="font-serif text-3xl md:text-4xl">
+          Simple credits, <span class="italic">clear actions</span>
+        </h2>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-3">
+        <!-- Proof 1 -->
+        <div class="reveal card-lift rounded-2xl border border-charcoal/6 bg-cream p-8">
+          <p class="font-serif text-4xl text-indigo">5</p>
+          <p class="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Credits on the free plan</p>
+          <hr class="my-5 border-charcoal/6">
+          <p class="font-serif text-lg leading-snug italic text-soft-black">
+            "Enough to create one full-page redesign and experience the complete generation workflow."
+          </p>
+          <p class="mt-4 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Free plan</p>
+        </div>
+
+        <!-- Proof 2 -->
+        <div class="reveal card-lift rounded-2xl border border-charcoal/6 bg-cream p-8 md:translate-y-8" style="transition-delay: 100ms">
+          <p class="font-serif text-4xl text-indigo">1</p>
+          <p class="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Credit per chat refinement</p>
+          <hr class="my-5 border-charcoal/6">
+          <p class="font-serif text-lg leading-snug italic text-soft-black">
+            "Continue iterating with targeted updates, inserted sections, and project-aware design changes."
+          </p>
+          <p class="mt-4 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Chat edits</p>
+        </div>
+
+        <!-- Proof 3 -->
+        <div class="reveal card-lift rounded-2xl border border-charcoal/6 bg-cream p-8" style="transition-delay: 200ms">
+          <p class="font-serif text-4xl text-indigo">2</p>
+          <p class="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">Credits per code export</p>
+          <hr class="my-5 border-charcoal/6">
+          <p class="font-serif text-lg leading-snug italic text-soft-black">
+            "Turn the latest committed design into a downloadable standalone HTML/CSS document."
+          </p>
+          <p class="mt-4 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-ink">HTML/CSS export</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== DARK CONTRAST SECTION ==================== -->
+  <section class="relative overflow-hidden bg-charcoal px-6 py-32">
+    <!-- Radial indigo glow -->
+    <div class="absolute left-1/2 top-0 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo/10 blur-3xl"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_center,rgba(67,56,202,0.15),transparent_60%)]"></div>
+
+    <div class="relative z-10 mx-auto max-w-[1200px] text-center">
+      <div class="reveal">
+        <p class="mb-6 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo-soft">Product difference / 07</p>
+        <h2 class="font-serif text-4xl leading-tight text-white md:text-6xl md:leading-tight">
+          Redesign from <span class="italic">real context</span>
+        </h2>
+        <p class="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/50">
+          ResetUI is not a blank-canvas generator. Your existing page supplies the copy, hierarchy, media, and brand signals; your prompt defines the direction the redesign should take.
+        </p>
+        <div class="mt-10 flex flex-col items-center gap-6 sm:flex-row sm:justify-center">
+          <button class="pulse-glow rounded-full bg-indigo px-8 py-4 font-mono text-[11px] uppercase tracking-[0.3em] text-white transition-colors duration-300 hover:bg-indigo-bright">
+            Start Redesign
+          </button>
+          <button class="rounded-full border border-white/12 px-8 py-4 font-mono text-[11px] uppercase tracking-[0.3em] text-white/70 backdrop-blur-sm transition-colors duration-300 hover:border-white/25 hover:text-white">
+            View Dashboard
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="reveal mt-20 grid grid-cols-2 gap-8 border-t border-white/8 pt-10 md:grid-cols-4">
+        <div>
+          <p class="font-serif text-3xl text-white md:text-4xl">URL</p>
+          <p class="mt-1 font-mono text-[8px] uppercase tracking-[0.3em] text-white/30">Required source</p>
+        </div>
+        <div>
+          <p class="font-serif text-3xl text-white md:text-4xl">Prompt</p>
+          <p class="mt-1 font-mono text-[8px] uppercase tracking-[0.3em] text-white/30">Design direction</p>
+        </div>
+        <div>
+          <p class="font-serif text-3xl text-white md:text-4xl">Live</p>
+          <p class="mt-1 font-mono text-[8px] uppercase tracking-[0.3em] text-white/30">Streamed sections</p>
+        </div>
+        <div>
+          <p class="font-serif text-3xl text-white md:text-4xl">HTML</p>
+          <p class="mt-1 font-mono text-[8px] uppercase tracking-[0.3em] text-white/30">Export format</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FINAL CTA ==================== -->
+  <section class="bg-cream px-6 py-28">
+    <div class="reveal mx-auto max-w-[1200px] text-center">
+      <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.45em] text-indigo">Begin / 08</p>
+      <h2 class="font-serif text-4xl leading-tight md:text-5xl md:leading-tight">
+        Ready to reset your <span class="italic">landing page</span>?
+      </h2>
+      <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-ink">
+        Start with the free plan: five credits, one project, and the complete URL plus prompt generation workflow.
+      </p>
+      <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-5">
+        <button class="pulse-glow rounded-full bg-indigo px-8 py-4 font-mono text-[11px] uppercase tracking-[0.3em] text-white transition-colors duration-300 hover:bg-indigo-bright">
+          Get Started
+        </button>
+        <button class="rounded-full border border-charcoal/12 bg-white/80 px-8 py-4 font-mono text-[11px] uppercase tracking-[0.3em] text-charcoal backdrop-blur-sm transition-colors duration-300 hover:border-indigo/30 hover:text-indigo">
+          Contact Support
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer id="contact" class="relative overflow-hidden bg-charcoal footer-curve pt-28 pb-12">
+  <!-- Subtle radial glow from top -->
+  <div class="absolute left-1/2 top-0 h-[40%] w-[50%] -translate-x-1/2 -translate-y-1/3 rounded-full bg-indigo/8 blur-3xl"></div>
+
+  <div class="relative z-10 mx-auto max-w-[1200px] px-6">
+    <!-- Closing statement -->
+    <div class="reveal mb-20 text-center">
+      <div class="mb-6 flex items-center justify-center gap-3">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">
+        <span class="font-serif text-2xl italic text-white">ResetUI</span>
+      </div>
+      <h2 class="font-serif text-3xl leading-tight text-white md:text-5xl md:leading-tight">
+        Keep the brand.<br>Reset the <span class="italic">experience</span>
+      </h2>
+    </div>
+
+    <!-- 3-column grid -->
+    <div class="reveal grid gap-12 border-t border-white/8 pt-12 md:grid-cols-3">
+      <!-- Product -->
+      <div>
+        <p class="mb-4 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo-soft">Product</p>
+        <p class="text-sm leading-relaxed text-white/50">
+          AI landing-page redesigns<br>
+          URL + prompt workflow<br>
+          Current version 1.0.3
+        </p>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <p class="mb-4 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo-soft">Contact</p>
+        <div class="space-y-2">
+          <a class="block text-sm text-white/50 transition-colors hover:text-white" href="mailto:support@resetui.com">support@resetui.com</a>
+          <a class="block text-sm text-white/50 transition-colors hover:text-white" href="mailto:security@resetui.com">security@resetui.com</a>
+          <a class="block text-sm text-white/50 transition-colors hover:text-white" href="https://resetui.com/contact">Contact form</a>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <p class="mb-4 font-mono text-[9px] uppercase tracking-[0.4em] text-indigo-soft">Connect</p>
+        <div class="flex gap-4">
+          <a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all hover:border-indigo/40 hover:text-indigo-soft" href="https://x.com/resetui" aria-label="X / Twitter">
+            <i data-lucide="twitter" class="h-4 w-4"></i>
+          </a>
+          <a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all hover:border-indigo/40 hover:text-indigo-soft" href="https://resetui.com" aria-label="ResetUI website">
+            <i data-lucide="globe" class="h-4 w-4"></i>
+          </a>
+          <a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all hover:border-indigo/40 hover:text-indigo-soft" href="https://resetui.com/security" aria-label="Security">
+            <i data-lucide="shield-check" class="h-4 w-4"></i>
+          </a>
+          <a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all hover:border-indigo/40 hover:text-indigo-soft" href="https://resetui.com/contact" aria-label="Contact">
+            <i data-lucide="mail" class="h-4 w-4"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom microcopy -->
+    <div class="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/6 pt-6 md:flex-row">
+      <p class="font-mono text-[8px] uppercase tracking-[0.3em] text-white/20">© 2026 ResetUI</p>
+      <p class="font-mono text-[8px] uppercase tracking-[0.3em] text-white/20">v1.0.3 / URL + prompt workflow</p>
+      <div class="flex items-center gap-2">
+        <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+        <p class="font-mono text-[8px] uppercase tracking-[0.3em] text-white/20">Live</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // ---- Scroll Reveal ----
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        // Also reveal divider-draw children
+        entry.target.querySelectorAll('.divider-draw').forEach(d => d.classList.add('revealed'));
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Also observe standalone divider-draw elements
+  document.querySelectorAll('.divider-draw').forEach(el => {
+    if (!el.closest('.reveal')) {
+      revealObserver.observe(el);
+    }
+  });
+
+  // ---- Accordion ----
+  function toggleAccordion(btn) {
+    const item = btn.closest('.accordion-item');
+    const content = item.querySelector('.accordion-content');
+    const title = item.querySelector('h3');
+    const icon = item.querySelector('.accordion-icon');
+    const allItems = document.querySelectorAll('[data-accordion]');
+
+    const isActive = item.classList.contains('active');
+
+    // Close all
+    allItems.forEach(ai => {
+      ai.classList.remove('active');
+      const ac = ai.querySelector('.accordion-content');
+      const at = ai.querySelector('h3');
+      const aicon = ai.querySelector('.accordion-icon');
+      ac.style.maxHeight = '0px';
+      ac.style.opacity = '0';
+      at.classList.remove('text-charcoal');
+      at.classList.add('text-muted-ink');
+      aicon.classList.remove('text-charcoal', 'border-charcoal/20');
+      aicon.classList.add('text-muted-ink', 'border-charcoal/10');
+    });
+
+    // Open clicked if it wasn't active
+    if (!isActive) {
+      item.classList.add('active');
+      content.style.maxHeight = content.scrollHeight + 'px';
+      content.style.opacity = '1';
+      title.classList.remove('text-muted-ink');
+      title.classList.add('text-charcoal');
+      icon.classList.remove('text-muted-ink', 'border-charcoal/10');
+      icon.classList.add('text-charcoal', 'border-charcoal/20');
+    }
+  }
+
+  // ---- Mobile Menu ----
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  menuToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    if (menuOpen) {
+      mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      closeMobileMenu();
+    }
+  });
+
+  function closeMobileMenu() {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ---- Header scroll effect ----
+  let lastScroll = 0;
+  const header = document.getElementById('main-header');
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    if (currentScroll > 100) {
+      header.style.boxShadow = '0 8px 32px -8px rgba(0,0,0,0.08)';
+    } else {
+      header.style.boxShadow = '0 4px 24px -4px rgba(0,0,0,0.04)';
+    }
+    lastScroll = currentScroll;
+  }, { passive: true });
+</script>
+</body>
+</html>

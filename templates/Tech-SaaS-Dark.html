@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech SaaS | Dark</title>
+<meta name="application-name" content="Tech SaaS | Dark">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        bg: '#0a0a0a',
+        surface1: '#161616',
+        surface2: '#111111',
+        line: '#252525',
+        blue: '#0080ff',
+        green: '#2ecc71',
+        gold: '#ffcc66',
+        muted: '#a2a2a2',
+        dim: '#585858',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'monospace'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0a0a0a;
+    color: #fff;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(0,128,255,0.3); color: #fff; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: #252525; }
+  ::-webkit-scrollbar-thumb:hover { background: #383838; }
+
+  *:focus-visible {
+    outline: 2px solid #0080ff;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .diag-bg {
+    background-color: #0e0e0e;
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 9px);
+  }
+  .mono-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .noscroll::-webkit-scrollbar { display: none; }
+  .noscroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Vertical tab indicator */
+  .tab-item {
+    position: relative;
+    transition: background 0.2s ease;
+  }
+  .tab-item::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: #0080ff;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+  }
+  .tab-item.active::before {
+    transform: scaleY(1);
+  }
+  .tab-item.active {
+    background: #111111;
+  }
+
+  /* Details accordion */
+  details summary::-webkit-details-marker { display: none; }
+  details summary { list-style: none; cursor: pointer; }
+  details .details-icon { transition: transform 0.25s ease; }
+  details[open] .details-icon { transform: rotate(45deg); }
+  details .details-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+  }
+  details[open] .details-body {
+    grid-template-rows: 1fr;
+  }
+  details .details-inner {
+    overflow: hidden;
+  }
+
+  /* Nav scrolled */
+  .nav-blur { transition: background 0.2s; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(20px); }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { transition: opacity .6s ease-out, transform .6s ease-out; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+    * { transition: none !important; }
+  }
+
+  /* Hover button glow */
+  .btn-blue:hover {
+    box-shadow: 0 0 24px -6px rgba(0,128,255,0.55);
+  }
+
+  /* Touch targets */
+  button, a[role="button"], .clickable { min-height: 44px; }
+
+  /* Mobile menu */
+  #mobile-menu { display: none; }
+  #mobile-menu.open { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. NAVBAR ============ -->
+<nav class="sticky top-0 z-50 bg-bg/80 backdrop-blur-md border-b border-line">
+  <div class="max-w-[1200px] mx-auto px-6 h-[72px] flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-3">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-9 h-9 rounded-full object-cover">
+      <span class="font-bold text-[17px] tracking-tight">ResetUI</span>
+    </a>
+
+    <div class="hidden lg:flex items-center gap-8 text-[14px] text-muted">
+      <a href="#use-cases" class="hover:text-white transition-colors">Use Cases</a>
+      <a href="#features" class="hover:text-white transition-colors">Features</a>
+      <a href="#workflow" class="hover:text-white transition-colors">Workflow</a>
+      <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+      <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="#" class="hidden sm:inline-flex items-center px-5 h-11 text-[14px] font-medium text-muted hover:text-white transition-colors">Sign in</a>
+      <a href="#cta" class="btn-blue inline-flex items-center px-5 h-11 bg-blue text-white text-[14px] font-medium rounded-[4px] hover:bg-[#0069d6] transition-colors">Get Started</a>
+      <button id="menu-toggle" aria-label="Open menu" aria-expanded="false" class="lg:hidden w-11 h-11 flex items-center justify-center text-white">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] bg-bg flex-col items-center justify-center gap-8">
+  <button id="menu-close" aria-label="Close menu" class="absolute top-6 right-6 w-11 h-11 flex items-center justify-center border border-line rounded-[4px]">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <a href="#use-cases" class="mobile-link text-2xl font-semibold">Use Cases</a>
+  <a href="#features" class="mobile-link text-2xl font-semibold">Features</a>
+  <a href="#workflow" class="mobile-link text-2xl font-semibold">Workflow</a>
+  <a href="#pricing" class="mobile-link text-2xl font-semibold">Pricing</a>
+  <a href="#faq" class="mobile-link text-2xl font-semibold">FAQ</a>
+  <a href="#cta" class="mobile-link btn-blue bg-blue text-white px-8 h-12 rounded-[4px] font-medium">Get Started</a>
+</div>
+
+<main id="top">
+
+<!-- ============ 2. HERO ============ -->
+<section class="relative pt-20 pb-20 overflow-hidden">
+  <div class="absolute inset-x-0 top-0 h-[600px] pointer-events-none" style="background: radial-gradient(620px 360px at 50% 46%, rgba(0,128,255,0.10), transparent 70%);"></div>
+  <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+    <div class="grid lg:grid-cols-[1fr_630px] gap-10 lg:gap-0 items-center">
+      <div class="flex flex-col gap-8 lg:pr-12 reveal">
+        <div class="inline-flex items-center gap-2 self-start px-3 py-1.5 border border-line rounded-[4px] text-[12px] font-mono uppercase tracking-wider text-muted">
+          <span class="w-1.5 h-1.5 bg-green rounded-full"></span>
+          v1.0.3 - URL capture online
+        </div>
+        <h1 class="text-[44px] sm:text-[56px] lg:text-[64px] font-bold leading-[1.02] tracking-[-0.04em]">
+          Redesign pages<br>faster.
+        </h1>
+        <p class="text-[18px] lg:text-[20px] text-muted leading-relaxed max-w-[520px]">
+          Capture an existing landing page from its URL, add your design direction, and generate a refreshed page you can edit, version, and export as clean front-end code.
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#cta" class="btn-blue inline-flex items-center px-6 h-12 bg-blue text-white text-[15px] font-medium rounded-[4px] hover:bg-[#0069d6] transition-colors">
+            Get Started
+            <svg class="ml-2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#" class="inline-flex items-center px-6 h-12 border border-line text-white text-[15px] font-medium rounded-[4px] hover:bg-white/5 transition-colors">
+            See workflow
+          </a>
+        </div>
+        <div class="flex items-center gap-6 pt-4 text-[13px] text-dim font-mono">
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 5 free credits</span>
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Chat edits</span>
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> HTML export</span>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="h-[360px] rounded-[12px] border border-line diag-bg flex items-center justify-center relative overflow-hidden">
+          <span class="mono-label">ResetUI canvas preview</span>
+          <div class="absolute top-4 left-4 flex gap-1.5">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. LOGO GRID ============ -->
+<section class="border-y border-line py-0">
+  <div class="max-w-[1200px] mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-5">
+      <div class="diag-bg h-[120px] flex items-center justify-center border-r border-t border-line"><span class="mono-label">Vercel</span></div>
+      <div class="diag-bg h-[120px] flex items-center justify-center border-r border-t border-line"><span class="mono-label">Prompt</span></div>
+      <div class="diag-bg h-[120px] flex items-center justify-center border-r border-t border-line"><span class="mono-label">Capture</span></div>
+      <div class="diag-bg h-[120px] flex items-center justify-center border-r border-t border-line"><span class="mono-label">Linear</span></div>
+      <div class="diag-bg h-[120px] flex items-center justify-center border-t border-line"><span class="mono-label">Export</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. USE CASES GRID ============ -->
+<section id="use-cases" class="py-20 lg:py-28 scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="mb-12 reveal">
+      <span class="mono-label block mb-3">/ Use Cases</span>
+      <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em]">Built for every redesign workflow.</h2>
+    </div>
+    <div class="grid md:grid-cols-3 border-t border-line">
+      <div class="p-8 border-t border-line md:border-r md:border-t-0 border-line">
+        <div class="flex flex-col gap-6 mb-8">
+          <span class="mono-label">01</span>
+          <h3 class="text-[20px] font-semibold tracking-tight">Website capture</h3>
+          <p class="text-[15px] text-muted leading-relaxed">Capture source copy, links, calls to action, media, hierarchy, colors, fonts, logo references, and section structure from one URL.</p>
+        </div>
+        <div class="h-[180px] diag-bg rounded-[8px] border border-line flex items-center justify-center">
+          <span class="mono-label">Capture Preview</span>
+        </div>
+      </div>
+      <div class="p-8 border-l border-dashed border-line border-t border-line md:border-t-0">
+        <div class="flex flex-col gap-6 mb-8">
+          <span class="mono-label">02</span>
+          <h3 class="text-[20px] font-semibold tracking-tight">Prompt direction</h3>
+          <p class="text-[15px] text-muted leading-relaxed">Describe the tone, audience, visual system, and structural changes you want, then keep that direction attached to generation.</p>
+        </div>
+        <div class="h-[180px] diag-bg rounded-[8px] border border-line flex items-center justify-center">
+          <span class="mono-label">Prompt Map</span>
+        </div>
+      </div>
+      <div class="p-8 border-l border-dashed border-line border-t border-line md:border-t-0">
+        <div class="flex flex-col gap-6 mb-8">
+          <span class="mono-label">03</span>
+          <h3 class="text-[20px] font-semibold tracking-tight">Version history</h3>
+          <p class="text-[15px] text-muted leading-relaxed">Commit generated design states, compare directions, undo, redo, and restore previous versions whenever a direction gets too far away.</p>
+        </div>
+        <div class="h-[180px] diag-bg rounded-[8px] border border-line flex items-center justify-center">
+          <span class="mono-label">Version Tree</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. VERTICAL TABS FEATURE ============ -->
+<section id="features" class="py-20 lg:py-28 scroll-mt-20 border-t border-line">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="mb-12 reveal">
+      <span class="mono-label block mb-3">/ Features</span>
+      <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em]">Everything you need to redesign.</h2>
+    </div>
+
+    <div class="grid lg:grid-cols-[380px_1fr] gap-0 border border-line rounded-[12px] overflow-hidden">
+      <!-- Tabs -->
+      <div class="border-r border-line flex flex-col">
+        <button class="tab-item active text-left px-6 py-5 border-b border-line" data-tab="0">
+          <div class="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0080ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span class="font-semibold text-[15px]">URL capture</span>
+          </div>
+          <p class="text-[13px] text-muted mt-2 ml-[30px]">Rendered page context and assets</p>
+        </button>
+        <button class="tab-item text-left px-6 py-5 border-b border-line" data-tab="1">
+          <div class="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a2a2a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span class="font-semibold text-[15px]">Live generation</span>
+          </div>
+          <p class="text-[13px] text-muted mt-2 ml-[30px]">Section-by-section page streaming</p>
+        </button>
+        <button class="tab-item text-left px-6 py-5 border-b border-line" data-tab="2">
+          <div class="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a2a2a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span class="font-semibold text-[15px]">Project-aware chat</span>
+          </div>
+          <p class="text-[13px] text-muted mt-2 ml-[30px]">Target sections without losing context</p>
+        </button>
+        <button class="tab-item text-left px-6 py-5" data-tab="3">
+          <div class="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a2a2a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span class="font-semibold text-[15px]">Clean export</span>
+          </div>
+          <p class="text-[13px] text-muted mt-2 ml-[30px]">Standalone HTML, ready to hand off</p>
+        </button>
+      </div>
+
+      <!-- Panel -->
+      <div class="bg-surface2 min-h-[400px] p-6 lg:p-8">
+        <div class="flex items-center gap-2 mb-5 pb-4 border-b border-line">
+          <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+          <span class="ml-3 mono-label">canvas.resetui.app</span>
+        </div>
+        <div class="tab-panel" data-panel="0">
+          <div class="h-[340px] diag-bg rounded-[8px] flex items-center justify-center mb-5">
+            <span class="mono-label">URL capture Interface</span>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="p-4 border border-line rounded-[8px]">
+              <div class="mono-label mb-2">Capture</div>
+              <div class="text-[20px] font-bold text-blue">URL</div>
+            </div>
+            <div class="p-4 border border-line rounded-[8px]">
+              <div class="mono-label mb-2">Sections</div>
+              <div class="text-[20px] font-bold">Mapped</div>
+            </div>
+            <div class="p-4 border border-line rounded-[8px]">
+              <div class="mono-label mb-2">Context</div>
+              <div class="text-[20px] font-bold">Ready</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. HORIZONTAL ABROLLING RAILS ============ -->
+<section class="py-20 lg:py-28 border-t border-line">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <!-- Benefits Rail -->
+    <div class="mb-16 reveal">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <span class="mono-label block mb-3">/ Benefits</span>
+          <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em]">Why builders choose ResetUI.</h2>
+        </div>
+        <div class="flex gap-2">
+          <button class="rail-prev w-11 h-11 rounded-full border border-line flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Previous">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button class="rail-next w-11 h-11 rounded-full border border-line flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Next">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="rail-container noscroll overflow-x-auto snap-x snap-mandatory flex gap-4 pb-2">
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] overflow-hidden bg-surface2">
+          <div class="h-[200px] diag-bg flex items-center justify-center"><span class="mono-label">Benefit 01</span></div>
+          <div class="p-6">
+            <h3 class="text-[18px] font-semibold mb-2">Instant Captures</h3>
+            <p class="text-[14px] text-muted leading-relaxed">Begin with the current page, not a blank prompt, so copy, CTAs, links, media, and intent stay available.</p>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] overflow-hidden bg-surface2">
+          <div class="h-[200px] diag-bg flex items-center justify-center"><span class="mono-label">Benefit 02</span></div>
+          <div class="p-6">
+            <h3 class="text-[18px] font-semibold mb-2">HTML export Network</h3>
+            <p class="text-[14px] text-muted leading-relaxed">Turn a design direction into a full landing-page pass with section planning, skeletons, and generated HTML.</p>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] overflow-hidden bg-surface2">
+          <div class="h-[200px] diag-bg flex items-center justify-center"><span class="mono-label">Benefit 03</span></div>
+          <div class="p-6">
+            <h3 class="text-[18px] font-semibold mb-2">Targeted chat edits</h3>
+            <p class="text-[14px] text-muted leading-relaxed">Ask for precise edits, additions, or explanations while the page map and current design stay attached.</p>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] overflow-hidden bg-surface2">
+          <div class="h-[200px] diag-bg flex items-center justify-center"><span class="mono-label">Benefit 04</span></div>
+          <div class="p-6">
+            <h3 class="text-[18px] font-semibold mb-2">Committed versions</h3>
+            <p class="text-[14px] text-muted leading-relaxed">Every edit, generated section, and committed version stays traceable inside the project.</p>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] overflow-hidden bg-surface2">
+          <div class="h-[200px] diag-bg flex items-center justify-center"><span class="mono-label">Benefit 05</span></div>
+          <div class="p-6">
+            <h3 class="text-[18px] font-semibold mb-2">Export without lock-in</h3>
+            <p class="text-[14px] text-muted leading-relaxed">Network policies, secrets management, and audit logs — configured by default, not by ticket.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials Rail -->
+    <div class="reveal">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <span class="mono-label block mb-3">/ Testimonials</span>
+          <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em]">Used for redesigns.</h2>
+        </div>
+        <div class="flex gap-2">
+          <button class="rail-prev-2 w-11 h-11 rounded-full border border-line flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Previous">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button class="rail-next-2 w-11 h-11 rounded-full border border-line flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Next">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="rail-container-2 noscroll overflow-x-auto snap-x snap-mandatory flex gap-4 pb-2">
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] p-6 bg-surface2 flex flex-col">
+          <p class="text-[15px] leading-relaxed mb-6 flex-1">"ResetUI gave us a redesign that still understood the original page. The copy and CTAs stayed grounded while the visual system felt new."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-line">
+            <div class="w-10 h-10 rounded-full bg-blue/20 flex items-center justify-center font-semibold text-blue">AB</div>
+            <div>
+              <div class="text-[14px] font-semibold">Advanced_Breakfast83</div>
+              <div class="text-[12px] text-muted">Reddit / Builder</div>
+            </div>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] p-6 bg-surface2 flex flex-col">
+          <p class="text-[15px] leading-relaxed mb-6 flex-1">"The URL capture made the first draft feel specific instead of generic. I could request section edits because the canvas knew the page."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-line">
+            <div class="w-10 h-10 rounded-full bg-green/20 flex items-center justify-center font-semibold text-green">SF</div>
+            <div>
+              <div class="text-[14px] font-semibold">SaaS Founder</div>
+              <div class="text-[12px] text-muted">Beta Workflow</div>
+            </div>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] p-6 bg-surface2 flex flex-col">
+          <p class="text-[15px] leading-relaxed mb-6 flex-1">"Chat edits stayed targeted because ResetUI kept the page map, source context, and generated design in one place."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-line">
+            <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center font-semibold text-gold">PD</div>
+            <div>
+              <div class="text-[14px] font-semibold">Product Designer</div>
+              <div class="text-[12px] text-muted">Landing Page Sprint</div>
+            </div>
+          </div>
+        </div>
+        <div class="snap-start shrink-0 w-[300px] md:w-[392px] border border-line rounded-[12px] p-6 bg-surface2 flex flex-col">
+          <p class="text-[15px] leading-relaxed mb-6 flex-1">"Export gave us standalone HTML we could inspect, edit, and hand off immediately. Version history made exploration safer."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-line">
+            <div class="w-10 h-10 rounded-full bg-blue/20 flex items-center justify-center font-semibold text-blue">FL</div>
+            <div>
+              <div class="text-[14px] font-semibold">Frontend Lead</div>
+              <div class="text-[12px] text-muted">Code Export</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. WORKFLOW GRID ============ -->
+<section id="workflow" class="py-20 lg:py-28 border-t border-line scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="mb-12 reveal">
+      <span class="mono-label block mb-3">/ Workflow</span>
+      <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em]">From URL to export in minutes.</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-0 border border-line rounded-[12px] overflow-hidden">
+      <div class="border-r border-line">
+        <div class="h-[220px] diag-bg flex items-center justify-center border-b border-line"><span class="mono-label">Step 01</span></div>
+        <div class="p-6">
+          <span class="mono-label block mb-2">STEP 01</span>
+          <h3 class="text-[18px] font-semibold mb-2">Capture</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Paste a public URL and let ResetUI render the page, extract content, and map the section hierarchy.</p>
+        </div>
+      </div>
+      <div class="border-r border-line">
+        <div class="h-[220px] diag-bg flex items-center justify-center border-b border-line"><span class="mono-label">Step 02</span></div>
+        <div class="p-6">
+          <span class="mono-label block mb-2">STEP 02</span>
+          <h3 class="text-[18px] font-semibold mb-2">Direct</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Describe the redesign direction, visual tone, audience, and sections you want improved.</p>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="p-6 border-b border-l border-dashed border-line flex-1">
+          <span class="mono-label block mb-2">STEP 03</span>
+          <h3 class="text-[18px] font-semibold mb-2">Generate</h3>
+          <p class="text-[14px] text-muted leading-relaxed">One command ships to the edge. Live generation handles traffic spikes.</p>
+        </div>
+        <div class="p-6 border-l border-dashed border-line flex-1">
+          <span class="mono-label block mb-2">STEP 04</span>
+          <h3 class="text-[18px] font-semibold mb-2">Export</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Use chat edits and version history, then export clean standalone HTML.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. NESTED BROWSER MOCKUP ============ -->
+<section class="py-20 lg:py-28 border-t border-line">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="text-center mb-12 reveal">
+      <span class="mono-label block mb-3">/ Platform</span>
+      <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em]">One workspace. Total context.</h2>
+    </div>
+
+    <div class="rounded-[12px] border border-line overflow-hidden bg-surface2 reveal">
+      <!-- Browser top bar -->
+      <div class="flex items-center gap-2 px-4 h-10 border-b border-line bg-bg">
+        <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+        <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+        <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+        <div class="ml-4 flex-1 max-w-[400px] h-6 bg-surface1 rounded-[4px] flex items-center px-3">
+          <span class="mono-label">app.resetui.dev/project</span>
+        </div>
+      </div>
+
+      <!-- Main visual -->
+      <div class="h-[280px] diag-bg flex items-center justify-center border-b border-line">
+        <span class="mono-label">ResetUI Project Canvas</span>
+      </div>
+
+      <!-- Bento sub-features -->
+      <div class="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-line">
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0080ff" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span class="mono-label">Canvas</span>
+          </div>
+          <h3 class="text-[16px] font-semibold mb-2">Live sections</h3>
+          <p class="text-[13px] text-muted mb-4 leading-relaxed">Capture, generation, chat edits, and export progress stay visible in one project view.</p>
+          <a href="#" class="text-blue text-[13px] font-medium inline-flex items-center gap-1 hover:underline">Get Started <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0080ff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="mono-label">Versions</span>
+          </div>
+          <h3 class="text-[16px] font-semibold mb-2">Design history</h3>
+          <p class="text-[13px] text-muted mb-4 leading-relaxed">Undo, redo, and restore committed redesign states as you explore.</p>
+          <a href="#" class="text-blue text-[13px] font-medium inline-flex items-center gap-1 hover:underline">Get Started <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0080ff" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span class="mono-label">Export</span>
+          </div>
+          <h3 class="text-[16px] font-semibold mb-2">Clean code</h3>
+          <p class="text-[13px] text-muted mb-4 leading-relaxed">Download standalone HTML with generated sections and metadata.</p>
+          <a href="#" class="text-blue text-[13px] font-medium inline-flex items-center gap-1 hover:underline">Get Started <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. PRICING ============ -->
+<section id="pricing" class="py-20 lg:py-28 border-t border-line scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="text-center mb-10 reveal">
+      <span class="mono-label block mb-3">/ Pricing</span>
+      <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em] mb-6">Credits for every redesign.</h2>
+      <div class="inline-flex items-center gap-1 p-1 border border-line rounded-[6px]">
+        <button id="btn-monthly" class="px-5 h-9 text-[13px] font-medium rounded-[4px] bg-surface1 text-white transition-colors">Monthly</button>
+        <button id="btn-yearly" class="px-5 h-9 text-[13px] font-medium rounded-[4px] text-muted hover:text-white transition-colors flex items-center gap-2">
+          Yearly
+          <span class="bg-green/15 text-green text-[10px] font-mono px-1.5 py-0.5 rounded">-20%</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 max-w-[800px] mx-auto reveal">
+      <!-- Starter -->
+      <div class="border border-line rounded-[12px] p-8 bg-surface2 flex flex-col">
+        <div class="mb-6">
+          <h3 class="text-[20px] font-semibold mb-1">Starter</h3>
+          <p class="text-[14px] text-muted">For solo builders trying their first redesign.</p>
+        </div>
+        <div class="mb-6">
+          <span class="text-[40px] font-bold tracking-tight price" data-monthly="$0" data-yearly="$0">$0</span>
+          <span class="text-[14px] text-muted">/mo</span>
+        </div>
+        <a href="#cta" class="inline-flex items-center justify-center h-11 border border-line text-white text-[14px] font-medium rounded-[4px] hover:bg-white/5 transition-colors mb-8">Get Started</a>
+        <ul class="space-y-4 flex-1">
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">5 free credits</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">URL capture workflow</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">Chat edits included</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">HTML export preview</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="border border-blue rounded-[12px] p-8 bg-surface2 flex flex-col relative">
+        <div class="absolute -top-3 left-8 px-3 py-1 bg-blue text-white text-[11px] font-mono uppercase tracking-wider rounded-[4px]">Popular</div>
+        <div class="mb-6">
+          <h3 class="text-[20px] font-semibold mb-1">Pro</h3>
+          <p class="text-[14px] text-muted">For builders who need more redesigns and exports.</p>
+        </div>
+        <div class="mb-6">
+          <span class="text-[40px] font-bold tracking-tight price" data-monthly="$19" data-yearly="$15">$19</span>
+          <span class="text-[14px] text-muted">/mo</span>
+        </div>
+        <a href="#cta" class="btn-blue inline-flex items-center justify-center h-11 bg-blue text-white text-[14px] font-medium rounded-[4px] hover:bg-[#0069d6] transition-colors mb-8">Get Started</a>
+        <ul class="space-y-4 flex-1">
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">100 monthly credits</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">Unlimited projects</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">Priority support</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">Full version history</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-[14px]">Clean HTML export</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. FAQ & CTA FOOTER ============ -->
+<section id="faq" class="py-20 lg:py-28 border-t border-line scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="grid lg:grid-cols-[400px_1fr] gap-12 lg:gap-20">
+      <!-- Left sticky -->
+      <div class="lg:sticky lg:top-28 self-start reveal">
+        <span class="mono-label block mb-3">/ FAQ</span>
+        <h2 class="text-[28px] lg:text-[32px] font-bold tracking-[-0.02em] mb-4">Questions, answered.</h2>
+        <p class="text-[15px] text-muted leading-relaxed mb-6">Everything you might want to know before redesigning from an existing landing page.</p>
+        <a href="#" class="inline-flex items-center gap-2 text-blue text-[14px] font-medium hover:underline">
+          Contact support
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Right accordion -->
+      <div class="reveal">
+        <details class="border-t border-line group">
+          <summary class="flex items-center justify-between py-5">
+            <span class="text-[16px] font-semibold">How does ResetUI capture an existing page?</span>
+            <span class="details-icon w-5 h-5 relative shrink-0">
+              <span class="absolute top-1/2 left-0 w-full h-[1.5px] bg-white -translate-y-1/2"></span>
+              <span class="absolute top-0 left-1/2 h-full w-[1.5px] bg-white -translate-x-1/2"></span>
+            </span>
+          </summary>
+          <div class="details-body">
+            <div class="details-inner">
+              <p class="text-[14px] text-muted leading-relaxed pb-5 pr-8">Paste a public URL. ResetUI renders the page and extracts copy, calls to action, links, media, brand colors, typography, logo references, and section structure.</p>
+            </div>
+          </div>
+        </details>
+        <details class="border-t border-line group">
+          <summary class="flex items-center justify-between py-5">
+            <span class="text-[16px] font-semibold">Can I edit the generated design?</span>
+            <span class="details-icon w-5 h-5 relative shrink-0">
+              <span class="absolute top-1/2 left-0 w-full h-[1.5px] bg-white -translate-y-1/2"></span>
+              <span class="absolute top-0 left-1/2 h-full w-[1.5px] bg-white -translate-x-1/2"></span>
+            </span>
+          </summary>
+          <div class="details-body">
+            <div class="details-inner">
+              <p class="text-[14px] text-muted leading-relaxed pb-5 pr-8">Yes. Use project-aware chat for targeted section changes, new sections, or explanations, with undo, redo, and version history for committed design states.</p>
+            </div>
+          </div>
+        </details>
+        <details class="border-t border-line group">
+          <summary class="flex items-center justify-between py-5">
+            <span class="text-[16px] font-semibold">What can I export?</span>
+            <span class="details-icon w-5 h-5 relative shrink-0">
+              <span class="absolute top-1/2 left-0 w-full h-[1.5px] bg-white -translate-y-1/2"></span>
+              <span class="absolute top-0 left-1/2 h-full w-[1.5px] bg-white -translate-x-1/2"></span>
+            </span>
+          </summary>
+          <div class="details-body">
+            <div class="details-inner">
+              <p class="text-[14px] text-muted leading-relaxed pb-5 pr-8">Export creates a standalone HTML document with generated sections, metadata, smooth anchors, and static behavior so the page can run outside ResetUI.</p>
+            </div>
+          </div>
+        </details>
+        <details class="border-t border-line group">
+          <summary class="flex items-center justify-between py-5">
+            <span class="text-[16px] font-semibold">How do credits work?</span>
+            <span class="details-icon w-5 h-5 relative shrink-0">
+              <span class="absolute top-1/2 left-0 w-full h-[1.5px] bg-white -translate-y-1/2"></span>
+              <span class="absolute top-0 left-1/2 h-full w-[1.5px] bg-white -translate-x-1/2"></span>
+            </span>
+          </summary>
+          <div class="details-body">
+            <div class="details-inner">
+              <p class="text-[14px] text-muted leading-relaxed pb-5 pr-8">Generation, chat edits, and export use credits. Free users start with 5 credits, and Pro users receive 100 monthly credits.</p>
+            </div>
+          </div>
+        </details>
+        <details class="border-t border-b border-line group">
+          <summary class="flex items-center justify-between py-5">
+            <span class="text-[16px] font-semibold">Does ResetUI support multi-page sites?</span>
+            <span class="details-icon w-5 h-5 relative shrink-0">
+              <span class="absolute top-1/2 left-0 w-full h-[1.5px] bg-white -translate-y-1/2"></span>
+              <span class="absolute top-0 left-1/2 h-full w-[1.5px] bg-white -translate-x-1/2"></span>
+            </span>
+          </summary>
+          <div class="details-body">
+            <div class="details-inner">
+              <p class="text-[14px] text-muted leading-relaxed pb-5 pr-8">The current product centers on landing-page redesigns. Multi-page design, deployment, watermarking, and mobile previews are planned future work.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Block -->
+<section id="cta" class="py-20 lg:py-28 border-t border-line scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="relative border border-line rounded-[12px] overflow-hidden reveal">
+      <div class="absolute inset-x-0 top-0 h-[400px] pointer-events-none" style="background: radial-gradient(500px 260px at 50% 0%, rgba(0,128,255,0.12), transparent 70%);"></div>
+      <div class="relative z-10 py-16 lg:py-20 px-6 text-center">
+        <h2 class="text-[32px] lg:text-[44px] font-bold tracking-[-0.03em] mb-5">Redesign your next page today.</h2>
+        <p class="text-[16px] lg:text-[18px] text-muted mb-8 max-w-[480px] mx-auto">Start with free credits. Paste a URL, describe the direction, and generate your first redesigned landing page.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href="#" class="btn-blue inline-flex items-center px-6 h-12 bg-blue text-white text-[15px] font-medium rounded-[4px] hover:bg-[#0069d6] transition-colors">
+            Get Started
+            <svg class="ml-2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#" class="inline-flex items-center px-6 h-12 border border-line text-white text-[15px] font-medium rounded-[4px] hover:bg-white/5 transition-colors">See workflow</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-line py-16">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+      <div class="col-span-2">
+        <a href="#top" class="flex items-center gap-3 mb-5">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-9 h-9 rounded-full object-cover">
+          <span class="font-bold text-[17px]">ResetUI</span>
+        </a>
+        <p class="text-[14px] text-muted leading-relaxed max-w-[280px] mb-6">ResetUI captures an existing landing page, applies your design direction, and exports clean front-end code.</p>
+        <div class="flex gap-3">
+          <a href="#" aria-label="GitHub" class="w-10 h-10 rounded-full border border-line flex items-center justify-center text-muted hover:text-white hover:border-white transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a href="#" aria-label="Twitter" class="w-10 h-10 rounded-full border border-line flex items-center justify-center text-muted hover:text-white hover:border-white transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" aria-label="Discord" class="w-10 h-10 rounded-full border border-line flex items-center justify-center text-muted hover:text-white hover:border-white transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="mono-label mb-4">Product</h4>
+        <ul class="space-y-3">
+          <li><a href="#features" class="text-[14px] text-muted hover:text-white transition-colors">Features</a></li>
+          <li><a href="#workflow" class="text-[14px] text-muted hover:text-white transition-colors">Workflow</a></li>
+          <li><a href="#pricing" class="text-[14px] text-muted hover:text-white transition-colors">Pricing</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Changelog</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Roadmap</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mono-label mb-4">Resources</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">See workflow</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">API Reference</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Quickstart</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Status</a></li>
+          <li><a href="#faq" class="text-[14px] text-muted hover:text-white transition-colors">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mono-label mb-4">Company</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">About</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Careers</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Blog</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Privacy</a></li>
+          <li><a href="#" class="text-[14px] text-muted hover:text-white transition-colors">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-line mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-[12px] text-dim font-mono">(c) 2026 ResetUI. All rights reserved.</p>
+      <p class="text-[12px] text-dim font-mono">URL capture / AI redesign / Code export</p>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  // Mobile menu
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuClose = document.getElementById('menu-close');
+
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    menuToggle.setAttribute('aria-expanded', 'true');
+  });
+  menuClose.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+    menuToggle.setAttribute('aria-expanded', 'false');
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Vertical tabs
+  const tabItems = document.querySelectorAll('.tab-item');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+
+  const tabData = [
+    {
+      label: 'URL capture Interface',
+      metrics: [
+        { label: 'Capture', value: 'URL', color: 'text-blue' },
+        { label: 'Sections', value: 'Mapped', color: '' },
+        { label: 'Context', value: 'Ready', color: '' }
+      ]
+    },
+    {
+      label: 'Live generation Dashboard',
+      metrics: [
+        { label: 'Plan', value: 'Live', color: 'text-blue' },
+        { label: 'Canvas', value: 'Streaming', color: '' },
+        { label: 'Output', value: 'Responsive', color: '' }
+      ]
+    },
+    {
+      label: 'Project-aware chat Router',
+      metrics: [
+        { label: 'Chat', value: 'Targeted', color: 'text-blue' },
+        { label: 'Versions', value: 'Saved', color: '' },
+        { label: 'Context', value: 'Attached', color: '' }
+      ]
+    },
+    {
+      label: 'HTML export preview',
+      metrics: [
+        { label: 'Export', value: 'HTML', color: 'text-blue' },
+        { label: 'Metadata', value: 'Ready', color: '' },
+        { label: 'Handoff', value: 'Clean', color: '' }
+      ]
+    }
+  ];
+
+  function renderTab(idx) {
+    const panel = document.querySelector('.tab-panel');
+    const data = tabData[idx];
+    panel.innerHTML = `
+      <div class="h-[340px] diag-bg rounded-[8px] flex items-center justify-center mb-5">
+        <span class="mono-label">${data.label}</span>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        ${data.metrics.map(m => `
+          <div class="p-4 border border-line rounded-[8px]">
+            <div class="mono-label mb-2">${m.label}</div>
+            <div class="text-[20px] font-bold ${m.color}">${m.value}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  tabItems.forEach((tab, idx) => {
+    tab.addEventListener('click', () => {
+      tabItems.forEach(t => {
+        t.classList.remove('active');
+        const svg = t.querySelector('svg');
+        if (svg) svg.setAttribute('stroke', '#a2a2a2');
+      });
+      tab.classList.add('active');
+      const svg = tab.querySelector('svg');
+      if (svg) svg.setAttribute('stroke', '#0080ff');
+      renderTab(idx);
+    });
+  });
+
+  // Horizontal rail navigation
+  document.querySelectorAll('.rail-next').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const container = btn.closest('section').querySelector('.rail-container');
+      container.scrollBy({ left: 408, behavior: 'smooth' });
+    });
+  });
+  document.querySelectorAll('.rail-prev').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const container = btn.closest('section').querySelector('.rail-container');
+      container.scrollBy({ left: -408, behavior: 'smooth' });
+    });
+  });
+  document.querySelectorAll('.rail-next-2').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const container = btn.closest('section').querySelector('.rail-container-2');
+      container.scrollBy({ left: 408, behavior: 'smooth' });
+    });
+  });
+  document.querySelectorAll('.rail-prev-2').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const container = btn.closest('section').querySelector('.rail-container-2');
+      container.scrollBy({ left: -408, behavior: 'smooth' });
+    });
+  });
+
+  // Pricing toggle
+  const btnMonthly = document.getElementById('btn-monthly');
+  const btnYearly = document.getElementById('btn-yearly');
+
+  function setBilling(isYearly) {
+    if (isYearly) {
+      btnYearly.classList.add('bg-surface1', 'text-white');
+      btnYearly.classList.remove('text-muted');
+      btnMonthly.classList.remove('bg-surface1', 'text-white');
+      btnMonthly.classList.add('text-muted');
+    } else {
+      btnMonthly.classList.add('bg-surface1', 'text-white');
+      btnMonthly.classList.remove('text-muted');
+      btnYearly.classList.remove('bg-surface1', 'text-white');
+      btnYearly.classList.add('text-muted');
+    }
+    document.querySelectorAll('.price').forEach(el => {
+      const val = isYearly ? el.dataset.yearly : el.dataset.monthly;
+      if (val) el.textContent = val;
+    });
+  }
+  btnMonthly.addEventListener('click', () => setBilling(false));
+  btnYearly.addEventListener('click', () => setBilling(true));
+
+  // Reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>

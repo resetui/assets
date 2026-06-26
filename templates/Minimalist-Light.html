@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Monochrome | Light</title>
+<meta name="description" content="ResetUI captures an existing landing page, applies your design direction, and exports clean production-ready HTML.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #000000;
+    --white: #FFFFFF;
+    --muted: #F5F5F5;
+    --muted-fg: #525252;
+    --border-light: #E5E5E5;
+  }
+
+  * { border-radius: 0 !important; }
+
+  body {
+    font-family: 'Source Serif 4', serif;
+    background-color: var(--white);
+    color: var(--black);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-display { font-family: 'Playfair Display', serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Textures */
+  .texture-h {
+    position: fixed; inset: 0; pointer-events: none; opacity: 0.02; z-index: 100;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, #000 3px, #000 4px);
+  }
+  .noise {
+    position: fixed; inset: 0; pointer-events: none; opacity: 0.03; z-index: 99;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .grid-texture {
+    background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .diagonal-texture {
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0, rgba(0,0,0,0.02) 1px, transparent 1px, transparent 12px);
+  }
+  .dark-vertical-texture {
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.03) 3px, rgba(255,255,255,0.03) 4px);
+  }
+  .radial-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+  }
+
+  /* Focus */
+  *:focus-visible {
+    outline: 3px solid var(--black);
+    outline-offset: 2px;
+  }
+  button:focus-visible, a:focus-visible {
+    outline-offset: 4px;
+  }
+
+  /* Marquee */
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+  .animate-marquee { animation: marquee 50s linear infinite; }
+
+  /* FAQ */
+  .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.1s ease; }
+  .faq-item.open .faq-content { max-height: 300px; }
+  .faq-item.open .faq-trigger { background: var(--black); color: var(--white); }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-item.open .faq-plus { display: none; }
+  .faq-item.open .faq-minus { display: block; }
+  .faq-minus { display: none; }
+  .faq-icon { transition: transform 0.1s ease; }
+
+  /* Touch targets */
+  button, a[role="button"] { min-height: 44px; }
+
+  /* Drop cap */
+  .drop-cap::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 4rem;
+    line-height: 0.8;
+    float: left;
+    margin: 0.25rem 0.5rem 0 0;
+    padding: 0.5rem;
+    border: 2px solid var(--black);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee { animation: none; }
+    * { transition: none !important; }
+  }
+
+  ::selection { background: var(--black); color: var(--white); }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--white); }
+  ::-webkit-scrollbar-thumb { background: var(--black); }
+</style>
+</head>
+<body>
+
+<div class="texture-h" aria-hidden="true"></div>
+<div class="noise" aria-hidden="true"></div>
+
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[200] focus:bg-black focus:text-white focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:tracking-widest">Skip to content</a>
+
+<!-- 1. Navbar — "Masthead" -->
+<header class="border-b-4 border-black sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
+  <nav class="flex items-center justify-between px-4 sm:px-6 py-5 max-w-[1200px] mx-auto">
+    <a class="font-display text-2xl sm:text-3xl tracking-tighter flex items-center gap-3" href="#top"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">ResetUI</a>
+    <div class="hidden md:flex gap-12 font-mono text-xs tracking-widest items-center">
+      <a href="#features" class="hover:underline underline-offset-4">FEATURES</a>
+      <a href="#benefits" class="hover:underline underline-offset-4">WORKFLOW</a>
+      <a href="#journal" class="hover:underline underline-offset-4">NOTES</a>
+      <a href="#pricing" class="hover:underline underline-offset-4">PRICING</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="hidden md:inline-flex items-center bg-black text-white px-8 py-3 text-xs tracking-widest uppercase transition-colors duration-100 hover:bg-white hover:text-black hover:outline hover:outline-2 hover:outline-black h-11">
+        Start free ->
+      </button>
+      <button id="menu-toggle" aria-label="Open menu" class="md:hidden p-3 border border-black h-11 w-11 flex items-center justify-center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="fixed inset-0 bg-white z-[100] hidden flex-col items-center justify-center">
+  <button id="menu-close" aria-label="Close menu" class="absolute top-6 right-6 p-4 border border-black h-12 w-12 flex items-center justify-center">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <nav class="flex flex-col items-center gap-8">
+    <a href="#features" class="mobile-link font-display text-5xl">Features</a>
+    <a href="#benefits" class="mobile-link font-display text-5xl">Workflow</a>
+    <a href="#journal" class="mobile-link font-display text-5xl">Notes</a>
+    <a href="#pricing" class="mobile-link font-display text-5xl">Pricing</a>
+  </nav>
+</div>
+
+<main id="main">
+
+<!-- 2. Hero — "Editorial cover" -->
+<section class="border-b-4 border-black py-20 sm:py-32 relative" id="top">
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <p class="font-mono text-xs tracking-[0.2em] mb-8 sm:mb-12">A STUDY IN LANDING-PAGE REDESIGN</p>
+    <h1 class="font-display text-[clamp(3.5rem,12vw,10rem)] leading-none tracking-tighter">
+      The architecture of <em>reset</em>.
+    </h1>
+    <div class="flex items-center gap-4 my-10 sm:my-12">
+      <span class="h-1 w-20 sm:w-40 bg-black"></span>
+      <span class="h-4 w-4 border-2 border-black"></span>
+    </div>
+    <p class="text-lg sm:text-xl max-w-xl leading-relaxed">ResetUI captures your existing landing page, applies your design direction, and generates an editable page you can export as clean HTML.</p>
+    <div class="flex flex-wrap gap-4 mt-10">
+      <button class="bg-black text-white px-6 sm:px-8 py-3 text-sm tracking-widest uppercase transition-colors duration-100 hover:bg-white hover:text-black hover:outline hover:outline-2 hover:outline-black h-12">
+        Start free ->
+      </button>
+      <button class="bg-transparent text-black px-6 sm:px-8 py-3 text-sm tracking-widest uppercase outline outline-2 outline-black transition-colors duration-100 hover:bg-black hover:text-white h-12">
+        View workflow
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Logo brands marquee — "Editorial ledger" -->
+<section class="border-b-4 border-black py-8 overflow-hidden">
+  <p class="font-mono text-[10px] tracking-widest text-center mb-6">RESETUI FLOW</p>
+  <div class="flex overflow-hidden whitespace-nowrap">
+    <div class="animate-marquee flex shrink-0 items-center gap-16 pr-16">
+      <span class="font-display text-3xl tracking-tight">URL</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">PROMPT</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">CANVAS</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">CHAT</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">EXPORT</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">VERSIONS</span>
+      <span class="font-mono text-xl">|</span>
+    </div>
+    <div class="animate-marquee flex shrink-0 items-center gap-16 pr-16" aria-hidden="true">
+      <span class="font-display text-3xl tracking-tight">URL</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">PROMPT</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">CANVAS</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">CHAT</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">EXPORT</span>
+      <span class="font-mono text-xl">|</span>
+      <span class="font-display text-3xl tracking-tight">VERSIONS</span>
+      <span class="font-mono text-xl">|</span>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Features bento — "Bordered editorial grid" -->
+<section id="features" class="border-b-4 border-black py-20 sm:py-32 grid-texture">
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-4xl sm:text-6xl tracking-tighter mb-12">Features</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 border-2 border-black">
+      <!-- 2x2 -->
+      <div class="md:col-span-2 md:row-span-2 p-8 border-b-2 md:border-b-2 md:border-r-2 border-black hover:bg-black hover:text-white transition-colors duration-100 cursor-pointer flex flex-col justify-between min-h-[300px] md:min-h-[400px]">
+        <span class="font-mono text-sm">01</span>
+        <div>
+          <h3 class="font-display text-3xl sm:text-5xl mb-4">URL Capture Intelligence</h3>
+          <p class="text-base sm:text-lg">Capture copy, links, media, hierarchy, colors, fonts, and brand signals from an existing landing page.</p>
+        </div>
+      </div>
+      <!-- 1x1 -->
+      <div class="p-8 border-b-2 border-black hover:bg-black hover:text-white transition-colors duration-100 cursor-pointer flex flex-col justify-between min-h-[200px]">
+        <span class="font-mono text-sm">02</span>
+        <div>
+          <h3 class="font-display text-2xl mb-2">Section Systems</h3>
+          <p class="text-sm">Full-page sections generated instantly.</p>
+        </div>
+      </div>
+      <!-- 1x1 -->
+      <div class="p-8 border-b-2 md:border-b-0 border-black hover:bg-black hover:text-white transition-colors duration-100 cursor-pointer flex flex-col justify-between min-h-[200px]">
+        <span class="font-mono text-sm">03</span>
+        <div>
+          <h3 class="font-display text-2xl mb-2">Prompt Sync</h3>
+          <p class="text-sm">Chat edits that keep project context.</p>
+        </div>
+      </div>
+      <!-- 2x1 -->
+      <div class="md:col-span-2 p-8 md:border-r-2 border-black hover:bg-black hover:text-white transition-colors duration-100 cursor-pointer flex flex-col justify-between min-h-[200px]">
+        <span class="font-mono text-sm">04</span>
+        <div>
+          <h3 class="font-display text-2xl mb-2">Version Engine</h3>
+          <p class="text-sm">Committed directions, visual comparison, and rollback.</p>
+        </div>
+      </div>
+      <!-- 1x1 -->
+      <div class="p-8 hover:bg-black hover:text-white transition-colors duration-100 cursor-pointer flex flex-col justify-between min-h-[200px]">
+        <span class="font-mono text-sm">05</span>
+        <div>
+          <h3 class="font-display text-2xl mb-2">Clean Export</h3>
+          <p class="text-sm">Standalone HTML ready for handoff.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Benefits - ResetUI outcomes -->
+<section id="benefits" class="border-b-4 border-black py-20 sm:py-32">
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-12 md:gap-24">
+    <div class="md:sticky md:top-32 self-start">
+      <p class="font-mono text-xs tracking-widest mb-6">/ MANIFESTO</p>
+      <h2 class="font-display text-4xl sm:text-6xl leading-tight tracking-tighter">
+        <em>Context</em> is the<br>fastest path to<br>a better page.
+      </h2>
+    </div>
+    <div class="space-y-12">
+      <div class="border-b border-[#E5E5E5] pb-8">
+        <div class="flex gap-6">
+          <span class="font-display text-6xl leading-none">1</span>
+          <div>
+            <h3 class="font-display text-2xl mb-2">Context in every section.</h3>
+            <p class="text-lg text-justify drop-cap">ResetUI starts with the source page, so the new direction preserves useful copy, structure, and intent while improving the visual system.</p>
+          </div>
+        </div>
+      </div>
+      <div class="border-b border-[#E5E5E5] pb-8">
+        <div class="flex gap-6">
+          <span class="font-display text-6xl leading-none">2</span>
+          <div>
+            <h3 class="font-display text-2xl mb-2">Editable by default.</h3>
+            <p class="text-lg text-justify">Each generated page stays editable through chat, versions, and section-level refinement instead of becoming a disposable mockup.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="flex gap-6">
+          <span class="font-display text-6xl leading-none">3</span>
+          <div>
+            <h3 class="font-display text-2xl mb-2">Built for handoff.</h3>
+            <p class="text-lg text-justify">Export clean standalone HTML that your team can inspect, host, customize, or hand off without platform lock-in.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. How it works — "Vertical editorial timeline" -->
+<section id="how" class="border-b-4 border-black py-20 sm:py-32 diagonal-texture">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-4xl sm:text-6xl tracking-tighter mb-16">The Workflow</h2>
+    <div class="flex flex-col gap-0">
+      <div class="flex gap-6">
+        <div class="flex flex-col items-center">
+          <div class="w-6 h-6 bg-white border-4 border-black z-10 shrink-0"></div>
+          <div class="w-1 flex-grow bg-black my-2"></div>
+        </div>
+        <div class="pb-12">
+          <p class="font-mono text-xs tracking-widest mb-2">STEP 01</p>
+          <h3 class="font-display text-3xl mb-2">Capture</h3>
+          <p class="text-lg">Paste a landing-page URL. ResetUI captures structure, copy, media, and brand signals.</p>
+        </div>
+      </div>
+      <div class="flex gap-6">
+        <div class="flex flex-col items-center">
+          <div class="w-6 h-6 bg-black border-4 border-black z-10 shrink-0"></div>
+          <div class="w-1 flex-grow bg-black my-2"></div>
+        </div>
+        <div class="pb-12">
+          <p class="font-mono text-xs tracking-widest mb-2">STEP 02</p>
+          <h3 class="font-display text-3xl mb-2">Direct</h3>
+          <p class="text-lg">Describe the visual direction, audience, and conversion goal you want the page to follow.</p>
+        </div>
+      </div>
+      <div class="flex gap-6">
+        <div class="flex flex-col items-center">
+          <div class="w-6 h-6 bg-white border-4 border-black z-10 shrink-0"></div>
+          <div class="w-1 flex-grow bg-black my-2"></div>
+        </div>
+        <div class="pb-12">
+          <p class="font-mono text-xs tracking-widest mb-2">STEP 03</p>
+          <h3 class="font-display text-3xl mb-2">Generate</h3>
+          <p class="text-lg">ResetUI generates the redesign section by section in an editable canvas.</p>
+        </div>
+      </div>
+      <div class="flex gap-6">
+        <div class="flex flex-col items-center">
+          <div class="w-6 h-6 bg-white border-4 border-black z-10 shrink-0"></div>
+        </div>
+        <div>
+          <p class="font-mono text-xs tracking-widest mb-2">STEP 04</p>
+          <h3 class="font-display text-3xl mb-2">Export</h3>
+          <p class="text-lg">Export clean HTML and keep versions available for future refinement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Four alternating feature rows — "Mirror spreads" -->
+<section id="spreads" class="border-b-4 border-black">
+  <!-- Row 1 -->
+  <div class="grid md:grid-cols-2 border-b-4 border-black">
+    <div class="border-r-0 md:border-r-4 border-black aspect-[4/3] md:aspect-auto bg-[#F5F5F5] flex items-center justify-center hover:bg-black transition-colors duration-100 cursor-pointer group">
+      <span class="font-display text-[12rem] leading-none text-black group-hover:text-white transition-colors duration-100">01</span>
+    </div>
+    <div class="p-8 sm:p-16 flex flex-col justify-center">
+      <h3 class="font-display text-4xl sm:text-5xl mb-4">URL Capture Intelligence</h3>
+      <p class="font-display italic text-xl mb-8 text-[#525252]">Source-page context, applied.</p>
+      <ul class="divide-y divide-[#E5E5E5]">
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Copy and hierarchy capture</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Media and brand extraction</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Prompt-ready project memory</li>
+      </ul>
+    </div>
+  </div>
+  <!-- Row 2 -->
+  <div class="grid md:grid-cols-2 border-b-4 border-black">
+    <div class="p-8 sm:p-16 flex flex-col justify-center md:order-1 order-2">
+      <h3 class="font-display text-4xl sm:text-5xl mb-4">Section Systems</h3>
+      <p class="font-display italic text-xl mb-8 text-[#525252]">Direct that liberates.</p>
+      <ul class="divide-y divide-[#E5E5E5]">
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Full-page generation</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Responsive structure</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>High-fidelity prompts</li>
+      </ul>
+    </div>
+    <div class="border-l-0 md:border-l-4 border-black aspect-[4/3] md:aspect-auto bg-[#F5F5F5] flex items-center justify-center hover:bg-black transition-colors duration-100 cursor-pointer group md:order-2 order-1">
+      <span class="font-display text-[12rem] leading-none text-black group-hover:text-white transition-colors duration-100">02</span>
+    </div>
+  </div>
+  <!-- Row 3 -->
+  <div class="grid md:grid-cols-2 border-b-4 border-black">
+    <div class="border-r-0 md:border-r-4 border-black aspect-[4/3] md:aspect-auto bg-[#F5F5F5] flex items-center justify-center hover:bg-black transition-colors duration-100 cursor-pointer group">
+      <span class="font-display text-[12rem] leading-none text-black group-hover:text-white transition-colors duration-100">03</span>
+    </div>
+    <div class="p-8 sm:p-16 flex flex-col justify-center">
+      <h3 class="font-display text-4xl sm:text-5xl mb-4">Version Engine</h3>
+      <p class="font-display italic text-xl mb-8 text-[#525252]">Control over direction.</p>
+      <ul class="divide-y divide-[#E5E5E5]">
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Committed page versions</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Direction comparison</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Instant restore</li>
+      </ul>
+    </div>
+  </div>
+  <!-- Row 4 -->
+  <div class="grid md:grid-cols-2">
+    <div class="p-8 sm:p-16 flex flex-col justify-center md:order-1 order-2">
+      <h3 class="font-display text-4xl sm:text-5xl mb-4">Clean Export</h3>
+      <p class="font-display italic text-xl mb-8 text-[#525252]">Export without lock-in.</p>
+      <ul class="divide-y divide-[#E5E5E5]">
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Clean standalone HTML</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Readable sections</li>
+        <li class="py-4 flex gap-4 items-center"><span class="w-3 h-3 bg-black"></span>Easy handoff</li>
+      </ul>
+    </div>
+    <div class="border-l-0 md:border-l-4 border-black aspect-[4/3] md:aspect-auto bg-[#F5F5F5] flex items-center justify-center hover:bg-black transition-colors duration-100 cursor-pointer group md:order-2 order-1">
+      <span class="font-display text-[12rem] leading-none text-black group-hover:text-white transition-colors duration-100">04</span>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Testimonials — "Oversized pull quote" -->
+<section id="testimonials" class="border-b-4 border-black py-20 sm:py-32">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+    <div class="border-t-4 border-b-4 border-black py-12">
+      <span class="font-display text-8xl leading-none block mb-4 opacity-30 hover:opacity-100 transition-opacity duration-100">“</span>
+      <blockquote class="font-display italic text-3xl sm:text-5xl leading-tight mb-8 max-w-4xl mx-auto">
+        ResetUI gave us a redesigned page that kept the original message and finally felt ready to ship.
+      </blockquote>
+      <p class="font-mono text-sm tracking-widest">/ MAYA CHEN, FOUNDER, LAUNCH STUDIO</p>
+    </div>
+    <div class="grid md:grid-cols-2 mt-12 divide-y md:divide-y-0 md:divide-x divide-[#E5E5E5]">
+      <div class="p-8 text-left hover:border-b-4 hover:border-black transition-all duration-100 border-b-2 border-transparent">
+        <p class="font-display italic text-xl mb-4">"A sharper landing page without starting from zero."</p>
+        <p class="font-mono text-xs tracking-widest">/ BUILDER NOTES</p>
+      </div>
+      <div class="p-8 text-left hover:border-b-4 hover:border-black transition-all duration-100 border-b-2 border-transparent">
+        <p class="font-display italic text-xl mb-4">"Clean HTML export made the handoff painless."</p>
+        <p class="font-mono text-xs tracking-widest">/ EXPORT REVIEW</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. Pricing — "Editorial price table" -->
+<section id="pricing" class="border-b-4 border-black py-20 sm:py-32">
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <div class="text-center mb-12">
+      <h2 class="font-display text-4xl sm:text-6xl tracking-tighter">Pricing</h2>
+      <div class="inline-flex mt-8 border-2 border-black">
+        <button id="btn-monthly" class="px-6 py-2 font-mono text-sm tracking-widest bg-black text-white transition-none">MONTHLY</button>
+        <button id="btn-annual" class="px-6 py-2 font-mono text-sm tracking-widest bg-white text-black transition-none">ANNUAL</button>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-3 border-2 border-black items-stretch">
+      <!-- Starter -->
+      <div class="p-8 md:py-12 border-b-2 md:border-b-0 md:border-r-2 border-black flex flex-col justify-between">
+        <div>
+          <p class="font-mono text-xs tracking-widest mb-2">STARTER</p>
+          <p class="font-display text-6xl mb-6">$0</p>
+          <p class="text-sm mb-8">For first-page redesigns.</p>
+        </div>
+        <button class="bg-white text-black outline outline-2 outline-black px-6 py-3 text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-100 h-12 mb-8">Begin</button>
+        <ul class="space-y-4 text-sm">
+          <li class="flex gap-3 items-center border-b border-[#E5E5E5] pb-4"><span class="w-3 h-3 bg-black"></span>3 Projects</li>
+          <li class="flex gap-3 items-center border-b border-[#E5E5E5] pb-4"><span class="w-3 h-3 bg-black"></span>Basic exports</li>
+          <li class="flex gap-3 items-center pb-4"><span class="w-3 h-3 bg-black"></span>Community Support</li>
+        </ul>
+      </div>
+      <!-- Atlas (Featured) -->
+      <div class="p-8 md:py-16 bg-black text-white flex flex-col justify-between relative">
+        <div>
+          <p class="font-mono text-xs tracking-widest mb-2">PRO</p>
+          <p class="font-display text-6xl mb-6">$24</p>
+          <p class="text-sm mb-8">For growing teams.</p>
+        </div>
+        <button class="bg-white text-black px-6 py-3 text-sm tracking-widest uppercase hover:bg-transparent hover:text-white hover:outline hover:outline-2 hover:outline-white transition-colors duration-100 h-12 mb-8">Subscribe</button>
+        <ul class="space-y-4 text-sm">
+          <li class="flex gap-3 items-center border-b border-white/30 pb-4"><span class="w-3 h-3 bg-white"></span>Unlimited Projects</li>
+          <li class="flex gap-3 items-center border-b border-white/30 pb-4"><span class="w-3 h-3 bg-white"></span>Advanced generations</li>
+          <li class="flex gap-3 items-center pb-4"><span class="w-3 h-3 bg-white"></span>Priority Support</li>
+        </ul>
+      </div>
+      <!-- Enterprise -->
+      <div class="p-8 md:py-12 flex flex-col justify-between">
+        <div>
+          <p class="font-mono text-xs tracking-widest mb-2">ENTERPRISE</p>
+          <p class="font-display text-6xl mb-6">Custom</p>
+          <p class="text-sm mb-8">For high-volume teams.</p>
+        </div>
+        <button class="bg-white text-black outline outline-2 outline-black px-6 py-3 text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-100 h-12 mb-8">Enquire</button>
+        <ul class="space-y-4 text-sm">
+          <li class="flex gap-3 items-center border-b border-[#E5E5E5] pb-4"><span class="w-3 h-3 bg-black"></span>Dedicated support</li>
+          <li class="flex gap-3 items-center border-b border-[#E5E5E5] pb-4"><span class="w-3 h-3 bg-black"></span>Custom export workflow</li>
+          <li class="flex gap-3 items-center pb-4"><span class="w-3 h-3 bg-black"></span>White-glove onboarding</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. FAQ - ResetUI questions -->
+<section id="faq" class="border-b-4 border-black py-20 sm:py-32">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-4xl sm:text-6xl tracking-tighter mb-12">Index</h2>
+    <div class="divide-y divide-[#E5E5E5] border-y-2 border-black">
+      <div class="faq-item">
+        <button class="faq-trigger w-full flex items-center justify-between py-6 text-left transition-colors duration-100 px-4 -mx-4">
+          <div class="flex gap-6 items-center">
+            <span class="font-mono text-sm">Q.01</span>
+            <span class="font-display text-xl sm:text-2xl">What exactly is ResetUI?</span>
+          </div>
+          <span class="faq-icon text-2xl font-mono shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-content">
+          <div class="pb-6 pl-[52px]">
+            <div class="border-l-2 border-black pl-4">
+              <p class="text-lg">ResetUI captures an existing landing page, applies your design direction, and generates editable HTML you can refine and export.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger w-full flex items-center justify-between py-6 text-left transition-colors duration-100 px-4 -mx-4">
+          <div class="flex gap-6 items-center">
+            <span class="font-mono text-sm">Q.02</span>
+            <span class="font-display text-xl sm:text-2xl">How does it capture my page?</span>
+          </div>
+          <span class="faq-icon text-2xl font-mono shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-content">
+          <div class="pb-6 pl-[52px]">
+            <div class="border-l-2 border-black pl-4">
+              <p class="text-lg">ResetUI reads the public page structure, copy, links, media, colors, fonts, and brand cues before generating a new direction.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger w-full flex items-center justify-between py-6 text-left transition-colors duration-100 px-4 -mx-4">
+          <div class="flex gap-6 items-center">
+            <span class="font-mono text-sm">Q.03</span>
+            <span class="font-display text-xl sm:text-2xl">What can I export?</span>
+          </div>
+          <span class="faq-icon text-2xl font-mono shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-content">
+          <div class="pb-6 pl-[52px]">
+            <div class="border-l-2 border-black pl-4">
+              <p class="text-lg">You can export standalone HTML that is ready to inspect, edit, host, or hand off.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger w-full flex items-center justify-between py-6 text-left transition-colors duration-100 px-4 -mx-4">
+          <div class="flex gap-6 items-center">
+            <span class="font-mono text-sm">Q.04</span>
+            <span class="font-display text-xl sm:text-2xl">Can small teams use it?</span>
+          </div>
+          <span class="faq-icon text-2xl font-mono shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-content">
+          <div class="pb-6 pl-[52px]">
+            <div class="border-l-2 border-black pl-4">
+              <p class="text-lg">Yes. ResetUI works for solo builders, agencies, and teams that need a faster first draft from real page context.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. Blogs — "Magazine front page" -->
+<section id="journal" class="border-b-4 border-black py-20 sm:py-32">
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-4xl sm:text-6xl tracking-tighter mb-12">The Notes</h2>
+    <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+      <!-- Featured -->
+      <article class="group cursor-pointer">
+        <div class="overflow-hidden mb-6 border-2 border-black transition-all duration-300 group-hover:border-4">
+          <img src="https://picsum.photos/seed/resetui1/800/500" class="w-full h-full object-cover grayscale group-hover:scale-105 group-hover:grayscale-0 transition-all duration-300" alt="ResetUI redesign preview">
+        </div>
+        <p class="font-mono text-xs tracking-widest mb-2">01 MAY 2026 / NOTE</p>
+        <h3 class="font-display text-3xl sm:text-4xl mb-2">The value of source context.</h3>
+        <p class="text-lg text-[#525252]">Why a captured landing page produces a stronger redesign than a blank canvas.</p>
+      </article>
+      <!-- List -->
+      <div class="divide-y divide-[#E5E5E5] border-t-2 border-b-2 border-[#E5E5E5]">
+        <article class="py-6 group cursor-pointer hover:bg-black hover:text-white transition-colors duration-100 px-4 -mx-4">
+          <p class="font-mono text-xs tracking-widest mb-2">24 APR 2026 / NOTE</p>
+          <h4 class="font-display text-xl">On chat edits.</h4>
+        </article>
+        <article class="py-6 group cursor-pointer hover:bg-black hover:text-white transition-colors duration-100 px-4 -mx-4">
+          <p class="font-mono text-xs tracking-widest mb-2">12 APR 2026 / GUIDE</p>
+          <h4 class="font-display text-xl">Exporting clean HTML.</h4>
+        </article>
+        <article class="py-6 group cursor-pointer hover:bg-black hover:text-white transition-colors duration-100 px-4 -mx-4">
+          <p class="font-mono text-xs tracking-widest mb-2">28 MAR 2026 / NOTE</p>
+          <h4 class="font-display text-xl">Versioning design directions.</h4>
+        </article>
+        <article class="py-6 group cursor-pointer hover:bg-black hover:text-white transition-colors duration-100 px-4 -mx-4">
+          <p class="font-mono text-xs tracking-widest mb-2">10 MAR 2026 / GUIDE</p>
+          <h4 class="font-display text-xl">Prompting better sections.</h4>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. CTA — "Inverted dark plate" -->
+<section id="cta" class="bg-black text-white border-b-4 border-white py-20 sm:py-32 relative overflow-hidden dark-vertical-texture">
+  <div class="absolute inset-0 radial-glow"></div>
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6 text-center relative z-10">
+    <h2 class="font-display text-6xl sm:text-9xl leading-none tracking-tighter mb-12">
+      Reset the <em>next</em><br>page.
+    </h2>
+    <div class="max-w-xl mx-auto">
+      <input type="email" placeholder="Your email address" class="w-full bg-transparent border-b-2 border-white text-white text-center text-xl italic py-4 mb-8 focus:outline-none focus:border-b-4 placeholder:text-white/50 transition-all duration-100">
+      <button class="bg-white text-black px-8 py-4 text-sm tracking-widest uppercase hover:bg-transparent hover:text-white hover:outline hover:outline-2 hover:outline-white transition-colors duration-100 h-12">Start free -></button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 13. Footer — "Viewport wordmark colophon" -->
+<footer class="py-16 border-t-4 border-black">
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 border-b border-[#E5E5E5] pb-16">
+      <div class="border-r border-[#E5E5E5] pr-4">
+        <a class="font-display text-2xl tracking-tighter flex items-center gap-3 mb-8" href="#top"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">ResetUI</a>
+        <h4 class="font-mono text-xs tracking-widest mb-4">PRODUCT</h4>
+        <ul class="space-y-2">
+          <li><a href="#features" class="hover:underline underline-offset-4">Features</a></li>
+          <li><a href="#pricing" class="hover:underline underline-offset-4">Pricing</a></li>
+          <li><a href="#" class="hover:underline underline-offset-4">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="border-r border-[#E5E5E5] pr-4">
+        <h4 class="font-mono text-xs tracking-widest mb-4">COMPANY</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:underline underline-offset-4">About</a></li>
+          <li><a href="#" class="hover:underline underline-offset-4">Careers</a></li>
+          <li><a href="#" class="hover:underline underline-offset-4">Contact</a></li>
+        </ul>
+      </div>
+      <div class="border-r border-[#E5E5E5] pr-4">
+        <h4 class="font-mono text-xs tracking-widest mb-4">RESOURCES</h4>
+        <ul class="space-y-2">
+          <li><a href="#journal" class="hover:underline underline-offset-4">Notes</a></li>
+          <li><a href="#" class="hover:underline underline-offset-4">Docs</a></li>
+          <li><a href="#" class="hover:underline underline-offset-4">Support</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-mono text-xs tracking-widest mb-4">LEGAL</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:underline underline-offset-4">Privacy</a></li>
+          <li><a href="#" class="hover:underline underline-offset-4">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="overflow-hidden whitespace-nowrap">
+      <h2 class="font-display text-[22vw] leading-none tracking-tighter text-center select-none">ResetUI</h2>
+    </div>
+    <div class="flex flex-col sm:flex-row justify-between items-center mt-16 font-mono text-xs tracking-widest">
+      <p>(c) 2026 ResetUI. All rights reserved.</p>
+      <p>URL capture / AI redesign / HTML export</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuClose = document.getElementById('menu-close');
+
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.remove('hidden');
+    mobileMenu.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  });
+  menuClose.addEventListener('click', () => {
+    mobileMenu.classList.add('hidden');
+    mobileMenu.classList.remove('flex');
+    document.body.style.overflow = '';
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('flex');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // FAQ Accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const trigger = item.querySelector('.faq-trigger');
+    trigger.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    });
+    // Keyboard
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+
+  // Pricing toggle
+  const btnMonthly = document.getElementById('btn-monthly');
+  const btnAnnual = document.getElementById('btn-annual');
+
+  btnMonthly.addEventListener('click', () => {
+    btnMonthly.classList.replace('bg-white', 'bg-black');
+    btnMonthly.classList.replace('text-black', 'text-white');
+    btnAnnual.classList.replace('bg-black', 'bg-white');
+    btnAnnual.classList.replace('text-white', 'text-black');
+  });
+  btnAnnual.addEventListener('click', () => {
+    btnAnnual.classList.replace('bg-white', 'bg-black');
+    btnAnnual.classList.replace('text-black', 'text-white');
+    btnMonthly.classList.replace('bg-black', 'bg-white');
+    btnMonthly.classList.replace('text-white', 'text-black');
+  });
+</script>
+
+</body>
+</html>

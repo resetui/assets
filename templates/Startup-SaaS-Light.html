@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Startup SaaS | Light</title>
+<meta name="application-name" content="Startup SaaS | Light">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Open Runde','Inter','-apple-system','BlinkMacSystemFont','Segoe UI','sans-serif'] },
+        colors: {
+          ink:    '#181925',
+          brand:  '#918DF6',
+          brand2: '#9580FF',
+          blu:    '#2C78FC',
+          grn:    '#33C758',
+          amb:    '#FFA600',
+          pink:   '#D6409F',
+          muted:  '#666666',
+          faint:  '#999999',
+          line:   '#E8E8E8',
+          dark:   '#14141F',
+        },
+        letterSpacing: { tightx: '-0.02em' },
+      }
+    }
+  }
+</script>
+<style>
+  /* Open Runde — rounded sibling of Inter (graceful fallback to Inter) */
+  @font-face{font-family:'Open Runde';font-weight:400;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/lauridskern/open-runde@master/fonts/web/OpenRunde-Regular.woff2') format('woff2');}
+  @font-face{font-family:'Open Runde';font-weight:500;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/lauridskern/open-runde@master/fonts/web/OpenRunde-Medium.woff2') format('woff2');}
+  @font-face{font-family:'Open Runde';font-weight:600;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/lauridskern/open-runde@master/fonts/web/OpenRunde-Semibold.woff2') format('woff2');}
+  @font-face{font-family:'Open Runde';font-weight:700;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/lauridskern/open-runde@master/fonts/web/OpenRunde-Bold.woff2') format('woff2');}
+
+  html{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  body{ font-family:'Open Runde','Inter',sans-serif; letter-spacing:-0.02em; }
+  .ls0{ letter-spacing:0; }
+
+  /* shimmer sweep on the hero badge label */
+  @keyframes sweep{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .shimmer{
+    background:linear-gradient(90deg,#2C78FC 35%,rgba(44,120,252,.35) 50%,#2C78FC 65%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:sweep 3.4s linear infinite;
+  }
+
+  /* pulsing operational dot */
+  @keyframes ping{ 0%{transform:scale(1);opacity:.75} 75%,100%{transform:scale(2.4);opacity:0} }
+  .ping{ animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite; }
+
+  /* scroll reveal */
+  [data-reveal]{ opacity:0; transform:translateY(18px); transition:opacity .7s cubic-bezier(.16,.84,.44,1), transform .7s cubic-bezier(.16,.84,.44,1); }
+  [data-reveal].in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){ [data-reveal]{opacity:1!important;transform:none!important} .shimmer,.ping{animation:none} }
+
+  .btn{ transition:transform .15s ease, background-color .2s ease, box-shadow .2s ease, opacity .2s ease; }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+
+  .featcard{ transition:transform .25s ease, box-shadow .25s ease; }
+  .featcard:hover{ transform:translateY(-3px); box-shadow:0 18px 40px -18px rgba(24,25,37,.18); }
+
+  /* faq */
+  .faq-a{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s cubic-bezier(.16,.84,.44,1); }
+  .faq.open .faq-a{ grid-template-rows:1fr; }
+  .faq-a > div{ overflow:hidden; }
+  .faq .chev{ transition:transform .3s ease; }
+  .faq.open .chev{ transform:rotate(45deg); }
+
+  /* pricing slider */
+  .tick{ width:6px;height:6px;border-radius:9999px;background:rgba(0,0,0,.12); }
+  .knob{ box-shadow:0 1px 3px rgba(0,0,0,.06),0 8px 16px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.02); cursor:grab; transition:transform .12s ease; }
+  .knob:active{ cursor:grabbing; transform:translateY(-50%) scale(1.06); }
+
+  /* marker pop on the realtime globe */
+  @keyframes pop{ 0%{transform:scale(.4);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+  .marker{ animation:pop .5s ease both; }
+
+  ::selection{ background:#918DF6; color:#fff; }
+
+  /* marquee */
+  .marquee-track{ display:flex; align-items:center; width:max-content; animation:marquee 24s linear infinite; }
+  .marquee-group{ display:flex; align-items:center; gap:36px; padding-right:36px; }
+  @keyframes marquee{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* integrations carousel */
+  @keyframes scroll-left{ 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+  @keyframes scroll-right{ 0%{transform:translateX(-50%);} 100%{transform:translateX(0);} }
+  .intg-left{ display:flex; align-items:center; gap:40px; width:max-content; animation:scroll-left 32s linear infinite; }
+  .intg-right{ display:flex; align-items:center; gap:40px; width:max-content; animation:scroll-right 32s linear infinite; }
+
+  /* testimonials infinite scroll */
+  @keyframes scrollUp{ from{transform:translateY(0);} to{transform:translateY(-50%);} }
+  .testi-col{ overflow:hidden; }
+  .testi-track{ display:flex; flex-direction:column; gap:20px; }
+  .testi-track.spd-1{ animation:scrollUp 22s linear infinite; }
+  .testi-track.spd-2{ animation:scrollUp 30s linear infinite; }
+  .testi-track.spd-3{ animation:scrollUp 26s linear infinite; }
+  .testi-col:hover .testi-track{ animation-play-state:paused; }
+</style>
+</head>
+<body class="bg-white text-ink">
+
+<div class="mx-auto bg-white relative overflow-hidden" style="max-width:1200px;">
+
+  <!-- ================= HEADER ================= -->
+  <header class="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-[640px] h-[52px] rounded-3xl bg-dark/95 backdrop-blur-md flex items-center gap-2 px-4" style="box-shadow:0 1px 1px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.05);">
+    <nav class="flex items-center gap-0 text-[14px] flex-1">
+      <a href="#features" class="px-2 py-1 rounded-md text-[#BBBCC3] hover:text-white transition-colors">Features</a>
+      <a href="#pricing" class="px-2 py-1 rounded-md text-[#BBBCC3] hover:text-white transition-colors">Pricing</a>
+      <a href="#" class="px-2 py-1 rounded-md text-[#BBBCC3] hover:text-white transition-colors">Docs</a>
+    </nav>
+    <a href="#" class="flex items-center gap-2 shrink-0">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-7 h-7 rounded-full object-cover flex-none">
+      <span class="text-[15px] font-semibold text-white">ResetUI</span>
+    </a>
+    <div class="flex items-center gap-2 flex-1 justify-end">
+      <a href="#" class="px-2 text-[14px] text-[#BBBCC3] hover:text-white transition-colors">Sign in</a>
+      <a href="#" class="btn h-8 px-2.5 grid place-items-center rounded-full bg-brand2 text-white text-[14px] hover:brightness-105">Start free</a>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="pt-[128px] pb-16 text-center relative z-0">
+    <div class="mx-auto px-5 in" style="max-width:768px;" data-reveal="">
+      <!-- badge -->
+      <a href="#" class="btn inline-flex items-center gap-2 h-8 rounded-full pl-1.5 pr-2.5 mb-6" style="background:rgba(44,120,252,.08)">
+        <span class="h-5 px-1.5 grid place-items-center rounded-full text-[12px] text-white" style="background:linear-gradient(90deg,#2C78FC,#918DF6)">new</span>
+        <span class="text-[14px] font-medium shimmer">ResetUI 1.0.3 - URL capture online</span>
+        <svg class="w-3 h-4 text-blu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+      <h1 class="font-bold text-[60px] leading-[68px] tracking-[-3px] text-ink">Reset landing pages<br>without starting over.</h1>
+      <p class="mt-4 text-[18px] leading-6 text-muted">Capture a live landing page, add your design direction, generate an editable redesign, and export clean HTML.</p>
+      <div class="mt-6 flex items-center justify-center gap-4">
+        <a href="#" class="btn h-11 px-5 grid place-items-center rounded-full bg-brand text-white text-[16px] hover:brightness-105">Start free</a>
+        <a href="#features" class="btn h-11 px-5 grid place-items-center rounded-full text-[16px] text-muted hover:bg-black/5" style="background:rgba(0,0,0,.03)">View workflow</a>
+      </div>
+    </div>
+
+    <!-- logo bar (infinite marquee) -->
+    <div class="mt-16 relative overflow-hidden mx-auto text-faint in" data-reveal="" style="width:640px;max-width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent); mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);">
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Capture</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Redesign</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Export</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Templates</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Versions</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">ResetUI</div>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Capture</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Redesign</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Export</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Templates</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">Versions</div>
+          <div style="width:110px;height:32px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#aaa;">ResetUI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tab bar: sits between hero and dashboard, z-20 so it floats above both -->
+  <div class="relative z-20 flex justify-center" style="margin-bottom:-26px;">
+    <div id="dashTabs" class="flex items-center gap-0.5 h-[52px] px-5 bg-white rounded-[28px] border-[3px] border-brand2 in" style="box-shadow:0 6px 20px -8px rgba(145,141,246,.55);" data-reveal="">
+      <button data-tab="" class="tab is-active px-3 h-9 rounded-full text-[14px] text-ink" style="background:rgba(0,0,0,.05)">Overview</button>
+      <button data-tab="" class="tab px-3 h-9 rounded-full text-[14px] text-faint hover:text-ink transition-colors">Analytics</button>
+      <button data-tab="" class="tab px-3 h-9 rounded-full text-[14px] text-faint hover:text-ink transition-colors">Reports</button>
+      <button data-tab="" class="tab px-3 h-9 rounded-full text-[14px] text-faint hover:text-ink transition-colors">Performance</button>
+      <button data-tab="" class="tab px-3 h-9 rounded-full text-[14px] text-faint hover:text-ink transition-colors">Realtime</button>
+    </div>
+  </div>
+
+  <!-- ================= DASHBOARD BAND ================= -->
+  <section class="relative w-full overflow-hidden" style="height:807px;background-image:url('/assets/Startup-SaaS-Hero-bg.png'),url('../assets/Startup-SaaS-Hero-bg.png');background-position:center;background-size:cover;background-repeat:no-repeat;border-radius:24px;">
+    <!-- dashboard placeholder -->
+    <div class="absolute left-1/2 top-[112px] rounded-lg overflow-hidden in" style="width:984px;height:615px;margin-left:-492px;box-shadow:0 1px 3px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.02);background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;" data-reveal="" id="dashPlaceholder">
+      <span id="dashPlaceholderLabel" style="font-family:ui-monospace,monospace;font-size:13px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.28);">ResetUI dashboard preview</span>
+    </div>
+  </section>
+
+  <!-- ================= 3 FEATURE POINTS ================= -->
+  <section class="bg-white">
+    <div class="mx-auto px-5 py-16 grid grid-cols-3 gap-8 in" style="max-width:1200px;" data-reveal="">
+      <div class="flex flex-col items-center text-center gap-3">
+        <div style="width:40px;height:40px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+        <p class="text-[16px] leading-6 text-muted">Capture the current page structure, copy, links, media, and brand signals from one public URL.</p>
+      </div>
+      <div class="flex flex-col items-center text-center gap-3">
+        <div style="width:40px;height:40px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+        <p class="text-[16px] leading-6 text-muted">Generate a new page direction from your prompt without discarding useful source context.</p>
+      </div>
+      <div class="flex flex-col items-center text-center gap-3">
+        <div style="width:40px;height:40px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+        <p class="text-[16px] leading-6 text-muted">Export clean HTML that stays readable, editable, and ready for front-end handoff.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES GRID ================= -->
+  <section class="bg-white">
+    <div class="mx-auto px-5 py-16" style="max-width:1200px;">
+      <div class="flex flex-col items-center text-center gap-5 mb-12 in" data-reveal="">
+        <span class="px-2 h-6 grid place-items-center rounded-md bg-black/[.03] text-[14px] text-black/40">Features</span>
+        <h2 class="text-[36px] leading-[44px] tracking-[-0.63px] font-medium text-ink">From captured context<br>to editable redesign.</h2>
+        <p class="text-[18px] leading-6 text-muted">ResetUI gives teams one focused flow for page capture, generation, iteration, and export.</p>
+      </div>
+
+      <!--
+        Layout (2-col outer grid):
+        [tall-left row-span-2]  [two-small-cards top-right]
+        [tall-left row-span-2]  [mid-wide-card]
+        [col-span-2: two equal bottom cards]
+      -->
+      <div class="grid grid-cols-2 gap-4">
+
+        <!-- TALL LEFT: Revenue attribution -->
+        <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" style="grid-row:span 2;" data-reveal="">
+          <div class="flex-1 grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);min-height:300px;">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">Capture preview</span>
+          </div>
+          <div class="p-7 flex flex-col gap-3">
+            <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-brand2 shrink-0">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </span>
+            <h3 class="text-[24px] leading-7 text-brand2">URL capture</h3>
+            <p class="text-[22px] leading-7 text-ink">Bring the source page into the project before generation starts.</p>
+            <ul class="flex flex-col gap-1 text-[14px] text-muted">
+              <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Copy and hierarchy</li>
+              <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Media and links</li>
+              <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Brand cues</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TOP RIGHT — Privacy-first + Integrations -->
+        <div class="grid grid-cols-2 gap-4">
+
+          <!-- Privacy-first -->
+          <div class="featcard rounded-2xl bg-black/[.03] p-6 flex flex-col gap-3 in" data-reveal="">
+            <div style="width:40px;height:40px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+            <h3 class="text-[16px] leading-[22px] font-semibold text-brand2">Prompt direction</h3>
+            <p class="text-[13px] leading-5 text-muted flex-1">Describe the new visual style and audience in plain language.</p>
+          </div>
+
+          <!-- Integrations -->
+          <div class="featcard rounded-2xl bg-black/[.03] p-6 flex flex-col gap-3 in" data-reveal="">
+            <div style="width:40px;height:40px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+            <h3 class="text-[16px] leading-[22px] font-semibold text-brand2">Template starts</h3>
+            <p class="text-[13px] leading-5 text-muted flex-1">Choose a design direction and keep the output aligned to it.</p>
+          </div>
+
+        </div><!-- /top right two cards -->
+
+        <!-- MID RIGHT: Performance metrics -->
+        <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" data-reveal="">
+          <div class="flex-1 grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);min-height:180px;">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">Generation preview</span>
+          </div>
+          <div class="p-6 flex flex-col gap-3">
+            <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-brand2 shrink-0">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a6 6 0 1 0-6-6"></path><path d="M12 14 16 8"></path><circle cx="12" cy="14" r="1.6" fill="currentColor"></circle></svg>
+            </span>
+            <h3 class="text-[18px] leading-6 text-brand2">Live generation</h3>
+            <p class="text-[16px] leading-6 text-ink">Generate complete sections into the canvas for fast review.</p>
+            <ul class="flex flex-col gap-1 text-[13px] text-muted">
+              <li class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Hero, pricing, FAQ</li>
+              <li class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Responsive layout</li>
+              <li class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Clean section order</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- BOTTOM ROW: Realtime tracking + Visitor profiles -->
+        <div class="col-span-2 grid grid-cols-2 gap-4">
+
+          <!-- Realtime tracking -->
+          <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" data-reveal="">
+            <div class="grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);height:260px;">
+              <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">Version preview</span>
+            </div>
+            <div class="p-7 flex flex-col gap-3">
+              <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-brand2 shrink-0">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"></path></svg>
+              </span>
+              <h3 class="text-[24px] leading-7 text-brand2">Version history</h3>
+              <p class="text-[22px] leading-7 text-ink">Compare directions and restore earlier design states.</p>
+              <ul class="flex flex-col gap-1 text-[14px] text-muted">
+                <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Committed designs</li>
+                <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Undo and redo</li>
+                <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Project memory</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Visitor profiles -->
+          <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" data-reveal="">
+            <div class="grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);height:260px;">
+              <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">Export preview</span>
+            </div>
+            <div class="p-7 flex flex-col gap-3">
+              <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-brand2 shrink-0">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+              </span>
+              <h3 class="text-[24px] leading-7 text-brand2">HTML export</h3>
+              <p class="text-[22px] leading-7 text-ink">Ship readable front-end code from the selected version.</p>
+              <ul class="flex flex-col gap-1 text-[14px] text-muted">
+                <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Standalone HTML</li>
+                <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Responsive markup</li>
+                <li class="flex items-center gap-1.5"><svg class="w-4 h-4 text-brand2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Ready handoff</li>
+              </ul>
+            </div>
+          </div>
+
+        </div><!-- /bottom row -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GET STARTED ================= -->
+  <section class="bg-white">
+    <div class="mx-auto px-5 py-16" style="max-width:1200px;">
+      <div class="flex flex-col items-center text-center gap-5 mb-12 in" data-reveal="">
+        <span class="px-2 h-6 grid place-items-center rounded-md bg-black/[.03] text-[14px] text-black/40">How it works</span>
+        <h2 class="text-[36px] leading-[44px] tracking-[-0.63px] font-medium text-ink">A short path from URL to export.</h2>
+        <p class="text-[16px] leading-6 text-muted">ResetUI keeps the workflow focused: capture the source, set direction, generate the redesign.</p>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <!-- step 1 -->
+        <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" style="height:368px" data-reveal="">
+          <div class="h-[200px] grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">URL input</span>
+          </div>
+          <div class="flex flex-col items-center gap-3 p-6 text-center">
+            <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-[18px] text-brand font-medium">01</span>
+            <p class="text-[18px] leading-6 text-ink">Paste a public landing-page URL and capture the page context.</p>
+          </div>
+        </div>
+        <!-- step 2 -->
+        <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" style="height:368px" data-reveal="">
+          <div class="h-[200px] grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">Prompt input</span>
+          </div>
+          <div class="flex flex-col items-center gap-3 p-6 text-center">
+            <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-[18px] text-brand font-medium">02</span>
+            <p class="text-[18px] leading-6 text-ink">Describe the desired style, sections, audience, and constraints.</p>
+          </div>
+        </div>
+        <!-- step 3 -->
+        <div class="featcard rounded-2xl bg-black/[.03] overflow-hidden flex flex-col in" style="height:368px" data-reveal="">
+          <div class="h-[200px] grid place-items-center" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.06) 0 2px,transparent 2px 9px);">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(0,0,0,0.22);">HTML output</span>
+          </div>
+          <div class="flex flex-col items-center gap-3 p-6 text-center">
+            <span class="w-10 h-9 rounded-full bg-white grid place-items-center text-[18px] text-brand font-medium">03</span>
+            <p class="text-[18px] leading-6 text-ink">Review the redesign, make chat edits, and export clean HTML.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INTEGRATIONS ================= -->
+  <section class="relative bg-white overflow-hidden py-20">
+    <!-- dot grid background -->
+    <div class="absolute inset-0 pointer-events-none" style="background-image:radial-gradient(circle,rgba(0,0,0,0.055) 1px,transparent 1px);background-size:24px 24px;"></div>
+
+    <!-- content -->
+    <div class="relative mx-auto px-5 text-center" style="max-width:1200px;">
+      <div class="flex flex-col items-center gap-4 mb-12 in" data-reveal="">
+        <span class="px-3 h-7 inline-flex items-center gap-1.5 rounded-full border border-black/[.08] bg-white text-[14px] text-ink">
+          <svg class="w-3.5 h-3.5 text-brand" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h9l-1 8 10-12h-9z"></path></svg>
+          Integrations
+        </span>
+        <h2 class="text-[42px] leading-[50px] tracking-[-1.4px] font-semibold text-ink">Export into the stack you already use.</h2>
+        <p class="text-[16px] leading-6 text-muted max-w-md">Generated pages stay readable, editable, and ready for front-end handoff.</p>
+        <a href="#" class="btn mt-2 h-11 px-6 grid place-items-center rounded-full bg-ink text-white text-[15px] hover:bg-ink/90">Start free</a>
+      </div>
+
+      <!-- carousels -->
+      <div class="relative mt-4 overflow-hidden pb-2 in" data-reveal="">
+
+        <!-- Row 1 — scrolls left -->
+        <div class="intg-left">
+          <!-- set 1 -->
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968854.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732084.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/281/281763.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968854.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732084.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/281/281763.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" class="w-9 h-9 object-contain" alt=""></div>
+          <!-- set 2 (duplicate for seamless -50% loop) -->
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968854.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732084.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/281/281763.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968854.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732084.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/281/281763.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" class="w-9 h-9 object-contain" alt=""></div>
+        </div>
+
+        <!-- Row 2 — scrolls right -->
+        <div class="intg-right mt-5">
+          <!-- set 1 -->
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906324.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888841.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968875.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906361.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888847.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906324.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888841.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968875.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906361.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888847.png" class="w-9 h-9 object-contain" alt=""></div>
+          <!-- set 2 -->
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906324.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888841.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968875.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906361.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888847.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906324.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888841.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968875.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/906/906361.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" class="w-9 h-9 object-contain" alt=""></div>
+          <div class="w-[60px] h-[60px] rounded-full bg-white shrink-0 grid place-items-center" style="box-shadow:0 2px 8px rgba(0,0,0,.10)"><img src="https://cdn-icons-png.flaticon.com/512/888/888847.png" class="w-9 h-9 object-contain" alt=""></div>
+        </div>
+
+        <!-- fade edges -->
+        <div class="absolute left-0 top-0 h-full w-28 pointer-events-none" style="background:linear-gradient(to right,#fff,transparent)"></div>
+        <div class="absolute right-0 top-0 h-full w-28 pointer-events-none" style="background:linear-gradient(to left,#fff,transparent)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMPARISON ================= -->
+  <section class="bg-white">
+    <div class="mx-auto px-5 py-16" style="max-width: 1200px; height: 940px">
+      <div class="flex flex-col items-center text-center gap-5 mb-12 in" data-reveal="">
+        <span class="px-2 h-6 grid place-items-center rounded-md bg-black/[.03] text-[14px] text-black/40">Comparison</span>
+        <h2 class="text-[36px] leading-[44px] tracking-[-1.8px] font-medium text-ink">ResetUI keeps context in the workflow.</h2>
+        <p class="text-[18px] leading-6 text-muted">Compare the page-reset flow against generic blank-canvas generation.</p>
+      </div>
+
+      <div class="relative in" data-reveal="" id="cmpTable">
+        <!-- header -->
+        <div class="grid items-end" style="grid-template-columns:492px repeat(4,123px);">
+          <div></div>
+          <div class="flex flex-col items-center gap-2 pb-4 relative z-10">
+            <div style="width:36px;height:36px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+            <span class="text-[14px] text-ink font-medium">ResetUI</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 pb-4">
+            <div style="width:36px;height:36px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+            <span class="text-[14px] text-faint">Builder A</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 pb-4">
+            <div style="width:36px;height:36px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+            <span class="text-[14px] text-faint">AI Draft</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 pb-4">
+            <div style="width:36px;height:36px;border-radius:9999px;flex:none;background-color:#f0f0ee;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.08) 0 2px,transparent 2px 9px);"></div>
+            <span class="text-[14px] text-faint">Manual</span>
+          </div>
+        </div>
+        <!-- highlighted Visitors column background -->
+        <div class="absolute pointer-events-none" style="left:492px;top:-12px;width:123px;bottom:-12px;background:#fff;border:1.6px solid #918DF6;border-radius:24px;box-shadow:0 18px 40px -22px rgba(145,141,246,.45);"></div>
+        <!-- body rows injected -->
+        <div id="cmpBody" class="relative">
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"></path></svg>
+        URL capture
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="9" cy="10" r="1"></circle><circle cx="14" cy="14" r="1"></circle><circle cx="15" cy="9" r="1"></circle></svg>
+        Brand context
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        Clean export
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"></path></svg>
+        Live generation
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"></circle><circle cx="18" cy="5" r="2"></circle><path d="M8 19h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"></path></svg>
+        Version history
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+        Project memory
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a6 6 0 1 0-6-6"></path><path d="M12 14 16 8"></path></svg>
+        Fast iteration
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #FFA600"><span class="w-2 h-[2px] bg-amb rounded"></span></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;border-bottom:.8px solid #E8E8E8">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19l1-5.8L3.5 9.2l5.9-.9z"></path></svg>
+        Template quality
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div>
+    </div>
+    <div class="grid items-center" style="grid-template-columns:492px repeat(4,123px);height:56.8px;">
+      <div class="flex items-center gap-2 text-[16px] text-ink">
+        <svg class="w-4 h-4 text-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8z"></path></svg>
+        Full-page output
+      </div>
+      <div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #918DF6"><svg class="w-3 h-3 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></div><div class="grid place-items-center"><span class="w-5 h-5 rounded-full grid place-items-center" style="box-shadow:inset 0 0 0 1.6px #CCCCCC"><svg class="w-2.5 h-2.5 text-[#CCCCCC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div>
+    </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICING ================= -->
+  <section id="pricing" class="bg-white">
+    <div class="mx-auto px-5 py-16" style="max-width:1200px;">
+      <div class="flex flex-col items-center text-center gap-5 mb-12 in" data-reveal="">
+        <span class="px-2 h-6 grid place-items-center rounded-md bg-black/[.03] text-[14px] text-black/40">Pricing</span>
+        <h2 class="text-[36px] leading-[44px] tracking-[-0.63px] font-medium text-ink">Simple plans for page resets.</h2>
+        <p class="text-[16px] leading-6 text-muted">Start with free credits, then scale exports as your team needs more redesigns.</p>
+      </div>
+
+      <!-- billing toggle -->
+      <div class="flex justify-center mb-8 in" data-reveal="">
+        <div class="h-[42px] rounded-full bg-black/[.03] flex items-center gap-1 p-1">
+          <button id="billMonthly" class="h-8 px-4 rounded-full text-[14px] text-ink" style="background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.06)">Monthly</button>
+          <button id="billYearly" class="h-8 pl-4 pr-2.5 rounded-full text-[14px] text-faint flex items-center gap-1">Yearly
+            <span class="px-1.5 h-[18px] grid place-items-center rounded text-[12px] text-amb" style="background:rgba(255,166,0,.1)">-20%</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 plan cards -->
+      <div class="grid grid-cols-3 gap-4 items-stretch in" data-reveal="">
+
+        <!-- Free -->
+        <div class="featcard rounded-2xl bg-black/[.03] flex flex-col p-7">
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[18px] font-medium text-ink">Starter</h3>
+            <p class="text-[14px] leading-5 text-faint ls0">For testing ResetUI on a few pages.</p>
+          </div>
+          <div class="flex items-end gap-1 mt-6">
+            <span class="text-[48px] leading-[48px] font-medium text-ink tabular-nums">$0</span>
+            <span class="text-[15px] text-faint mb-1.5 ls0">/mo</span>
+          </div>
+          <span class="text-[13px] text-faint mt-1 ls0">Includes 5 free credits.</span>
+          <a href="#" class="btn mt-6 h-11 grid place-items-center rounded-full text-[15px] text-ink hover:bg-black/5" style="background:#fff;box-shadow:0 1px 1px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.06)">Start free</a>
+          <div class="h-px bg-black/5 my-6"></div>
+          <ul class="flex flex-col gap-2.5 text-[14px] text-ink" data-feats="5 page credits,URL capture,Template gallery,Basic HTML export,Community support">
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>5 page credits</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>URL capture</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Template gallery</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Basic HTML export</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Community support</span>
+      </li></ul>
+        </div>
+
+        <!-- Pro (highlighted) -->
+        <div class="featcard relative rounded-2xl bg-dark text-white flex flex-col p-7" style="box-shadow:0 24px 50px -20px rgba(145,141,246,.45)">
+          <span class="absolute px-2.5 h-6 grid place-items-center rounded-full text-[12px] text-white" style="background:#918DF6;top:10px;right:20px;">Most popular</span>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[18px] font-medium text-brand2">Pro</h3>
+            <p class="text-[14px] leading-5 text-white/55 ls0">For teams generating and editing live projects.</p>
+          </div>
+          <div class="flex items-end gap-1 mt-6">
+            <span class="text-[48px] leading-[48px] font-medium tabular-nums">$<span data-price="29|23">29</span></span>
+            <span class="text-[15px] text-white/55 mb-1.5 ls0">/mo</span>
+          </div>
+          <span class="text-[13px] text-white/55 mt-1 ls0">For production redesign work.</span>
+          <a href="#" class="btn mt-6 h-11 grid place-items-center rounded-full bg-brand text-white text-[15px] hover:brightness-110">Start trial</a>
+          <div class="h-px bg-white/10 my-6"></div>
+          <ul class="flex flex-col gap-2.5 text-[14px] text-white/90" data-feats="100 exports monthly,All templates,Chat edits,Version history,Priority generation,Email support" data-dark="1">
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>100 exports monthly</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>All templates</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Chat edits</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Version history</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Priority generation</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Email support</span>
+      </li></ul>
+        </div>
+
+        <!-- Teams -->
+        <div class="featcard rounded-2xl bg-black/[.03] flex flex-col p-7">
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[18px] font-medium text-ink">Studio</h3>
+            <p class="text-[14px] leading-5 text-faint ls0">For agencies and teams resetting pages at scale.</p>
+          </div>
+          <div class="flex items-end gap-1 mt-6">
+            <span class="text-[48px] leading-[48px] font-medium text-ink tabular-nums">$<span data-price="99|79">99</span></span>
+            <span class="text-[15px] text-faint mb-1.5 ls0">/mo</span>
+          </div>
+          <span class="text-[13px] text-faint mt-1 ls0">For shared project workspaces.</span>
+          <a href="#" class="btn mt-6 h-11 grid place-items-center rounded-full text-[15px] text-ink hover:bg-black/5" style="background:#fff;box-shadow:0 1px 1px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.06)">Contact sales</a>
+          <div class="h-px bg-black/5 my-6"></div>
+          <ul class="flex flex-col gap-2.5 text-[14px] text-ink" data-feats="Unlimited projects,Shared workspace,Custom templates,Export history,Priority support,Team billing">
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Unlimited projects</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Shared workspace</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Custom templates</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Export history</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Priority support</span>
+      </li>
+      <li class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span>Team billing</span>
+      </li></ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TESTIMONIALS ================= -->
+  <section class="bg-white overflow-hidden">
+    <div class="mx-auto px-5 py-16" style="max-width:1200px;">
+      <div class="flex flex-col items-center text-center gap-5 mb-12 in" data-reveal="">
+        <span class="px-2 h-6 grid place-items-center rounded-md bg-black/[.03] text-[14px] text-black/40">Testimonials</span>
+        <h2 class="text-[36px] leading-[44px] tracking-[-0.63px] font-medium text-ink">Teams reset pages faster.</h2>
+        <p class="text-[16px] leading-6 text-muted">ResetUI keeps capture, generation, edits, and export in one project.</p>
+      </div>
+
+      <!-- 3-column infinite scroll -->
+      <div class="grid grid-cols-3 gap-5" style="height:520px;">
+
+        <!-- Column 1 — speed 22s -->
+        <div class="testi-col">
+          <div class="testi-track spd-1">
+            <!-- set 1 -->
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"ResetUI keeps capture, generation, edits, and export in one project."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The HTML export was readable enough for our front-end team to keep moving."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"We compared versions, changed direction, and still kept the page context close."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The generated sections felt like a real starting point, not a blank template."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <!-- set 2 (duplicate for seamless loop) -->
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"ResetUI keeps capture, generation, edits, and export in one project."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The HTML export was readable enough for our front-end team to keep moving."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"We compared versions, changed direction, and still kept the page context close."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The generated sections felt like a real starting point, not a blank template."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2 — speed 30s -->
+        <div class="testi-col">
+          <div class="testi-track spd-2">
+            <!-- set 1 -->
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"ResetUI made the first redesign pass feel calm, fast, and reviewable."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"Capturing the original page helped us keep the useful copy and calls to action."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The version history made it easy to restore a stronger earlier direction."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"We shipped a cleaner landing page without rebuilding every section by hand."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <!-- set 2 -->
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"ResetUI made the first redesign pass feel calm, fast, and reviewable."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"Capturing the original page helped us keep the useful copy and calls to action."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The version history made it easy to restore a stronger earlier direction."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"We shipped a cleaner landing page without rebuilding every section by hand."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3 — speed 26s -->
+        <div class="testi-col">
+          <div class="testi-track spd-3">
+            <!-- set 1 -->
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The template gallery helped us pick a visual lane before generation started."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"Chat edits were specific because ResetUI remembered the project context."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The redesign preserved our message and made the page easier to scan."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"We got production-ready HTML and a direction the team could actually discuss."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <!-- set 2 -->
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The template gallery helped us pick a visual lane before generation started."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"Chat edits were specific because ResetUI remembered the project context."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"The redesign preserved our message and made the page easier to scan."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+            <div class="p-7 rounded-3xl border border-black/[.07] bg-white" style="box-shadow:0 4px 24px -8px rgba(24,25,37,.08)">
+              <p class="text-[15px] leading-[1.6] text-ink">"We got production-ready HTML and a direction the team could actually discuss."</p>
+              <div class="flex items-center gap-3 mt-5">
+                <span class="shrink-0" style="width: 40px; height: 40px; border-radius: 9999px; flex: 0 0 auto; background-color: rgb(240, 240, 238); background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 9px);"></span>
+                <div><div class="text-[14px] font-medium text-ink leading-5">ResetUI user</div><div class="text-[13px] text-faint leading-5">Design team</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /grid -->
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="bg-white">
+    <div class="mx-auto px-5 py-16" style="max-width:1200px;">
+      <div class="flex flex-col items-center text-center gap-5 mb-12 in" data-reveal="">
+        <span class="px-2 h-6 grid place-items-center rounded-md bg-black/[.03] text-[14px] text-black/40">FAQ</span>
+        <h2 class="text-[36px] leading-[44px] tracking-[-0.63px] font-medium text-ink">Questions about<br>ResetUI?</h2>
+        <p class="text-[16px] leading-6 text-muted">ResetUI captures the source page, follows your prompt, and exports clean HTML.</p>
+      </div>
+      <div class="mx-auto flex flex-col gap-0.5 in" style="max-width:536px;" id="faqList" data-reveal="">
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">What does ResetUI capture from a URL?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">ResetUI captures visible copy, links, media references, hierarchy, brand cues, and page structure from a public landing-page URL.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">Can I edit the generated page?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">Yes. You can make targeted chat edits, regenerate sections, compare versions, and keep refining the same project.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">What does ResetUI export?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">The export is standalone front-end code you can inspect, edit, host, or hand to another developer.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">Can I start for free?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">The free starter includes credits for trying URL capture, templates, generation, and basic HTML export.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">Does ResetUI keep project context?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">ResetUI keeps capture, generation, edits, and export in one project.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">Is the output production-ready?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">ResetUI captures the source page, follows your prompt, and exports clean HTML.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">Can I preserve the original page message?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">ResetUI keeps the original page context attached to each redesign.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">Can I make targeted section edits?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">Use chat edits to adjust sections without starting again.</p></div></div>
+    </div>
+    <div class="faq border-b border-line">
+      <button class="faq-q w-full flex items-center justify-between gap-4 py-4 text-left">
+        <span class="text-[16px] text-ink">What do I need to begin?</span>
+        <svg class="chev w-4 h-4 text-faint shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <div class="faq-a"><div><p class="text-[14px] leading-5 text-muted pb-4 pr-8">Start with a URL and a design direction.</p></div></div>
+    </div></div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="bg-white">
+    <div class="mx-auto px-5 py-16 in" style="max-width:1200px;" data-reveal="">
+      <div class="rounded-3xl bg-[#FAFAFA] flex flex-col items-center text-center gap-5 px-8 py-16">
+        <h2 class="text-[36px] leading-[44px] tracking-[-0.63px] font-medium text-ink">Reset your next<br>landing page.</h2>
+        <p class="text-[16px] leading-6 text-muted">ResetUI keeps capture, generation, edits, and export in one project.</p>
+        <div class="flex items-center gap-4 mt-1">
+          <a href="#" class="btn h-11 px-5 grid place-items-center rounded-full bg-brand text-white text-[16px] hover:brightness-105">Start free</a>
+          <a href="#features" class="btn h-11 px-5 grid place-items-center rounded-full text-[16px] text-muted hover:bg-black/5" style="background:rgba(0,0,0,.03)">View workflow</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative overflow-hidden pt-16">
+    <div class="mx-auto px-5 flex justify-center gap-8" style="max-width:1200px;">
+      <div class="flex flex-col gap-4 w-[476px]">
+        <a href="#" class="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-8 h-8 rounded-full object-cover flex-none">
+          <span class="text-[15px] font-semibold text-ink">ResetUI</span>
+        </a>
+        <p class="text-[14px] leading-5 text-faint max-w-[266px]">The export is standalone front-end code you can inspect, edit, host, or hand to another developer.</p>
+        <div class="flex items-center gap-2">
+          <span class="text-[14px] text-faint">Operational</span>
+          <span class="relative w-2 h-2"><span class="absolute inset-0 rounded-full bg-grn"></span><span class="ping absolute -inset-0.5 rounded-full bg-grn"></span></span>
+        </div>
+        <span class="text-[14px] text-faint">© 2026</span>
+      </div>
+      <div class="grid grid-cols-2 gap-x-12 gap-y-8 w-[476px]">
+        <div class="flex flex-col gap-1">
+          <h6 class="text-[13.9px] text-ink font-medium mb-1">Product</h6>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Home</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Templates</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Pricing</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Docs</a>
+        </div>
+        <div class="flex flex-col gap-1">
+          <h6 class="text-[13.9px] text-ink font-medium mb-1">Features</h6>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">URL capture</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">AI redesign</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Chat edits</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">HTML export</a>
+        </div>
+        <div class="flex flex-col gap-1">
+          <h6 class="text-[13.9px] text-ink font-medium mb-1">Comparison</h6>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">ResetUI</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Builder A</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">AI draft</a>
+        </div>
+        <div class="flex flex-col gap-1">
+          <h6 class="text-[13.9px] text-ink font-medium mb-1">Company</h6>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Contact</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Privacy</a>
+          <a href="#" class="text-[14px] text-faint hover:text-ink transition-colors">Terms</a>
+        </div>
+      </div>
+    </div>
+    <div class="h-16"></div>
+    <div class="absolute bottom-0 left-0 w-full h-2" style="background:linear-gradient(90deg,#BED5FE,#EBF2FF 50%,#918DF6)"></div>
+  </footer>
+
+</div>
+
+
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" rx="20" fill="#918DF6"></rect>
+    <circle cx="50" cy="50" r="20" fill="none" stroke="#fff" stroke-width="6"></circle>
+    <circle cx="50" cy="50" r="7" fill="#fff"></circle>
+  </svg>
+</template>
+
+
+</body></html>

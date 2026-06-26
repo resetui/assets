@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Lite | Dark</title>
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #020202;
+  --ink: #f4f4f4;
+  --muted: #808080;
+  --dim: #a8a8a8;
+  --line: #1a1a1a;
+  --accent: #36DF01;
+  --accent-deep: #1E7F00;
+  --selection: #ed4d35;
+  --surface-1: #0e0e0e;
+  --surface-2: #1c1c1c;
+  --surface-3: #2b2b2b;
+  --ease-quiet: cubic-bezier(.22, 1, .36, 1);
+  --ease-precise: cubic-bezier(.4, 0, .2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: auto;
+}
+
+::selection { background: rgba(237,77,53,0.3); color: #fff; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface-2); border: 1px dashed var(--line); }
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+ul { list-style: none; }
+
+/* Dashed utilities */
+.dash-x { border-left: 1px dashed var(--line); border-right: 1px dashed var(--line); }
+.dash-b { border-bottom: 1px dashed var(--line); }
+.dash-t { border-top: 1px dashed var(--line); }
+.dash-l { border-left: 1px dashed var(--line); }
+.dash-r { border-right: 1px dashed var(--line); }
+.dash-all { border: 1px dashed var(--line); }
+
+/* Grid badge — 2x2 green dots */
+.grid-badge {
+  display: grid;
+  grid-template-columns: repeat(2, 6px);
+  gap: 2px;
+  filter: drop-shadow(0 0 6px rgba(54,223,1,0.55));
+  flex-shrink: 0;
+}
+.grid-badge i {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  display: block;
+}
+
+/* Diagonal stripe placeholder */
+.diag-bg {
+  background-color: var(--surface-1);
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 10px);
+}
+
+/* Fade mask */
+.mask-fade {
+  -webkit-mask-image: linear-gradient(180deg, #000 69%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 69%, transparent 100%);
+}
+
+/* Typography */
+.display {
+  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: -2.24px;
+  line-height: 0.98;
+}
+.mono { font-family: 'Geist Mono', monospace; }
+.muted { color: var(--muted); }
+.dim { color: var(--dim); }
+.accent { color: var(--accent); }
+
+/* Page layout */
+.page {
+  position: relative;
+  width: 100%;
+  min-width: 1200px;
+}
+.column {
+  width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  border-left: 1px dashed var(--line);
+  border-right: 1px dashed var(--line);
+}
+
+/* CTA buttons */
+.cta-btn {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  padding: 11px 18px;
+  background: var(--surface-3);
+  color: var(--ink);
+  border: 1px dashed var(--line);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  transition: all 0.25s var(--ease-precise);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.02em;
+}
+.cta-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--accent-deep);
+  box-shadow: inset 0 0 0 1px rgba(54,223,1,0.3), 0 0 12px rgba(30,127,0,0.4);
+}
+.cta-btn.primary {
+  background: var(--accent);
+  color: #020202;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.cta-btn.primary:hover {
+  background: #4ef81a;
+  box-shadow: 0 0 16px rgba(54,223,1,0.5);
+}
+.cta-btn.ghost { background: transparent; }
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  background: rgba(2,2,2,0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 50;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  font-family: 'Geist', sans-serif;
+}
+.logo-mark {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--accent);
+  background: rgba(54,223,1,0.08);
+  position: relative;
+  box-shadow: 0 0 8px rgba(30,127,0,0.4), inset 0 0 4px rgba(54,223,1,0.15);
+}
+.logo-mark::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 4px var(--accent);
+}
+.brand-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(54,223,1,0.45);
+  flex-shrink: 0;
+}
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-size: 13px;
+  color: var(--dim);
+}
+.main-nav a {
+  transition: color 0.2s;
+  position: relative;
+  padding: 4px 0;
+}
+.main-nav a:hover { color: var(--ink); }
+.main-nav a:hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent);
+  box-shadow: 0 0 4px var(--accent);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--dim);
+}
+.header-actions a { transition: color 0.2s; }
+.header-actions a:hover { color: var(--ink); }
+
+/* Hero */
+.hero {
+  position: relative;
+  padding: 88px 28px 0;
+  overflow: hidden;
+}
+
+.hero-radial {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 28%, rgba(54,223,1,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 32px;
+}
+.hero h1 {
+  font-size: 88px;
+  margin-bottom: 24px;
+}
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 600px;
+  margin-bottom: 40px;
+  line-height: 1.55;
+}
+.hero-cta-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 64px;
+}
+
+/* Dashboard mockup */
+.dashboard-mockup {
+  width: 100%;
+  max-width: 1200px;
+  height: 500px;
+  border: 1px dashed var(--line);
+  background: var(--surface-1);
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 12px);
+  position: relative;
+  overflow: hidden;
+}
+.dash-topbar {
+  height: 36px;
+  border-bottom: 1px dashed var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 11px;
+  color: var(--dim);
+}
+.dash-topbar-left { display: flex; align-items: center; gap: 14px; }
+.dash-dots { display: flex; gap: 6px; }
+.dash-dots span {
+  width: 8px; height: 8px;
+  background: var(--surface-3);
+  border: 1px dashed var(--line);
+}
+.dash-topbar-right { display: flex; align-items: center; gap: 8px; }
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--accent);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.dash-body { display: flex; height: calc(100% - 36px); }
+.dash-sidebar {
+  width: 180px;
+  border-right: 1px dashed var(--line);
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dash-section-label {
+  font-size: 9px;
+  color: var(--muted);
+  padding: 8px 8px 6px;
+  letter-spacing: 0.12em;
+}
+.dash-nav-item {
+  padding: 7px 10px;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dash-nav-item.active {
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px dashed var(--line);
+}
+.dash-nav-bullet {
+  width: 4px; height: 4px;
+  background: var(--muted);
+}
+.dash-nav-item.active .dash-nav-bullet {
+  background: var(--accent);
+  box-shadow: 0 0 4px var(--accent);
+}
+.dash-main {
+  flex: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.dash-kpi {
+  border: 1px dashed var(--line);
+  padding: 10px 12px;
+  background: rgba(14,14,14,0.6);
+}
+.dash-kpi-label {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.dash-kpi-value {
+  font-size: 18px;
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.dash-kpi-delta {
+  font-size: 10px;
+  color: var(--accent);
+}
+.dash-kpi-delta.down { color: #ed4d35; }
+.dash-chart {
+  border: 1px dashed var(--line);
+  padding: 14px;
+  background: rgba(14,14,14,0.4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.dash-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.dash-chart-title { font-size: 10px; color: var(--dim); letter-spacing: 0.1em; }
+.dash-chart-legend { display: flex; gap: 14px; font-size: 9px; color: var(--muted); }
+.dash-chart-legend span { display: flex; align-items: center; gap: 5px; }
+.dash-chart-legend i { width: 10px; height: 2px; background: var(--accent); }
+.dash-chart-legend i.dim { background: var(--surface-3); }
+.dash-chart-bars {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+.dash-chart-bars i {
+  flex: 1;
+  background: var(--accent);
+  opacity: 0.75;
+  min-height: 2px;
+}
+.dash-chart-bars i.dim { background: var(--surface-3); opacity: 1; }
+
+/* Trusted by */
+.trusted {
+  padding: 36px 0;
+  overflow: hidden;
+}
+.trusted-header {
+  padding: 0 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+.marquee::before, .marquee::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+.marquee::after { right: 0; background: linear-gradient(270deg, var(--bg), transparent); }
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  animation: marquee-l 60s linear infinite;
+}
+.marquee-track.reverse { animation: marquee-r 60s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee-l {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-r {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.logo-box {
+  width: 140px;
+  height: 40px;
+  border: 1px dashed var(--line);
+  background-color: var(--surface-1);
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 10px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+/* Section heads */
+.section-head {
+  padding: 0 28px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+}
+.section-head .meta { margin-left: auto; color: var(--muted); }
+
+/* Solutions */
+.solutions { padding: 80px 0; }
+.solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px dashed var(--line);
+}
+.solution-card {
+  padding: 44px 36px;
+  border-right: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+}
+.solution-card:last-child { border-right: none; }
+.icon-box {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--accent);
+  background: rgba(54,223,1,0.05);
+  box-shadow: 0 0 12px #1E7F00, inset 0 0 8px rgba(54,223,1,0.1);
+  display: grid;
+  place-items: center;
+  margin-bottom: 28px;
+}
+.icon-box svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  filter: drop-shadow(0 0 3px rgba(54,223,1,0.6));
+}
+.solution-card h3 {
+  font-family: 'Geist', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.solution-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 28px;
+  flex: 1;
+}
+.solution-card .more {
+  font-size: 12px;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.25s var(--ease-precise);
+}
+.solution-card .more:hover { gap: 12px; }
+
+/* Features */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px dashed var(--line);
+}
+.feature-text {
+  padding: 64px 56px;
+  border-right: 1px dashed var(--line);
+}
+.feature-text.right { border-right: none; border-left: 1px dashed var(--line); }
+.feature-visual {
+  padding: 0;
+  min-height: 480px;
+  position: relative;
+}
+.feature-visual-inner {
+  position: absolute;
+  inset: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.feature-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 28px;
+}
+.feature-text h2 {
+  font-family: 'Geist', sans-serif;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.feature-text > p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 36px;
+  max-width: 460px;
+}
+.feature-list { display: flex; flex-direction: column; gap: 20px; }
+.feature-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.feature-list svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+  filter: drop-shadow(0 0 4px rgba(54,223,1,0.7));
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.feature-list .label { color: var(--ink); margin-bottom: 3px; }
+.feature-list .desc { color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+/* Terminal */
+.terminal {
+  border: 1px dashed var(--line);
+  background: rgba(8,8,8,0.85);
+  font-family: 'Geist Mono', monospace;
+}
+.terminal-head {
+  border-bottom: 1px dashed var(--line);
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.terminal-dots { display: flex; gap: 5px; }
+.terminal-dots span {
+  width: 7px; height: 7px;
+  background: var(--surface-3);
+  border: 1px dashed var(--line);
+}
+.terminal-body { padding: 16px; font-size: 12px; line-height: 1.8; }
+.terminal-prompt { color: var(--accent); }
+.terminal-out { color: var(--muted); }
+.terminal-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: var(--accent);
+  vertical-align: middle;
+  animation: blink 1s steps(2) infinite;
+  box-shadow: 0 0 4px rgba(54,223,1,0.6);
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* How it works */
+.how-it-works { padding: 80px 0; }
+.how-grid {
+  display: grid;
+  grid-template-columns: 662px 618px;
+  border-top: 1px dashed var(--line);
+}
+.how-text {
+  padding: 56px 48px;
+  border-right: 1px dashed var(--line);
+}
+.how-visual {
+  padding: 56px 48px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.how-text h2 {
+  font-family: 'Geist', sans-serif;
+  font-size: 48px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+.how-text > p {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 40px;
+  max-width: 480px;
+  line-height: 1.65;
+}
+.steps { display: flex; flex-direction: column; }
+.step {
+  padding: 26px 0;
+  border-bottom: 1px dashed var(--line);
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'Geist', sans-serif;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  min-width: 52px;
+  filter: drop-shadow(0 0 8px rgba(54,223,1,0.4));
+}
+.step h4 {
+  font-family: 'Geist', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.step p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Testimonials */
+.testimonials { padding: 80px 0; overflow: hidden; }
+.testimonial-row { margin-bottom: 12px; }
+.testimonial-card {
+  width: 460px;
+  border-right: 1px dashed var(--line);
+  padding: 26px 28px;
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background: var(--surface-1);
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 14px);
+  vertical-align: top;
+}
+.testimonial-quote {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 22px;
+}
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 32px; height: 32px;
+  background: var(--surface-2);
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 6px);
+  border: 1px dashed var(--line);
+  flex-shrink: 0;
+}
+.testimonial-name { font-size: 12px; color: var(--ink); }
+.testimonial-role { font-size: 11px; color: var(--muted); }
+
+/* FAQ */
+.faq { padding: 80px 0; }
+.faq-column {
+  width: 700px;
+  margin: 0 auto;
+  border-left: 1px dashed var(--line);
+  border-right: 1px dashed var(--line);
+}
+.faq-item { border-bottom: 1px dashed var(--line); }
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 32px;
+  text-align: left;
+  font-size: 15px;
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  transition: color 0.2s;
+  gap: 24px;
+}
+.faq-trigger:hover { color: var(--accent); }
+.faq-icon {
+  width: 30px; height: 30px;
+  border: 1px dashed var(--line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.3s var(--ease-precise);
+}
+.faq-icon::before, .faq-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--dim);
+  transition: all 0.3s var(--ease-precise);
+}
+.faq-icon::before { width: 10px; height: 1px; }
+.faq-icon::after { width: 1px; height: 10px; }
+.faq-item.open .faq-icon {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(54,223,1,0.4);
+}
+.faq-item.open .faq-icon::before { background: var(--accent); }
+.faq-item.open .faq-icon::after { transform: rotate(90deg); opacity: 0; }
+.faq-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease-precise);
+}
+.faq-body-inner {
+  padding: 0 32px 26px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* Final CTA */
+.final-cta {
+  position: relative;
+  padding: 120px 28px;
+  overflow: hidden;
+  border-bottom: 1px dashed var(--line);
+}
+
+.final-cta-radial {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(54,223,1,0.15) 0%, transparent 70%);
+}
+.final-cta-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.final-cta h2 {
+  font-family: 'Geist', sans-serif;
+  font-size: 80px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 24px;
+}
+.final-cta p {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 500px;
+  margin-bottom: 40px;
+  line-height: 1.65;
+}
+
+/* Footer */
+.site-footer { padding: 64px 28px 32px; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  margin-bottom: 56px;
+}
+.footer-brand p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 20px 0 24px;
+  line-height: 1.65;
+  max-width: 300px;
+}
+.social-row { display: flex; gap: 10px; }
+.social-icon {
+  width: 36px; height: 36px;
+  border: 1px dashed var(--line);
+  background: var(--surface-1);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: var(--dim);
+  transition: all 0.25s;
+}
+.social-icon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px rgba(30,127,0,0.4);
+}
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+.footer-col-label {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-bottom: 18px;
+}
+.footer-col a {
+  display: block;
+  font-size: 13px;
+  color: var(--dim);
+  padding: 5px 0;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--accent); }
+.footer-bottom {
+  border-top: 1px dashed var(--line);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease-quiet), transform 0.9s var(--ease-quiet);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .live-dot, .terminal-cursor { animation: none; }
+}
+@media (hover: none) {
+  .marquee:hover .marquee-track { animation-play-state: running; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+<div class="column">
+
+  <!-- HEADER -->
+  <header class="site-header dash-b">
+    <a href="#" class="brand">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="brand-logo">
+      <span>ResetUI</span>
+    </a>
+    <nav class="main-nav">
+      <a href="#features">Features</a>
+      <a href="#integrations">Templates</a>
+      <a href="#changelog">Versions</a>
+      <a href="#docs">Export</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="header-actions">
+      <a href="#">Sign in</a>
+      <button class="cta-btn">Get started -></button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero dash-b">
+    <div class="hero-bg"></div>
+    <div class="hero-radial"></div>
+    <div class="hero-content">
+      <div class="eyebrow reveal">
+        <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+        <span>1.0.3 / URL CAPTURE ONLINE</span>
+      </div>
+      <h1 class="display reveal">Reset your page,<br>with real context.</h1>
+      <p class="hero-sub reveal">ResetUI captures your existing landing page, applies your design direction, and generates an editable redesign you can export as clean HTML.</p>
+      <div class="hero-cta-row reveal">
+        <button class="cta-btn primary">Start free -></button>
+        <button class="cta-btn ghost">View examples</button>
+      </div>
+
+      <div class="dashboard-mockup mask-fade reveal">
+        <div class="dash-topbar">
+          <div class="dash-topbar-left">
+            <span class="dash-dots"><span></span><span></span><span></span></span>
+            <span>resetui.canvas / redesign / live</span>
+          </div>
+          <div class="dash-topbar-right">
+            <span class="live-dot"></span>
+            <span>live / generating sections</span>
+          </div>
+        </div>
+        <div class="dash-body">
+          <aside class="dash-sidebar">
+            <div class="dash-section-label">WORKSPACE</div>
+            <div class="dash-nav-item active"><span class="dash-nav-bullet"></span>overview</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>capture</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>sections</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>exports</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>versions</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>prompts</div>
+            <div class="dash-section-label" style="margin-top:14px;">ENVIRONMENT</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>landing</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>draft</div>
+            <div class="dash-nav-item"><span class="dash-nav-bullet"></span>handoff</div>
+          </aside>
+          <main class="dash-main">
+            <div class="dash-kpis">
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">SECTIONS</div>
+                <div class="dash-kpi-value">12</div>
+                <div class="dash-kpi-delta">↑ 2.3%</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">EDIT READY</div>
+                <div class="dash-kpi-value">LIVE</div>
+                <div class="dash-kpi-delta">↓ 12ms</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">EXPORTS</div>
+                <div class="dash-kpi-value">08</div>
+                <div class="dash-kpi-delta down">↑ 0.01%</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">VERSIONS</div>
+                <div class="dash-kpi-value">04</div>
+                <div class="dash-kpi-delta">— 0</div>
+              </div>
+            </div>
+            <div class="dash-chart">
+              <div class="dash-chart-header">
+                <span class="dash-chart-title">EDIT READY · LAST 24H</span>
+                <div class="dash-chart-legend">
+                  <span><i></i>new page</span>
+                  <span><i class="dim"></i>source page</span>
+                </div>
+              </div>
+              <div class="dash-chart-bars" id="chart-bars"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUSTED BY -->
+  <section class="trusted dash-b">
+    <div class="trusted-header">
+      <span>// USED BY BUILDERS FOR</span>
+      <span>URL CAPTURE / AI REDESIGN / HTML EXPORT</span>
+    </div>
+    <div class="marquee">
+      <div class="marquee-track">
+        <div class="logo-box">URL</div>
+        <div class="logo-box">PROMPT</div>
+        <div class="logo-box">CANVAS</div>
+        <div class="logo-box">CHAT</div>
+        <div class="logo-box">EXPORT</div>
+        <div class="logo-box">VERSION</div>
+        <div class="logo-box">HTML</div>
+        <div class="logo-box">HANDOFF</div>
+        <div class="logo-box">URL</div>
+        <div class="logo-box">PROMPT</div>
+        <div class="logo-box">CANVAS</div>
+        <div class="logo-box">CHAT</div>
+        <div class="logo-box">EXPORT</div>
+        <div class="logo-box">VERSION</div>
+        <div class="logo-box">HTML</div>
+        <div class="logo-box">HANDOFF</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTIONS -->
+  <section class="solutions dash-b">
+    <div class="section-head reveal">
+      <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+      <span>// RESETUI FLOW</span>
+      <span class="meta">03 / OUTPUTS</span>
+    </div>
+    <div class="solutions-grid">
+      <div class="solution-card reveal">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+        </div>
+        <h3>Website capture</h3>
+        <p>Extract copy, links, media, hierarchy, colors, fonts, and brand signals from one landing-page URL.</p>
+        <a class="more" href="#">Explore capture -></a>
+      </div>
+      <div class="solution-card reveal">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        </div>
+        <h3>Live generation</h3>
+        <p>Stream a full-page redesign into the canvas section by section, ready for review and edits.</p>
+        <a class="more" href="#">Explore sections -></a>
+      </div>
+      <div class="solution-card reveal">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        </div>
+        <h3>Clean HTML export</h3>
+        <p>Download standalone HTML that is easy to inspect, edit, host, or hand off.</p>
+        <a class="more" href="#">Explore exports -></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features dash-b" id="features">
+    <!-- Row 1 -->
+    <div class="feature-row">
+      <div class="feature-text reveal">
+        <div class="feature-eyebrow">
+          <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+          <span>// FEATURE 01 / URL CAPTURE</span>
+        </div>
+        <h2>Capture that keeps the source intent.</h2>
+        <p>Paste a URL and ResetUI reads the page structure, copy, imagery, and brand cues before it generates anything.</p>
+        <ul class="feature-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">URL capture for live landing pages</div>
+              <div class="desc">Works from public marketing pages without a design file.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Copy, media, and hierarchy extraction</div>
+              <div class="desc">Keeps the useful source-page context attached to the project.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Prompt and template compatibility</div>
+              <div class="desc">Blend captured content with high-fidelity prompts and templates.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Section edits without restart</div>
+              <div class="desc">Ask for targeted changes while preserving the generated page.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="feature-visual diag-bg">
+        <div class="feature-visual-inner">
+          <div class="terminal">
+            <div class="terminal-head">
+              <span class="terminal-dots"><span></span><span></span><span></span></span>
+              <span>~/resetui / capture</span>
+            </div>
+            <div class="terminal-body">
+              <div><span class="terminal-prompt">$</span> capture https://example.com</div>
+              <div class="terminal-out">+ source page captured</div>
+              <div class="terminal-out">copy, links, media, and hierarchy ready</div>
+              <div style="margin-top:10px;"><span class="terminal-prompt">$</span> PROMPT="clean SaaS redesign"</div>
+              <div style="margin-top:10px;"><span class="terminal-prompt">$</span> resetui generate</div>
+              <div class="terminal-out">[resetui] connected to project canvas</div>
+              <div class="terminal-out">[resetui] generating hero, features, pricing, faq</div>
+              <div class="terminal-out">[resetui] export -> <span class="accent">page.html</span></div>
+              <div style="margin-top:10px;"><span class="terminal-prompt">$</span> <span class="terminal-cursor"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="feature-row">
+      <div class="feature-visual diag-bg">
+        <div class="feature-visual-inner" style="gap:12px;">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+            <div style="border:1px dashed var(--line);padding:16px;background:rgba(14,14,14,0.6);">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;">P50</div>
+              <div style="font-family:'Geist',sans-serif;font-size:26px;letter-spacing:-0.02em;">12ms</div>
+            </div>
+            <div style="border:1px dashed var(--line);padding:16px;background:rgba(14,14,14,0.6);">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;">P99</div>
+              <div style="font-family:'Geist',sans-serif;font-size:26px;letter-spacing:-0.02em;color:var(--accent);">LIVE</div>
+            </div>
+            <div style="border:1px dashed var(--line);padding:16px;background:rgba(14,14,14,0.6);">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;">P99.9</div>
+              <div style="font-family:'Geist',sans-serif;font-size:26px;letter-spacing:-0.02em;">210ms</div>
+            </div>
+          </div>
+          <div style="border:1px dashed var(--line);padding:16px;background:rgba(14,14,14,0.4);flex:1;display:flex;flex-direction:column;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+              <span style="font-size:10px;color:var(--dim);letter-spacing:0.1em;">SECTION MAP / CURRENT DRAFT</span>
+              <span style="font-size:10px;color:var(--accent);">filtered: needs review</span>
+            </div>
+            <div id="mini-chart" style="flex:1;display:flex;align-items:flex-end;gap:4px;border-top:1px dashed var(--line);padding-top:10px;"></div>
+          </div>
+          <div style="border:1px dashed var(--line);padding:10px 14px;background:rgba(14,14,14,0.4);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;">
+            <span>showing: landing / us-east-1</span>
+            <span>12 sections / live edits</span>
+          </div>
+        </div>
+      </div>
+      <div class="feature-text right reveal">
+        <div class="feature-eyebrow">
+          <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+          <span>// FEATURE 02 / CHAT EDITS</span>
+        </div>
+        <h2>Edit without losing context.</h2>
+        <p>Use plain-language chat to change tone, sections, spacing, and copy while keeping the captured source and generated page connected.</p>
+        <ul class="feature-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Target one section at a time</div>
+              <div class="desc">Ask for precise revisions without regenerating the full page.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Save versions as project history</div>
+              <div class="desc">Commit directions, compare drafts, and restore prior versions.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Export to clean standalone HTML</div>
+              <div class="desc">Keep the output easy to inspect, edit, host, and hand off.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Refine any visual direction</div>
+              <div class="desc">Try bolder, cleaner, warmer, or more minimal directions from the same captured page.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="feature-row">
+      <div class="feature-text reveal">
+        <div class="feature-eyebrow">
+          <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+          <span>// FEATURE 03 / EXPORT</span>
+        </div>
+        <h2>Latency you can ship to landing.</h2>
+        <p>ResetUI exports standalone HTML that keeps the design readable, editable, and ready for hosting or developer handoff.</p>
+        <ul class="feature-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Clean standalone HTML export</div>
+              <div class="desc">From generated page to local file without platform lock-in.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Responsive sections by default</div>
+              <div class="desc">Generated pages keep the section structure easy to scan and adapt.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Version-aware by default</div>
+              <div class="desc">Return to earlier drafts when a direction is worth preserving.</div>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <div>
+              <div class="label">Prompt, canvas, and export in one flow</div>
+              <div class="desc">Capture, generate, chat-edit, and export without losing context.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="feature-visual diag-bg">
+        <div class="feature-visual-inner">
+          <div style="border:1px dashed var(--line);background:rgba(8,8,8,0.7);padding:22px;display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:10px;color:var(--dim);letter-spacing:0.1em;">EXPORT / HANDOFF READINESS</span>
+              <span style="font-size:10px;color:var(--muted);">page ready / review</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">
+                  <span style="color:var(--ink);">resetui</span><span class="accent">ready</span>
+                </div>
+                <div style="height:10px;background:var(--surface-2);border:1px dashed var(--line);">
+                  <div style="height:100%;width:4%;background:var(--accent);box-shadow:0 0 6px var(--accent);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;">
+                  <span>competitor-a</span><span>review</span>
+                </div>
+                <div style="height:10px;background:var(--surface-2);border:1px dashed var(--line);">
+                  <div style="height:100%;width:48%;background:var(--surface-3);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;">
+                  <span>competitor-b</span><span>edit</span>
+                </div>
+                <div style="height:10px;background:var(--surface-2);border:1px dashed var(--line);">
+                  <div style="height:100%;width:82%;background:var(--surface-3);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;">
+                  <span>competitor-c</span><span>ship</span>
+                </div>
+                <div style="height:10px;background:var(--surface-2);border:1px dashed var(--line);">
+                  <div style="height:100%;width:100%;background:var(--surface-3);"></div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:9px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;letter-spacing:0.05em;">
+              export readiness / captured context / clean HTML handoff
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works dash-b">
+    <div class="section-head reveal">
+      <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+      <span>// HOW IT WORKS</span>
+      <span class="meta">04 / STEPS</span>
+    </div>
+    <div class="how-grid">
+      <div class="how-text reveal">
+        <h2>From zero to capture<br>in under five minutes.</h2>
+        <p>No blank canvas. Capture the current page, describe the direction, review the generated result, and export.</p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">01</span>
+            <div>
+              <h4>Capture the page</h4>
+              <p>Paste a landing-page URL and let ResetUI collect the useful context from the live page.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">02</span>
+            <div>
+              <h4>Ship to landing</h4>
+              <p>Auto-discovers prompts. Traces propagate by default. No code changes required past the initial import.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">03</span>
+            <div>
+              <h4>Review the canvas</h4>
+              <p>Inspect the generated layout, adjust copy, and ask for targeted edits where needed.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">04</span>
+            <div>
+              <h4>Set versions</h4>
+              <p>Download clean standalone HTML and keep versions ready for future iterations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual diag-bg">
+        <div style="width:100%;max-width:520px;border:1px dashed var(--line);background:rgba(8,8,8,0.85);">
+          <div style="border-bottom:1px dashed var(--line);padding:10px 14px;display:flex;align-items:center;gap:12px;font-size:11px;color:var(--muted);">
+            <span class="terminal-dots"><span></span><span></span><span></span></span>
+            <span>resetui / quickstart</span>
+          </div>
+          <div style="padding:22px;font-size:12px;line-height:1.9;">
+            <div style="color:var(--muted);"># 1 / capture</div>
+            <div><span class="terminal-prompt">$</span> capture https://example.com</div>
+            <div class="terminal-out">+ source page captured  copy, links, media, and hierarchy ready</div>
+            <div style="margin-top:10px;color:var(--muted);"># 2 / prompt</div>
+            <div><span class="terminal-prompt">$</span> export PROMPT="clean SaaS redesign"</div>
+            <div style="margin-top:10px;color:var(--muted);"># 3 / generate</div>
+            <div><span class="terminal-prompt">$</span> resetui generate --sections all</div>
+            <div class="terminal-out">[resetui] source context loaded</div>
+            <div class="terminal-out">[resetui] hero, features, pricing, faq generated</div>
+            <div class="terminal-out">[resetui] export -> <span class="accent">page.html</span></div>
+            <div style="margin-top:14px;color:var(--muted);"># 4 / export</div>
+            <div><span class="terminal-prompt">$</span> export page.html</div>
+            <div style="margin-top:10px;"><span class="terminal-prompt">$</span> <span class="terminal-cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials dash-b">
+    <div class="section-head reveal">
+      <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+      <span>// BUILDER FEEDBACK</span>
+      <span class="meta">08 / QUOTES</span>
+    </div>
+
+    <div class="testimonial-row marquee">
+      <div class="marquee-track">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"ResetUI one-shotted a landing page that felt more unique than the other tools we tried."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Maya Chen</div><div class="testimonial-role">Builder / SaaS</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The export gave us a standalone HTML file we could inspect, edit, and hand off immediately."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Daniel Park</div><div class="testimonial-role">Frontend Lead / Export</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Querying capture without learning a DSL is genuinely a relief. Junior engineers are productive in 20 minutes, not 20 days."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Sofia Reyes</div><div class="testimonial-role">Product Designer / Chat</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The URL capture kept our source message intact while giving the page a stronger visual system."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Arjun Mehta</div><div class="testimonial-role">Growth Lead / Capture</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"ResetUI one-shotted a landing page that felt more unique than the other tools we tried."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Maya Chen</div><div class="testimonial-role">Builder / SaaS</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The export gave us a standalone HTML file we could inspect, edit, and hand off immediately."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Daniel Park</div><div class="testimonial-role">Frontend Lead / Export</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Querying capture without learning a DSL is genuinely a relief. Junior engineers are productive in 20 minutes, not 20 days."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Sofia Reyes</div><div class="testimonial-role">Product Designer / Chat</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The URL capture kept our source message intact while giving the page a stronger visual system."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Arjun Mehta</div><div class="testimonial-role">Growth Lead / Capture</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-row marquee">
+      <div class="marquee-track reverse">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"ResetUI felt fast because the prompt, canvas, versions, and export all stayed in one workflow."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Lin Wei</div><div class="testimonial-role">Founder / Workflow</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Section edits without restart is the feature I didn't know I needed. We dropped a deploy pipeline step overnight."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Hassan Ali</div><div class="testimonial-role">Design Engineer / Versions</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The generated sections were high fidelity enough that we could focus on polish instead of structure."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Elena Voss</div><div class="testimonial-role">Agency Lead / Templates</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"We used the exported HTML as the starting point for production instead of a disposable mockup."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Marcus Reed</div><div class="testimonial-role">Principal Engineer · Nullpoint</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"ResetUI felt fast because the prompt, canvas, versions, and export all stayed in one workflow."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Lin Wei</div><div class="testimonial-role">Founder / Workflow</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Section edits without restart is the feature I didn't know I needed. We dropped a deploy pipeline step overnight."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Hassan Ali</div><div class="testimonial-role">Design Engineer / Versions</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The generated sections were high fidelity enough that we could focus on polish instead of structure."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Elena Voss</div><div class="testimonial-role">Agency Lead / Templates</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"We used the exported HTML as the starting point for production instead of a disposable mockup."</p>
+          <div class="testimonial-author">
+            <div class="avatar"></div>
+            <div><div class="testimonial-name">Marcus Reed</div><div class="testimonial-role">Principal Engineer · Nullpoint</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq dash-b">
+    <div class="section-head reveal" style="justify-content:center;margin-bottom:48px;">
+      <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+      <span>// FREQUENTLY ASKED</span>
+    </div>
+    <div class="faq-column">
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>How does ResetUI capture an existing page?</span>
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-body">
+          <div class="faq-body-inner">Paste a public landing-page URL and ResetUI extracts the visible copy, links, layout hierarchy, media references, colors, fonts, and brand signals before generating the redesign.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>Can I edit the generated page?</span>
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-body">
+          <div class="faq-body-inner">Yes. Use chat to change specific sections, restore versions, try new directions, and export again without losing the original page context.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>What does ResetUI export?</span>
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-body">
+          <div class="faq-body-inner">ResetUI exports standalone HTML that you can inspect, edit, host, or hand off. The project also keeps generated versions for future refinement.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>Can I generate another direction?</span>
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-body">
+          <div class="faq-body-inner">Yes. Keep the captured page context, change the design prompt, and generate another version without starting from scratch.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>Can I use prompts and templates?</span>
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-body">
+          <div class="faq-body-inner">Yes. ResetUI works with high-fidelity prompts and templates so you can push the captured page into a clearer visual system.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>How long does a first draft take?</span>
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-body">
+          <div class="faq-body-inner">Most first drafts are generated in minutes after capture. You can then refine sections with chat and export the final HTML.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="final-cta-bg"></div>
+    <div class="final-cta-radial"></div>
+    <div class="final-cta-content">
+      <div class="eyebrow reveal" style="margin-bottom:28px;">
+        <span class="grid-badge"><i></i><i></i><i></i><i></i></span>
+        <span>// READY TO SHIP</span>
+      </div>
+      <h2 class="display reveal">Reset the page<br>without starting over.</h2>
+      <p class="reveal">Start with a live URL, add your design direction, generate the page, and export clean HTML when it feels ready.</p>
+      <div class="hero-cta-row reveal" style="margin-bottom:0;">
+        <button class="cta-btn primary">Start free -></button>
+        <button class="cta-btn ghost">See examples</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="brand">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="brand-logo">
+      <span>ResetUI</span>
+        </a>
+        <p>Capture a live landing page, generate a refreshed design, chat-edit sections, and export clean HTML.</p>
+        <div class="social-row">
+          <a class="social-icon" href="#" aria-label="GitHub">GH</a>
+          <a class="social-icon" href="#" aria-label="X">X</a>
+          <a class="social-icon" href="#" aria-label="Discord">DC</a>
+          <a class="social-icon" href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-label">PRODUCT</div>
+          <a href="#">Features</a>
+          <a href="#">Templates</a>
+          <a href="#">Versions</a>
+          <a href="#">Pricing</a>
+          <a href="#">Status</a>
+          <a href="#">Roadmap</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">RESOURCES</div>
+          <a href="#">Documentation</a>
+          <a href="#">API Reference</a>
+          <a href="#">Export Guides</a>
+          <a href="#">Templates</a>
+          <a href="#">Roadmap</a>
+          <a href="#">Security</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">COMPANY</div>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press Kit</a>
+          <a href="#">Contact</a>
+          <a href="#">Legal</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>(c) 2026 ResetUI. All rights reserved.</span>
+      <span>URL capture / AI redesign / HTML export</span>
+    </div>
+  </footer>
+
+</div>
+</div>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => io.observe(el));
+
+  // Dashboard chart bars
+  const chartBars = document.getElementById('chart-bars');
+  if (chartBars) {
+    const heights = [38, 52, 35, 68, 58, 44, 78, 62, 48, 72, 88, 54, 40, 58, 68, 82, 50, 35, 58, 72, 78, 54, 44, 68, 58, 48, 72, 82, 62, 52];
+    heights.forEach((h, i) => {
+      const bar = document.createElement('i');
+      bar.style.height = h + '%';
+      if (i % 8 === 6 || i % 8 === 7) bar.classList.add('dim');
+      chartBars.appendChild(bar);
+    });
+  }
+
+  // Mini chart
+  const miniChart = document.getElementById('mini-chart');
+  if (miniChart) {
+    const heights = [28, 42, 36, 54, 68, 40, 58, 82, 48, 72, 62, 38, 52, 68, 44, 88, 58, 34, 48, 62, 78, 52, 68, 44, 58, 72, 48, 82, 54, 38];
+    heights.forEach((h) => {
+      const bar = document.createElement('div');
+      bar.style.cssText = `flex:1;height:${h}%;background:var(--accent);opacity:0.7;min-height:2px;`;
+      miniChart.appendChild(bar);
+    });
+  }
+
+  // FAQ accordion
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const trigger = item.querySelector('.faq-trigger');
+    const body = item.querySelector('.faq-body');
+    trigger.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      faqItems.forEach(other => {
+        other.classList.remove('open');
+        other.querySelector('.faq-body').style.maxHeight = '0';
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

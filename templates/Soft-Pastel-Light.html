@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soft Pastel | Light</title>
+<meta name="application-name" content="Soft Pastel | Light">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --foundation: #FBF9FF;
+  --surface: #FFFFFF;
+  --sunken: #F3EFF8;
+  --panel: #F8F5FC;
+  --lavender-primary: #B69DDF;
+  --lavender-soft: #E8DEF6;
+  --lavender-wash: #F2ECFA;
+  --periwinkle: #E7EAF5;
+  --periwinkle-deep: #C9D1E8;
+  --lilac: #EEE8F8;
+  --lilac-deep: #DCD0F1;
+  --wisteria: #D6C2EA;
+  --ink: #2B2633;
+  --ink-soft: #47404F;
+  --ink-muted: #776F80;
+  --ink-faint: #A59DAD;
+  --stone-300: #D9D2E0;
+  --stone-200: #EAE4EF;
+  --shadow-lavender: 0 8px 32px rgba(139,108,190,0.25);
+  --shadow-soft: 0 4px 20px rgba(43,38,51,0.06);
+  --shadow-lift: 0 12px 40px rgba(43,38,51,0.08);
+  --ease-quiet: cubic-bezier(.22, 1, .36, 1);
+  --ease-precise: cubic-bezier(.4, 0, .2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--foundation);
+  color: var(--ink);
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  position: relative;
+}
+
+::selection { background: var(--lavender-soft); color: var(--ink); }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--foundation); }
+::-webkit-scrollbar-thumb { background: var(--stone-300); border-radius: 8px; }
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+ul, ol { list-style: none; }
+img { max-width: 100%; display: block; }
+
+/* === GRAIN === */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* === BLOBS === */
+.blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+}
+.blob-1 { width: 500px; height: 500px; background: var(--lavender-soft); top: -100px; right: -100px; animation: drift1 32s ease-in-out infinite alternate; }
+.blob-2 { width: 400px; height: 400px; background: var(--lilac-deep); top: 40%; left: -120px; animation: drift2 36s ease-in-out infinite alternate; }
+.blob-3 { width: 450px; height: 450px; background: var(--periwinkle); top: 70%; right: 10%; animation: drift3 30s ease-in-out infinite alternate; }
+.blob-4 { width: 350px; height: 350px; background: var(--wisteria); top: 120%; left: 30%; animation: drift4 34s ease-in-out infinite alternate; opacity: 0.4; }
+
+@keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(-50px, 60px) scale(1.1); } }
+@keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(60px, -40px) scale(0.95); } }
+@keyframes drift3 { from { transform: translate(0,0); } to { transform: translate(-40px, -50px); } }
+@keyframes drift4 { from { transform: translate(0,0); } to { transform: translate(50px, 70px); } }
+
+/* === TYPOGRAPHY === */
+.display { font-family: 'Outfit', sans-serif; font-weight: 600; letter-spacing: -0.02em; line-height: 1.08; }
+.hand { font-family: 'Reenie Beanie', cursive; font-weight: 400; color: var(--lavender-primary); display: inline-block; }
+.hand.ink { color: var(--ink); }
+
+/* === LAYOUT === */
+.section { padding: 96px 24px; position: relative; z-index: 1; }
+.section-head { text-align: center; max-width: 560px; margin: 0 auto 64px; }
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 20px;
+}
+.section-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lavender-primary); }
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.section-deck { font-size: 17px; line-height: 1.6; color: var(--ink-muted); }
+
+/* === BUTTONS === */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.3s var(--ease-quiet);
+  white-space: nowrap;
+}
+.pill-lavender {
+  background: var(--lavender-primary);
+  color: var(--ink);
+  box-shadow: var(--shadow-lavender);
+}
+.pill-lavender:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(139,108,190,0.35);
+}
+.pill-ghost {
+  background: var(--surface);
+  color: var(--ink-soft);
+  border: 1px solid var(--stone-200);
+  box-shadow: var(--shadow-soft);
+}
+.pill-ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--stone-300);
+  box-shadow: var(--shadow-lift);
+}
+.pill-dark {
+  background: var(--ink);
+  color: var(--foundation);
+  box-shadow: 0 4px 16px rgba(43,38,51,0.15);
+}
+.pill-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(43,38,51,0.25);
+}
+
+/* === NAV === */
+.nav-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.nav-wrap .nav { pointer-events: auto; }
+.nav {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 20px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 24px rgba(43,38,51,0.06);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+}
+.logo-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--lavender-primary);
+  display: grid;
+  place-items: center;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(139,108,190,0.4);
+}
+.logo-dot::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.nav-links { display: flex; gap: 4px; font-size: 14px; font-weight: 500; }
+.nav-links a {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  transition: all 0.25s var(--ease-precise);
+}
+.nav-links a:hover { color: var(--ink); background: rgba(255,255,255,0.5); }
+.nav-cta { padding: 9px 20px; font-size: 14px; }
+
+/* === HERO === */
+.hero {
+  padding: 80px 24px 96px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  background-image:
+    linear-gradient(180deg, rgba(251,249,255,0.30) 0%, rgba(251,249,255,0.58) 68%, rgba(251,249,255,0.86) 100%),
+    url("/assets/Startup-SaaS-Hero-bg.png"),
+    url("../assets/Startup-SaaS-Hero-bg.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.hero-blobs { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.hero-blobs .b1 {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: var(--lavender-soft);
+  top: 5%;
+  left: 5%;
+  filter: blur(90px);
+  opacity: 0.6;
+  animation: drift1 30s ease-in-out infinite alternate;
+}
+.hero-blobs .b2 {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: var(--lilac-deep);
+  top: 10%;
+  right: 5%;
+  filter: blur(90px);
+  opacity: 0.6;
+  animation: drift2 34s ease-in-out infinite alternate;
+}
+.hero-inner { max-width: 1200px; margin: 0 auto; padding-top: 34px; position: relative; }
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 28px;
+}
+.hero-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lavender-primary); box-shadow: 0 0 8px rgba(139,108,190,0.6); }
+.hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(48px, 7vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
+}
+.hero h1 .hand {
+  font-size: 1.15em;
+  transform: rotate(-2deg);
+  margin: 0 4px;
+  color: var(--surface);
+}
+.hero-deck {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  max-width: 500px;
+  margin: 0 auto 36px;
+}
+.hero-ctas { display: flex; gap: 12px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+.hero-ctas .pill-lavender {
+  background: #000;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+}
+.hero-ctas .pill-lavender:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.hero-trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+.hero-trust .star { color: var(--lavender-primary); }
+.hero-trust .num { font-weight: 600; color: var(--ink-soft); }
+
+/* === HERO VISUAL === */
+.hero-visual {
+  max-width: 720px;
+  margin: 56px auto 0;
+  position: relative;
+}
+.hero-visual-blob {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(circle at 30% 30%, var(--lavender-soft), transparent 60%), radial-gradient(circle at 70% 70%, var(--lilac-deep), transparent 60%);
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  z-index: -1;
+}
+.hero-card {
+  background: var(--surface);
+  border-radius: 32px;
+  padding: 24px;
+  box-shadow: var(--shadow-lift);
+  position: relative;
+}
+.hero-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.hero-card-greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--lavender-primary), var(--wisteria));
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+}
+.hero-card-greeting-text .hello { font-size: 14px; font-weight: 600; color: var(--ink); }
+.hero-card-greeting-text .sub { font-size: 12px; color: var(--ink-muted); }
+.hero-card-date {
+  font-size: 12px;
+  color: var(--ink-muted);
+  padding: 6px 12px;
+  background: var(--sunken);
+  border-radius: 999px;
+}
+.hero-card-prompt {
+  background: var(--lavender-wash);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.hero-card-prompt-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--lavender-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.hero-card-prompt-text {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.hero-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hero-card-tile {
+  background: var(--sunken);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+.hero-card-tile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  display: grid;
+  place-items: center;
+}
+.hero-card-tile-icon.lavender { background: var(--lavender-soft); color: #6B4B96; }
+.hero-card-tile-icon.periwinkle { background: var(--periwinkle); color: #53627E; }
+.hero-card-tile-label { font-size: 12px; font-weight: 500; color: var(--ink); }
+.hero-card-tile-meta { font-size: 11px; color: var(--ink-muted); }
+
+/* === TRUST STRIP === */
+.trust-strip { padding: 40px 24px; }
+.trust-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+.trust-label { font-size: 13px; color: var(--ink-faint); margin-bottom: 20px; font-weight: 400; }
+.trust-row { display: flex; justify-content: center; align-items: center; gap: 32px; flex-wrap: wrap; }
+.trust-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.trust-chip .num { color: var(--ink); font-weight: 600; }
+.trust-chip .star { color: var(--lavender-primary); }
+
+/* === FEATURES === */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.feature-card {
+  padding: 32px 28px;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.4s var(--ease-quiet);
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+}
+.feature-icon.lavender { background: var(--lavender-soft); color: #6B4B96; }
+.feature-icon.periwinkle { background: var(--periwinkle); color: #53627E; }
+.feature-icon.lilac { background: var(--lilac); color: #67548F; }
+.feature-icon.wisteria { background: var(--wisteria); color: #76528F; }
+.feature-icon svg { width: 26px; height: 26px; }
+.feature-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.feature-card p { font-size: 15px; line-height: 1.6; color: var(--ink-muted); }
+
+/* === SPOTLIGHT === */
+.spotlight-block {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.spotlight-block.reverse > .spotlight-visual { order: 2; }
+.spotlight-block.reverse > .spotlight-content { order: 1; }
+.spotlight-visual { position: relative; }
+.spotlight-visual-blob {
+  position: absolute;
+  inset: -30px;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.5;
+  z-index: -1;
+}
+.spotlight-visual-blob.lavender { background: var(--lavender-soft); }
+.spotlight-visual-blob.lilac { background: var(--lilac-deep); }
+.spotlight-visual-blob.periwinkle { background: var(--periwinkle); }
+.spotlight-phone {
+  background: var(--surface);
+  border-radius: 32px;
+  padding: 20px;
+  box-shadow: var(--shadow-lift);
+  position: relative;
+}
+.spotlight-content h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(28px, 3.5vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.spotlight-content h2 .hand { font-size: 1.2em; transform: rotate(-2deg); }
+.spotlight-content > p { font-size: 16px; line-height: 1.65; color: var(--ink-muted); margin-bottom: 24px; }
+.check-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.check-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px 10px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.check-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--lavender-primary);
+  color: var(--surface);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.check-icon svg { width: 14px; height: 14px; }
+
+/* phone mockup — sleep story */
+.phone-mock {
+  background: var(--sunken);
+  border-radius: 24px;
+  padding: 20px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+.phone-mock-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.phone-mock-back { font-size: 18px; color: var(--ink-muted); }
+.phone-mock-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.phone-mock-cover {
+  border-radius: 20px;
+  aspect-ratio: 1.4;
+  background: linear-gradient(135deg, var(--lilac-deep), var(--lavender-soft));
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.phone-mock-cover img { width: 100%; height: 100%; object-fit: cover; }
+.phone-mock-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(43,38,51,0.4));
+}
+.phone-mock-story-title { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.phone-mock-story-meta { font-size: 12px; color: var(--ink-muted); margin-bottom: 20px; }
+.phone-mock-progress {
+  height: 4px;
+  background: var(--stone-200);
+  border-radius: 999px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.phone-mock-progress-fill { width: 35%; height: 100%; background: var(--lavender-primary); border-radius: 999px; }
+.phone-mock-time { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-muted); margin-bottom: 20px; }
+.phone-mock-controls { display: flex; justify-content: center; align-items: center; gap: 24px; margin-top: auto; }
+.phone-mock-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-soft);
+  color: var(--ink);
+}
+.phone-mock-btn.play { width: 56px; height: 56px; background: var(--lavender-primary); color: var(--surface); }
+
+/* phone mockup — journal */
+.phone-mock-journal { display: flex; flex-direction: column; gap: 16px; }
+.phone-mock-journal-header { display: flex; align-items: center; justify-content: space-between; }
+.phone-mock-journal-date { font-size: 13px; font-weight: 600; color: var(--ink); }
+.phone-mock-journal-mood { display: flex; gap: 6px; }
+.phone-mock-journal-mood span { width: 24px; height: 24px; border-radius: 50%; }
+.phone-mock-journal-prompt {
+  background: var(--lavender-wash);
+  border-radius: 16px;
+  padding: 16px;
+}
+.phone-mock-journal-prompt-label { font-size: 10px; color: var(--lavender-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.phone-mock-journal-prompt-text { font-family: 'Reenie Beanie', cursive; font-size: 24px; color: var(--ink); line-height: 1.2; }
+.phone-mock-journal-entry {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 16px;
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  min-height: 120px;
+}
+.phone-mock-journal-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.phone-mock-journal-tag { padding: 4px 12px; border-radius: 999px; font-size: 11px; background: var(--lilac); color: #67548F; font-weight: 500; }
+
+/* === RITUAL / HOW IT WORKS === */
+.ritual-steps {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  position: relative;
+}
+.ritual-connector {
+  position: absolute;
+  top: 40px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background-image: linear-gradient(90deg, var(--periwinkle-deep) 50%, transparent 50%);
+  background-size: 12px 2px;
+  background-repeat: repeat-x;
+  z-index: 0;
+}
+.step-card {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 32px 24px;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.4s var(--ease-quiet);
+}
+.step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.step-num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--ink);
+}
+.step-num.lavender { background: var(--lavender-soft); }
+.step-num.periwinkle { background: var(--periwinkle); }
+.step-num.lilac { background: var(--lilac); }
+.step-num.wisteria { background: var(--wisteria); }
+.step-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.step-card p { font-size: 14px; line-height: 1.55; color: var(--ink-muted); }
+
+/* === GALLERY === */
+.gallery-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.gallery-item {
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.4s var(--ease-quiet);
+}
+.gallery-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3 / 4; }
+.gallery-item.tall { grid-row: span 2; }
+.gallery-item.tall img { aspect-ratio: 3 / 5; }
+.gallery-cap {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.gallery-cap .hand { font-size: 18px; display: block; color: var(--lavender-primary); }
+
+/* === STATS BAND === */
+.stats-band {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 40px;
+  border-radius: 36px;
+  background: var(--sunken);
+  box-shadow: inset 0 2px 8px rgba(43,38,51,0.04);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.stat-niche { text-align: center; }
+.stat-niche-num {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 44px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-niche-label {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 22px;
+  color: var(--ink-muted);
+  line-height: 1.2;
+}
+
+/* === TESTIMONIALS === */
+.testimonials-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.testimonial-card {
+  padding: 32px 28px;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: all 0.4s var(--ease-quiet);
+}
+.testimonial-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.testimonial-stars { display: flex; gap: 2px; color: var(--lavender-primary); }
+.testimonial-stars svg { width: 16px; height: 16px; fill: currentColor; }
+.testimonial-quote { font-size: 15px; line-height: 1.65; color: var(--ink-soft); flex: 1; }
+.testimonial-signature {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 24px;
+  color: var(--lavender-primary);
+  margin-top: -4px;
+}
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--surface);
+  font-weight: 600;
+  font-size: 15px;
+}
+.testimonial-avatar.lavender { background: linear-gradient(135deg, var(--lavender-primary), #8F6FC2); }
+.testimonial-avatar.periwinkle { background: linear-gradient(135deg, var(--periwinkle-deep), #AAB5D0); }
+.testimonial-avatar.lilac { background: linear-gradient(135deg, #C1AFE1, #9B83CA); }
+.testimonial-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.testimonial-role { font-size: 12px; color: var(--ink-muted); }
+
+/* === INTEGRATIONS === */
+.integrations-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+.integration-tile {
+  aspect-ratio: 1;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  place-items: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink-muted);
+  transition: all 0.3s var(--ease-quiet);
+}
+.integration-tile img { width: 42px; height: 42px; object-fit: contain; }
+.integration-tile span { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.integration-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); color: var(--ink); }
+.integration-tile.lavender { background: var(--lavender-wash); color: #6B4B96; }
+.integration-tile.periwinkle { background: var(--periwinkle); color: #53627E; }
+.integration-tile.lilac { background: var(--lilac); color: #67548F; }
+.integrations-cta { text-align: center; margin-top: 36px; }
+
+/* === PRICING === */
+.pricing-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: center;
+}
+.price-card {
+  padding: 36px 30px;
+  border-radius: 32px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s var(--ease-quiet);
+}
+.price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.price-card.featured {
+  background: var(--lavender-wash);
+  box-shadow: var(--shadow-lavender);
+  transform: scale(1.03);
+  position: relative;
+}
+.price-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+.price-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--lavender-primary);
+  color: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(139,108,190,0.4);
+  white-space: nowrap;
+}
+.price-label { font-size: 13px; font-weight: 500; color: var(--ink-muted); margin-bottom: 8px; }
+.price-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.price-amount { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+.price-amount .num { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 40px; line-height: 1; color: var(--ink); }
+.price-amount .per { font-size: 14px; color: var(--ink-muted); }
+.price-desc { font-size: 14px; color: var(--ink-muted); margin-bottom: 24px; min-height: 40px; }
+.price-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; flex: 1; }
+.price-features li {
+  font-size: 14px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.price-features li::before {
+  content: '✓';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--lavender-soft);
+  color: var(--lavender-primary);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.price-cta {
+  width: 100%;
+  text-align: center;
+  padding: 13px 24px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 15px;
+  background: var(--sunken);
+  color: var(--ink);
+  transition: all 0.3s var(--ease-quiet);
+}
+.price-cta:hover { background: var(--stone-200); }
+.price-card.featured .price-cta {
+  background: var(--lavender-primary);
+  color: var(--surface);
+  box-shadow: var(--shadow-lavender);
+}
+.price-card.featured .price-cta:hover { background: #A98ED5; }
+
+/* === FAQ === */
+.faq-list { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: all 0.3s var(--ease-quiet);
+}
+.faq-item:hover { box-shadow: var(--shadow-lift); }
+.faq-trigger {
+  width: 100%;
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+}
+.faq-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--lavender-wash);
+  color: var(--lavender-primary);
+  position: relative;
+  transition: all 0.3s var(--ease-quiet);
+}
+.faq-icon::before, .faq-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--lavender-primary);
+  border-radius: 2px;
+}
+.faq-icon::before { width: 12px; height: 2px; }
+.faq-icon::after { width: 2px; height: 12px; transition: transform 0.3s var(--ease-quiet); }
+.faq-item.open .faq-icon { background: var(--lavender-primary); }
+.faq-item.open .faq-icon::before { background: var(--surface); }
+.faq-item.open .faq-icon::after { transform: rotate(90deg); background: var(--surface); }
+.faq-body { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease-quiet); }
+.faq-body-inner { padding: 0 24px 24px; font-size: 15px; line-height: 1.65; color: var(--ink-muted); }
+
+/* === FINAL CTA === */
+.final-cta-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 72px 48px;
+  border-radius: 40px;
+  background: linear-gradient(135deg, var(--lavender-wash) 0%, var(--lilac) 100%);
+  border: 2px solid var(--lavender-primary);
+  text-align: center;
+  box-shadow: var(--shadow-lift);
+  position: relative;
+  overflow: hidden;
+}
+.final-cta-inner::before, .final-cta-inner::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+}
+.final-cta-inner::before { width: 200px; height: 200px; background: var(--lavender-soft); top: -60px; right: -40px; opacity: 0.6; }
+.final-cta-inner::after { width: 240px; height: 240px; background: var(--lilac-deep); bottom: -80px; left: -60px; opacity: 0.5; }
+.final-cta-inner h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 18px;
+  position: relative;
+}
+.final-cta-inner h2 .hand { font-size: 1.2em; transform: rotate(-3deg); }
+.final-cta-inner p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 34px;
+  max-width: 470px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+.final-cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+/* === FOOTER === */
+.footer { padding: 64px 24px 40px; position: relative; z-index: 1; }
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px;
+  border-radius: 36px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.footer-newsletter {
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--sunken);
+  margin-bottom: 40px;
+  text-align: center;
+}
+.footer-newsletter-label { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.footer-newsletter-label .hand { font-size: 24px; color: var(--lavender-primary); }
+.footer-newsletter-desc { font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; }
+.footer-newsletter-form { display: flex; gap: 8px; max-width: 420px; margin: 0 auto; }
+.footer-newsletter input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--stone-200);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: all 0.25s var(--ease-precise);
+}
+.footer-newsletter input::placeholder { color: var(--ink-faint); }
+.footer-newsletter input:focus { border-color: var(--lavender-primary); box-shadow: 0 0 0 3px rgba(139,108,190,0.15); }
+.footer-newsletter button {
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 14px;
+  background: var(--lavender-primary);
+  color: var(--surface);
+  box-shadow: var(--shadow-lavender);
+  transition: all 0.3s var(--ease-quiet);
+  white-space: nowrap;
+}
+.footer-newsletter button:hover { transform: translateY(-1px); background: #A98ED5; }
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 36px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--stone-200);
+}
+.footer-brand-col .brand { margin-bottom: 16px; }
+.footer-brand-col p { font-size: 14px; line-height: 1.6; color: var(--ink-muted); margin-bottom: 20px; max-width: 280px; }
+.footer-social { display: flex; gap: 8px; }
+.social-tile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--sunken);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: all 0.25s var(--ease-precise);
+}
+.social-tile:hover { background: var(--lavender-primary); color: var(--surface); transform: translateY(-2px); }
+.footer-col h5 { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 14px; }
+.footer-col a { display: block; font-size: 14px; color: var(--ink-muted); padding: 5px 0; transition: color 0.2s; }
+.footer-col a:hover { color: var(--lavender-primary); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ink-faint);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* === REVEAL === */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s var(--ease-quiet), transform 0.9s var(--ease-quiet); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+  .spotlight-block { grid-template-columns: 1fr; gap: 40px; }
+  .spotlight-block.reverse > .spotlight-visual { order: 0; }
+  .spotlight-block.reverse > .spotlight-content { order: 0; }
+  .ritual-steps { grid-template-columns: 1fr 1fr; }
+  .ritual-connector { display: none; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-item.tall { grid-row: auto; }
+  .stats-band { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .integrations-grid { grid-template-columns: repeat(4, 1fr); }
+  .pricing-grid { grid-template-columns: 1fr; gap: 24px; }
+  .price-card.featured { transform: none; }
+  .price-card.featured:hover { transform: translateY(-4px); }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .hero-card-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .gallery-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-newsletter-form { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob, .hero-blobs .b1, .hero-blobs .b2 { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { transition-duration: 0.01ms !important; }
+}
+@media (hover: none) {
+  .feature-card:hover, .step-card:hover, .gallery-item:hover, .testimonial-card:hover, .integration-tile:hover, .price-card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- GRAIN -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- BLOBS -->
+<div class="blobs" aria-hidden="true">
+  <span class="blob blob-1"></span>
+  <span class="blob blob-2"></span>
+  <span class="blob blob-3"></span>
+  <span class="blob blob-4"></span>
+</div>
+
+<!-- 2. NAV -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <a href="#top" class="brand">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
+      <span>ResetUI</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#ritual">Workflow</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <button class="pill pill-dark nav-cta">Start free</button>
+  </nav>
+</div>
+
+<!-- 3. HERO -->
+<section class="hero" id="top">
+  <div class="hero-blobs" aria-hidden="true">
+    <span class="b1"></span>
+    <span class="b2"></span>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow reveal">
+      <span class="dot"></span>
+      <span>ResetUI 1.0.3 - URL capture online</span>
+    </div>
+    <h1 class="reveal">Reset pages with <span class="hand">pastel</span><br>precision.</h1>
+    <p class="hero-deck reveal">Capture an existing landing page, describe the new direction, and generate an editable redesign you can export as clean HTML.</p>
+    <div class="hero-ctas reveal">
+      <button class="pill pill-lavender">Start free</button>
+      <button class="pill pill-ghost">See workflow</button>
+    </div>
+    <p class="hero-trust reveal"><span class="num">10</span> templates <span class="star">+</span> <span class="num">5</span> free credits <span class="star">+</span> clean HTML export</p>
+
+    <!-- Hero visual -->
+    <div class="hero-visual reveal">
+      <div class="hero-visual-blob" aria-hidden="true"></div>
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div class="hero-card-greeting">
+            <div class="hero-card-avatar">M</div>
+            <div class="hero-card-greeting-text">
+              <div class="hello">ResetUI project</div>
+              <div class="sub">Captured from your current page</div>
+            </div>
+          </div>
+          <div class="hero-card-date">v1.0.3</div>
+        </div>
+        <div class="hero-card-prompt">
+          <div class="hero-card-prompt-label">DESIGN DIRECTION</div>
+          <div class="hero-card-prompt-text">Soft pastel SaaS refresh with calm spacing and clear sections.</div>
+        </div>
+        <div class="hero-card-row">
+          <div class="hero-card-tile">
+            <div class="hero-card-tile-icon lavender">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </div>
+            <div class="hero-card-tile-label">Capture</div>
+            <div class="hero-card-tile-meta">URL + brand cues</div>
+          </div>
+          <div class="hero-card-tile">
+            <div class="hero-card-tile-icon periwinkle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 8 10 12 14s4 8 0 8"/><path d="M12 14c4-4 8-4 8 0"/></svg>
+            </div>
+            <div class="hero-card-tile-label">Export</div>
+            <div class="hero-card-tile-meta">HTML + Tailwind</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. TRUST STRIP -->
+<section class="trust-strip">
+  <div class="trust-inner">
+    <p class="trust-label reveal">Built for landing-page redesign</p>
+    <div class="trust-row reveal">
+      <div class="trust-chip"><span class="num">10</span> design templates</div>
+      <div class="trust-chip"><span class="num">250+</span> generated designs</div>
+      <div class="trust-chip"><span class="num">5</span> free starter credits</div>
+      <div class="trust-chip"><span class="num">100%</span> editable output</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. FEATURES -->
+<section class="section" id="features">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Features</div>
+    <h2 class="section-title">A softer way to <span class="hand">reset</span> a page.</h2>
+    <p class="section-deck">Six focused tools for turning a live landing page into a refreshed, editable design.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon lavender">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+      <h3>URL capture</h3>
+      <p>Import visible copy, hierarchy, links, media, colors, fonts, and brand cues from your existing landing page.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon periwinkle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 8 10 12 14s4 8 0 8"/><path d="M12 14c4-4 8-4 8 0"/></svg>
+      </div>
+      <h3>Prompt direction</h3>
+      <p>Describe the visual shift you want and keep the original page context attached to every generated section.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon lilac">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </div>
+      <h3>Full-page generation</h3>
+      <p>Generate a complete redesign section by section, with soft pacing and clear structure for review.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon wisteria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      </div>
+      <h3>Chat edits</h3>
+      <p>Ask for targeted changes to copy, layout, visual tone, or sections without losing project context.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon lavender">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <h3>Version history</h3>
+      <p>Compare directions, restore earlier states, and keep every meaningful redesign pass within reach.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon periwinkle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <h3>Clean export</h3>
+      <p>Download standalone HTML that stays readable, editable, responsive, and ready to hand off.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. SPOTLIGHT 1 -->
+<section class="section">
+  <div class="spotlight-block reveal">
+    <div class="spotlight-visual">
+      <div class="spotlight-visual-blob lilac" aria-hidden="true"></div>
+      <div class="spotlight-phone">
+        <div class="phone-mock">
+          <div class="phone-mock-header">
+            <span class="phone-mock-back">←</span>
+            <span class="phone-mock-title">Captured page</span>
+            <span style="width:18px;"></span>
+          </div>
+          <div class="phone-mock-cover">
+            <img src="https://picsum.photos/seed/resetui-soft-capture/600/430" alt="ResetUI captured landing page preview">
+          </div>
+          <div class="phone-mock-story-title">Homepage context</div>
+          <div class="phone-mock-story-meta">8 sections captured</div>
+          <div class="phone-mock-progress">
+            <div class="phone-mock-progress-fill"></div>
+          </div>
+          <div class="phone-mock-time">
+            <span>Copy</span>
+            <span>Brand cues mapped</span>
+          </div>
+          <div class="phone-mock-controls">
+            <div class="phone-mock-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM10 6l8 6-8 6z" transform="scale(-1,1) translate(-24,0)"/></svg>
+                </div>
+            <div class="phone-mock-btn play">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="phone-mock-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8-6-8-6v12zM16 6v12h2V6h-2z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spotlight-content">
+      <div class="section-eyebrow" style="margin-bottom:20px;"><span class="dot"></span> Capture workflow</div>
+      <h2>Your page, <span class="hand">gently</span> mapped.</h2>
+      <p>ResetUI starts with the landing page you already have. It keeps useful copy, hierarchy, media, links, and brand signals close so the redesign begins from real context.</p>
+      <div class="check-list">
+        <div class="check-pill">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Public URL capture with source-page structure</span>
+        </div>
+        <div class="check-pill">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Copy, media, typography, and CTA cues retained</span>
+        </div>
+        <div class="check-pill">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Project context stays available for every edit</span>
+        </div>
+      </div>
+      <button class="pill pill-lavender">Capture a page -></button>
+    </div>
+  </div>
+
+  <!-- SPOTLIGHT 2 -->
+  <div class="spotlight-block reverse reveal">
+    <div class="spotlight-visual">
+      <div class="spotlight-visual-blob lavender" aria-hidden="true"></div>
+      <div class="spotlight-phone">
+        <div class="phone-mock phone-mock-journal">
+          <div class="phone-mock-journal-header">
+            <span class="phone-mock-journal-date">Design prompt</span>
+            <div class="phone-mock-journal-mood">
+              <span style="background:var(--lavender-soft);"></span>
+              <span style="background:var(--wisteria);"></span>
+              <span style="background:var(--periwinkle);border:2px solid var(--lavender-primary);"></span>
+              <span style="background:var(--lilac-deep);"></span>
+              <span style="background:var(--stone-200);"></span>
+            </div>
+          </div>
+          <div class="phone-mock-journal-prompt">
+            <div class="phone-mock-journal-prompt-label">REDESIGN PROMPT</div>
+            <div class="phone-mock-journal-prompt-text">Make this SaaS page calm, modern, and conversion-ready.</div>
+          </div>
+          <div class="phone-mock-journal-entry">
+            Preserve the product story, sharpen the hero, simplify pricing, and make the export easy to edit.
+          </div>
+          <div class="phone-mock-journal-tags">
+            <span class="phone-mock-journal-tag">hero</span>
+            <span class="phone-mock-journal-tag">pricing</span>
+            <span class="phone-mock-journal-tag">export</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spotlight-content">
+      <div class="section-eyebrow" style="margin-bottom:20px;"><span class="dot"></span> Prompt-led redesign</div>
+      <h2>Directions that stay tied to <span class="hand">context</span>.</h2>
+      <p>Write the design direction in plain language. ResetUI uses the captured page map to generate a refreshed design that still understands what the source page was trying to say.</p>
+      <div class="check-list">
+        <div class="check-pill">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Design prompts grounded in existing content</span>
+        </div>
+        <div class="check-pill">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Section-by-section generation for review</span>
+        </div>
+        <div class="check-pill">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Exportable HTML when the design feels ready</span>
+        </div>
+      </div>
+      <button class="pill pill-ghost">See workflow -></button>
+    </div>
+  </div>
+</section>
+
+<!-- 7. HOW IT WORKS / RITUAL -->
+<section class="section" id="ritual">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Workflow</div>
+    <h2 class="section-title">Four calm steps from <span class="hand">URL</span> to export.</h2>
+    <p class="section-deck">A focused flow for redesigning an existing page without starting over from a blank canvas.</p>
+  </div>
+  <div class="ritual-steps">
+    <div class="ritual-connector" aria-hidden="true"></div>
+    <div class="step-card reveal">
+      <div class="step-num lavender">01</div>
+      <h3>Capture</h3>
+      <p>Paste the live URL and let ResetUI collect the page structure, copy, and visual signals.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num periwinkle">02</div>
+      <h3>Direct</h3>
+      <p>Add the new design direction, tone, audience, sections, and constraints you want to see.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num lilac">03</div>
+      <h3>Generate</h3>
+      <p>Review a complete redesign that uses the captured context instead of generic filler.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num wisteria">04</div>
+      <h3>Export</h3>
+      <p>Download clean HTML, keep versions, and continue refining with project-aware chat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. GALLERY -->
+<section class="section">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Templates</div>
+    <h2 class="section-title">Soft <span class="hand">directions</span>, ready to adapt.</h2>
+    <p class="section-deck">A glimpse at the kinds of page resets ResetUI can shape from one captured landing page.</p>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item tall">
+      <img src="https://picsum.photos/seed/resetui-soft-landing/600/1000" alt="Soft ResetUI landing page concept">
+      <div class="gallery-cap">
+        <span class="hand">soft SaaS</span>
+        Hero + pricing reset
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/resetui-soft-dashboard/500/667" alt="ResetUI dashboard redesign concept">
+      <div class="gallery-cap">Dashboard refresh</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/resetui-soft-product/500/667" alt="ResetUI product page concept">
+      <div class="gallery-cap">Product story</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/resetui-soft-export/500/667" alt="ResetUI export preview">
+      <div class="gallery-cap">Export handoff</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://picsum.photos/seed/resetui-soft-template/500/667" alt="ResetUI template gallery concept">
+      <div class="gallery-cap">
+        <span class="hand">template run</span>
+        URL to HTML
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. STATS BAND -->
+<section class="section">
+  <div class="stats-band reveal">
+    <div class="stat-niche">
+      <div class="stat-niche-num">10</div>
+      <div class="stat-niche-label">templates</div>
+    </div>
+    <div class="stat-niche">
+      <div class="stat-niche-num">250+</div>
+      <div class="stat-niche-label">designs</div>
+    </div>
+    <div class="stat-niche">
+      <div class="stat-niche-num">5</div>
+      <div class="stat-niche-label">free credits</div>
+    </div>
+    <div class="stat-niche">
+      <div class="stat-niche-num">HTML</div>
+      <div class="stat-niche-label">export</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. TESTIMONIALS -->
+<section class="section">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Proof</div>
+    <h2 class="section-title">What teams <span class="hand">notice</span> first.</h2>
+    <p class="section-deck">Notes from people using ResetUI to move faster without losing the source-page story.</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="testimonial-quote">"ResetUI kept the copy and page structure we cared about, then gave us a softer direction we could actually edit."</p>
+      <p class="testimonial-signature">— Maya</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar lavender">M</div>
+        <div>
+          <div class="testimonial-name">Maya Chen</div>
+          <div class="testimonial-role">Founder · SaaS studio</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="testimonial-quote">"The generated sections were clean enough to review with the team, and the HTML export stayed easy to hand off."</p>
+      <p class="testimonial-signature">— Daniel</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar periwinkle">D</div>
+        <div>
+          <div class="testimonial-name">Daniel Park</div>
+          <div class="testimonial-role">Product lead · AI tools</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="testimonial-quote">"We changed the prompt twice, compared versions, and shipped the direction without rebuilding the page from zero."</p>
+      <p class="testimonial-signature">— Sofia</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar lilac">S</div>
+        <div>
+          <div class="testimonial-name">Sofia Reyes</div>
+          <div class="testimonial-role">Designer · Growth team</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. INTEGRATIONS -->
+<section class="section">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Output</div>
+    <h2 class="section-title">Works with your <span class="hand">front-end</span> flow.</h2>
+    <p class="section-deck">ResetUI exports usable front-end code and keeps the generated project ready for iteration.</p>
+  </div>
+  <div class="integrations-grid reveal">
+    <div class="integration-tile lavender"><img src="https://cdn.simpleicons.org/html5/E34F26" alt="HTML5 logo"><span>HTML5</span></div>
+    <div class="integration-tile periwinkle"><img src="https://cdn.simpleicons.org/css/663399" alt="CSS logo"><span>CSS</span></div>
+    <div class="integration-tile lilac"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript logo"><span>JavaScript</span></div>
+    <div class="integration-tile"><img src="https://cdn.simpleicons.org/typescript/3178C6" alt="TypeScript logo"><span>TypeScript</span></div>
+    <div class="integration-tile lavender"><img src="https://cdn.simpleicons.org/react/61DAFB" alt="React logo"><span>React</span></div>
+    <div class="integration-tile periwinkle"><img src="https://cdn.simpleicons.org/nextdotjs/000000" alt="Next.js logo"><span>Next.js</span></div>
+    <div class="integration-tile lilac"><img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" alt="Tailwind CSS logo"><span>Tailwind</span></div>
+    <div class="integration-tile"><img src="https://cdn.simpleicons.org/vite/646CFF" alt="Vite logo"><span>Vite</span></div>
+    <div class="integration-tile lavender"><img src="https://cdn.simpleicons.org/github/181717" alt="GitHub logo"><span>GitHub</span></div>
+    <div class="integration-tile periwinkle"><img src="https://cdn.simpleicons.org/vercel/000000" alt="Vercel logo"><span>Vercel</span></div>
+    <div class="integration-tile lilac"><img src="https://cdn.simpleicons.org/netlify/00C7B7" alt="Netlify logo"><span>Netlify</span></div>
+    <div class="integration-tile"><img src="https://cdn.simpleicons.org/figma/F24E1E" alt="Figma logo"><span>Figma</span></div>
+  </div>
+  <div class="integrations-cta reveal">
+    <button class="pill pill-ghost">See export options -></button>
+  </div>
+</section>
+
+<!-- 12. PRICING -->
+<section class="section" id="pricing">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Pricing</div>
+    <h2 class="section-title">Simple plans for <span class="hand">page</span> resets.</h2>
+    <p class="section-deck">Start with free credits, then upgrade when your team needs more generated pages and version history.</p>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="price-card">
+      <div class="price-label">Free starter</div>
+      <div class="price-name">Explore</div>
+      <div class="price-amount">
+        <span class="num">$0</span>
+        <span class="per">/ month</span>
+      </div>
+      <div class="price-desc">For trying ResetUI on a few landing pages before committing.</div>
+      <ul class="price-features">
+        <li>5 free page credits</li>
+        <li>URL capture</li>
+        <li>Template gallery</li>
+        <li>Basic HTML export</li>
+        <li>Community support</li>
+      </ul>
+      <button class="price-cta">Start free -></button>
+    </div>
+
+    <div class="price-card featured">
+      <div class="price-badge">Most useful</div>
+      <div class="price-label">For active teams</div>
+      <div class="price-name">Pro</div>
+      <div class="price-amount">
+        <span class="num">$8</span>
+        <span class="per">/ month</span>
+      </div>
+      <div class="price-desc">For teams generating, editing, and exporting multiple page directions.</div>
+      <ul class="price-features">
+        <li>100 exports / month</li>
+        <li>All design templates</li>
+        <li>Chat edits</li>
+        <li>Version history</li>
+        <li>Priority generation</li>
+        <li>Email support</li>
+      </ul>
+      <button class="price-cta">Start trial -></button>
+    </div>
+
+    <div class="price-card">
+      <div class="price-label">For studios</div>
+      <div class="price-name">Studio</div>
+      <div class="price-amount">
+        <span class="num">$48</span>
+        <span class="per">/ year</span>
+      </div>
+      <div class="price-desc">For agencies and product teams resetting pages at scale.</div>
+      <ul class="price-features">
+        <li>Unlimited projects</li>
+        <li>Shared team workspace</li>
+        <li>Export history</li>
+        <li>Custom templates</li>
+        <li>Priority support</li>
+        <li>Team billing</li>
+      </ul>
+      <button class="price-cta">Contact sales -></button>
+    </div>
+  </div>
+</section>
+
+<!-- 13. FAQ -->
+<section class="section" id="faq">
+  <div class="section-head reveal">
+    <div class="section-eyebrow"><span class="dot"></span> Questions</div>
+    <h2 class="section-title">Soft questions, <span class="hand">clear</span> answers.</h2>
+    <p class="section-deck">Everything you might wonder before using ResetUI to redesign an existing landing page.</p>
+  </div>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <button class="faq-trigger">
+        <span>What does ResetUI capture from my URL?</span>
+        <span class="faq-icon"></span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">ResetUI reads the visible page structure, copy, links, CTAs, media references, color cues, fonts, and hierarchy so the redesign starts from real context instead of placeholder content.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger">
+        <span>Can I change the generated design?</span>
+        <span class="faq-icon"></span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">Yes. Use chat edits to adjust sections, copy, spacing, visual direction, or layout details. Your project keeps the captured context and generated versions together.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger">
+        <span>What does the export include?</span>
+        <span class="faq-icon"></span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">The export is clean front-end code you can inspect, edit, host, or hand to another developer. The template is designed to keep output readable and production-friendly.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger">
+        <span>Can I start without paying?</span>
+        <span class="faq-icon"></span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">Yes. The free starter gives you 5 credits so you can capture a page, test design prompts, and export a first result before choosing a paid plan.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger">
+        <span>Does ResetUI replace a designer?</span>
+        <span class="faq-icon"></span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">No. It gives designers and founders a faster starting point by preserving source-page context, generating directions, and making iteration easier.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger">
+        <span>Can I keep earlier versions?</span>
+        <span class="faq-icon"></span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">Yes. Version history keeps committed directions available so you can compare, restore, and keep moving without losing the path that got you there.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14. FINAL CTA -->
+<section class="section">
+  <div class="final-cta-inner reveal">
+    <h2>Your next page <span class="hand">starts</span><br>with context.</h2>
+    <p>Paste a URL, describe the direction, and let ResetUI turn<br>the source page into an editable redesign.</p>
+    <div class="final-cta-actions">
+      <button class="pill pill-lavender">Start free -></button>
+      <button class="pill pill-ghost">Explore templates</button>
+    </div>
+  </div>
+</section>
+
+<!-- 15. FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-newsletter">
+      <div class="footer-newsletter-label">A <span class="hand">soft</span> product note, once a month</div>
+      <div class="footer-newsletter-desc">Template updates, redesign notes, and product improvements. No noise.</div>
+      <form class="footer-newsletter-form" onsubmit="event.preventDefault();">
+        <input type="email" placeholder="you@company.com" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <a href="#" class="brand">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
+          <span>ResetUI</span>
+        </a>
+        <p>AI landing-page redesign grounded in your existing site, brand context, and design direction.</p>
+        <div class="footer-social">
+        <a href="#" class="social-tile" aria-label="X / Twitter">X</a>
+        <a href="#" class="social-tile" aria-label="LinkedIn">In</a>
+        <a href="#" class="social-tile" aria-label="GitHub">Gh</a>
+          <a href="#" class="social-tile" aria-label="Email">@</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#">Features</a>
+        <a href="#">Templates</a>
+        <a href="#">Exports</a>
+        <a href="#">Pricing</a>
+        <a href="#">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <a href="#">Docs</a>
+        <a href="#">Dashboard</a>
+        <a href="#">API</a>
+        <a href="#">Blog</a>
+        <a href="#">Support</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">About</a>
+        <a href="#">Privacy</a>
+        <a href="#">Security</a>
+        <a href="#">Contact</a>
+        <a href="#">Status</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 ResetUI. All rights reserved.</span>
+      <span>URL capture · AI redesign · Clean HTML export</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Keep soft visual cards from showing broken-image icons if a remote placeholder fails.
+  const softAfternoonPlaceholder = 'https://picsum.photos/seed/resetui-soft-afternoon/700/900';
+  document.querySelectorAll('.gallery-item img, .spotlight-phone img').forEach(img => {
+    img.addEventListener('error', () => {
+      if (img.src !== softAfternoonPlaceholder) img.src = softAfternoonPlaceholder;
+    }, { once: true });
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+
+  // Smooth scroll for in-page anchors
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const target = document.querySelector(id);
+        if (target) {
+          e.preventDefault();
+          const y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // FAQ accordion
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const trigger = item.querySelector('.faq-trigger');
+    const body = item.querySelector('.faq-body');
+    trigger.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      faqItems.forEach(other => {
+        other.classList.remove('open');
+        other.querySelector('.faq-body').style.maxHeight = '0';
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

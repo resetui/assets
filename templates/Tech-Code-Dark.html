@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech | Dark</title>
+<meta name="application-name" content="Tech | Dark">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ['Playfair Display', 'serif'],
+        sans: ['Space Grotesk', 'sans-serif'],
+        mono: ['Space Mono', 'monospace'],
+      },
+      colors: {
+        base: '#070908',
+        elevated: '#0c0f0d',
+        panel: '#111512',
+        surface: '#151a16',
+        offwhite: '#f7f6f2',
+        dim: '#e8e7df',
+        muted: '#a7aaa2',
+        faint: '#696f68',
+        forest: '#3d7068',
+        'forest-hover': '#4e8a80',
+        'forest-deep': '#294c47',
+        line: 'rgba(247,246,242,0.10)',
+        'line-strong': 'rgba(247,246,242,0.18)',
+      }
+    }
+  }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Space Grotesk', sans-serif; background: #070908; color: #f7f6f2; overflow-x: hidden; }
+
+  /* Structural grid */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(247,246,242,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247,246,242,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at center, black 0%, black 40%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at center, black 0%, black 40%, transparent 75%);
+  }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { transition-duration: 0.01ms !important; transform: none !important; opacity: 1 !important; }
+    .word-reveal span { opacity: 1 !important; }
+    .scan-line { animation: none !important; }
+  }
+
+  /* Word reveal */
+  .word-reveal span {
+    opacity: 0.08;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .word-reveal span.active {
+    opacity: 1;
+  }
+
+  /* Scan line */
+  @keyframes scanPulse {
+    0%, 100% { width: 30%; opacity: 0.6; }
+    50% { width: 70%; opacity: 1; }
+  }
+  .scan-line {
+    animation: scanPulse 4s ease-in-out infinite;
+  }
+
+  /* CTA tracking expand */
+  .cta-primary {
+    transition: letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+  }
+  .cta-primary:hover {
+    letter-spacing: 0.4em;
+    background-color: #4e8a80;
+  }
+
+  /* Workflow step */
+  .workflow-step {
+    transition: opacity 0.4s ease;
+  }
+  .workflow-step.inactive {
+    opacity: 0.3;
+  }
+  .workflow-step.active-step {
+    opacity: 1;
+  }
+
+  /* Tab button */
+  .tab-btn {
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  .tab-btn.tab-active {
+    background: #3d7068;
+    color: #f7f6f2;
+    border-color: #3d7068;
+  }
+
+  /* Form input */
+  .form-input {
+    transition: border-color 0.3s ease;
+  }
+  .form-input:focus {
+    border-color: #3d7068;
+    outline: none;
+  }
+
+  /* Stat hover */
+  .stat-cell {
+    transition: background 0.3s ease;
+  }
+  .stat-cell:hover {
+    background: #111512;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #070908; }
+  ::-webkit-scrollbar-thumb { background: #294c47; border-radius: 0; }
+
+  /* Mobile menu */
+  .mobile-overlay {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ==================== STRUCTURAL GRID ==================== -->
+<div aria-hidden="true" class="pointer-events-none fixed inset-0 z-0">
+  <!-- Square grid -->
+  <div class="grid-bg absolute inset-0 opacity-40"></div>
+</div>
+
+<!-- ==================== HEADER ==================== -->
+<header class="fixed inset-x-0 top-0 z-50 border-b border-line bg-base/80 backdrop-blur-md" id="site-header">
+  <nav class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-6 md:py-8">
+    <!-- Brand -->
+    <a href="#top" class="flex items-center gap-3 text-offwhite">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">
+      <span class="font-serif text-lg uppercase tracking-tight">ResetUI</span>
+    </a>
+
+    <!-- Center links -->
+    <div class="hidden items-center gap-8 font-mono text-[10px] uppercase tracking-[0.3em] text-muted md:flex">
+      <a href="#workflow" class="transition-colors hover:text-offwhite">Workflow</a>
+      <a href="#systems" class="transition-colors hover:text-offwhite">Features</a>
+      <a href="#cases" class="transition-colors hover:text-offwhite">Templates</a>
+      <a href="#contact" class="transition-colors hover:text-offwhite">Start</a>
+    </div>
+
+    <!-- CTA + mobile toggle -->
+    <div class="flex items-center gap-4">
+      <a href="#contact" class="hidden bg-forest px-5 py-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#f7f6f2] cta-primary md:block">Start Free</a>
+      <button class="flex h-9 w-9 items-center justify-center border border-line text-muted md:hidden" id="mobile-toggle" aria-label="Menu">
+        <i data-lucide="menu" class="h-4 w-4"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile overlay -->
+<div class="mobile-overlay fixed inset-0 z-40 bg-base/95 backdrop-blur-md md:hidden" id="mobile-menu">
+  <div class="flex flex-col items-center justify-center gap-8 pt-20">
+    <a class="font-mono text-[11px] uppercase tracking-[0.3em] text-muted transition-colors hover:text-offwhite" href="#workflow" onclick="closeMobile()">Workflow</a>
+    <a class="font-mono text-[11px] uppercase tracking-[0.3em] text-muted transition-colors hover:text-offwhite" href="#systems" onclick="closeMobile()">Features</a>
+    <a class="font-mono text-[11px] uppercase tracking-[0.3em] text-muted transition-colors hover:text-offwhite" href="#cases" onclick="closeMobile()">Templates</a>
+    <a class="font-mono text-[11px] uppercase tracking-[0.3em] text-muted transition-colors hover:text-offwhite" href="#contact" onclick="closeMobile()">Start</a>
+    <a class="mt-4 bg-forest px-6 py-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#f7f6f2]" href="#contact" onclick="closeMobile()">Start Free</a>
+    <button class="mt-6 font-mono text-[10px] uppercase tracking-[0.2em] text-faint" onclick="closeMobile()">Close</button>
+  </div>
+</div>
+
+<!-- ==================== MAIN ==================== -->
+<main id="top" class="relative z-10">
+
+  <!-- ==================== HERO ==================== -->
+  <section class="mx-auto grid min-h-screen max-w-[1200px] place-items-center px-6 py-32 text-center md:py-40">
+    <div class="reveal">
+      <!-- Status badge -->
+      <p class="mx-auto mb-8 inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.28em] text-muted">
+        <span class="relative flex h-2 w-2">
+          <span class="absolute h-full w-full animate-ping rounded-full bg-forest/60"></span>
+          <span class="relative h-2 w-2 rounded-full bg-forest"></span>
+        </span>
+        ResetUI system online
+      </p>
+
+      <!-- Headline -->
+      <h1 class="mx-auto max-w-6xl font-serif text-[clamp(48px,8.5vw,140px)] font-light uppercase leading-[0.88] tracking-[-0.05em]">
+        Redesign your <em class="font-light not-italic text-muted">existing</em> site for what comes next
+      </h1>
+
+      <!-- Subcopy -->
+      <p class="mx-auto mt-8 max-w-2xl text-[17px] leading-[1.8] text-muted">
+        Paste your landing-page URL, describe the direction, and generate a refreshed full-page experience with editable, production-ready code.
+      </p>
+
+      <!-- CTAs -->
+      <div class="mt-10 flex flex-col items-center justify-center gap-5 sm:flex-row">
+        <a class="bg-forest px-7 py-4 font-mono text-[10px] uppercase tracking-[0.25em] text-[#f7f6f2] cta-primary" href="#contact">Start Redesigning</a>
+        <a class="font-mono text-[10px] uppercase tracking-[0.25em] text-muted transition-colors hover:text-offwhite" href="#workflow">
+          View Workflow <span class="ml-1 text-faint">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STATISTICS GRID ==================== -->
+  <section class="mx-auto max-w-[1200px] border-y border-line">
+    <div class="grid md:grid-cols-3">
+      <article class="stat-cell border-b border-line p-8 md:border-b-0 md:border-r">
+        <div class="mb-6 grid h-11 w-11 place-items-center border border-line-strong font-mono text-[10px] text-muted">01</div>
+        <p class="font-serif text-[clamp(36px,5vw,56px)] font-light leading-none">10</p>
+        <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.26em] text-muted">Design templates</p>
+      </article>
+      <article class="stat-cell border-b border-line p-8 md:border-b-0 md:border-r">
+        <div class="mb-6 grid h-11 w-11 place-items-center border border-line-strong font-mono text-[10px] text-muted">02</div>
+        <p class="font-serif text-[clamp(36px,5vw,56px)] font-light leading-none">250+</p>
+        <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.26em] text-muted">Designs generated</p>
+      </article>
+      <article class="stat-cell p-8">
+        <div class="mb-6 grid h-11 w-11 place-items-center border border-line-strong font-mono text-[10px] text-muted">03</div>
+        <p class="font-serif text-[clamp(36px,5vw,56px)] font-light leading-none">100%</p>
+        <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.26em] text-muted">Editable code output</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ==================== TEXT REVEAL ==================== -->
+  <section class="mx-auto max-w-[1200px] px-6 py-28 md:py-36">
+    <div class="reveal mx-auto max-w-4xl">
+      <p class="mb-8 font-mono text-[10px] uppercase tracking-[0.3em] text-forest">The ResetUI method</p>
+      <p class="word-reveal font-serif text-[clamp(24px,3.2vw,40px)] font-light leading-[1.35] tracking-[-0.02em]" id="reveal-text">
+        The best redesigns do not erase what already works. They preserve the copy, calls to action, imagery, brand signals, and section intent that make a page yours—then rebuild the visual experience around a clearer direction. ResetUI keeps that source context present from first capture to final export.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== INTERACTIVE WORKFLOW ==================== -->
+  <section id="workflow" class="mx-auto max-w-[1200px] border-t border-line">
+    <div class="grid md:grid-cols-2">
+      <!-- Left: Steps -->
+      <div class="border-b border-line p-8 md:border-b-0 md:border-r md:p-12">
+        <p class="mb-10 font-mono text-[10px] uppercase tracking-[0.3em] text-forest">Interactive workflow</p>
+
+        <div class="space-y-0" id="workflow-steps">
+          <!-- Step 01 -->
+          <div class="workflow-step active-step cursor-pointer border-t border-line py-8" data-step="0" onclick="setWorkflowStep(0)">
+            <div class="flex items-start gap-5">
+              <span class="font-mono text-[11px] text-faint">01</span>
+              <div class="flex-1">
+                <h3 class="font-serif text-2xl font-light md:text-3xl">Capture the source</h3>
+                <p class="step-desc mt-3 text-[14px] leading-relaxed text-muted" style="max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; opacity: 0;">
+                  Paste a public website URL. ResetUI captures the page structure, copy, links, calls to action, imagery, typography, colors, and brand context.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 02 -->
+          <div class="workflow-step inactive cursor-pointer border-t border-line py-8" data-step="1" onclick="setWorkflowStep(1)">
+            <div class="flex items-start gap-5">
+              <span class="font-mono text-[11px] text-faint">02</span>
+              <div class="flex-1">
+                <h3 class="font-serif text-2xl font-light md:text-3xl">Define the direction</h3>
+                <p class="step-desc mt-3 text-[14px] leading-relaxed text-muted" style="max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; opacity: 0;">
+                  Describe how the page should look and feel. Your prompt supplies the new visual direction while the captured site supplies the content and intent.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 03 -->
+          <div class="workflow-step inactive cursor-pointer border-t border-line py-8" data-step="2" onclick="setWorkflowStep(2)">
+            <div class="flex items-start gap-5">
+              <span class="font-mono text-[11px] text-faint">03</span>
+              <div class="flex-1">
+                <h3 class="font-serif text-2xl font-light md:text-3xl">Generate and refine</h3>
+                <p class="step-desc mt-3 text-[14px] leading-relaxed text-muted" style="max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; opacity: 0;">
+                  Stream a redesigned page into the canvas section by section, refine it through project-aware chat, restore versions, and export the final code.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Sticky preview -->
+      <div class="p-8 md:p-12">
+        <aside class="sticky top-32 border border-line bg-panel">
+          <!-- Preview image area -->
+          <div class="relative aspect-[4/3] bg-surface">
+            <img src="https://picsum.photos/seed/resetui-tech-workflow/800/600.jpg" alt="ResetUI redesign workflow preview" class="h-full w-full object-cover opacity-30 grayscale">
+            <!-- Scan line -->
+            <div class="absolute bottom-0 left-0 right-0 h-px overflow-hidden bg-white/10">
+              <div class="scan-line h-full bg-[#3b82f6]"></div>
+            </div>
+            <!-- Status labels -->
+            <div class="absolute left-4 top-4 flex items-center gap-2 border border-line bg-panel/90 px-3 py-1.5 backdrop-blur-sm">
+              <span class="h-1.5 w-1.5 rounded-full bg-forest"></span>
+              <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-muted" id="preview-status">Scanning</span>
+            </div>
+            <div class="absolute right-4 top-4 border border-line bg-panel/90 px-3 py-1.5 backdrop-blur-sm">
+              <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Layer 01</span>
+            </div>
+          </div>
+          <!-- Preview metadata -->
+          <div class="border-t border-line p-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Current step</p>
+                <p class="mt-1 font-serif text-lg font-light" id="preview-title">Capture the source</p>
+              </div>
+              <div class="text-right">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Progress</p>
+                <p class="mt-1 font-mono text-[11px] text-forest" id="preview-progress">33%</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== USE CASE TABS ==================== -->
+  <section id="cases" class="mx-auto max-w-[1200px] border-t border-line">
+    <div class="p-6 md:p-12">
+      <div class="reveal mb-10 text-center">
+        <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-forest">Use cases</p>
+        <h2 class="font-serif text-[clamp(32px,4.5vw,56px)] font-light uppercase tracking-[-0.04em]">Built for every <em class="text-muted">redesign brief</em></h2>
+      </div>
+
+      <!-- Tab buttons -->
+      <div class="reveal mb-8 flex flex-wrap justify-center gap-2">
+        <button class="tab-btn tab-active border border-line px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted" onclick="switchTab(this, 'tab-ai')">Founders</button>
+        <button class="tab-btn border border-line px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted" onclick="switchTab(this, 'tab-infra')">Marketing Teams</button>
+        <button class="tab-btn border border-line px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted" onclick="switchTab(this, 'tab-design')">Product Teams</button>
+      </div>
+
+      <!-- Tab panels -->
+      <div class="reveal">
+        <!-- Founders -->
+        <div id="tab-ai" class="tab-panel border border-line bg-panel relative overflow-hidden">
+          <!-- Ghost icon -->
+          <div class="absolute right-8 top-8 opacity-[0.03]">
+            <i data-lucide="brain" class="h-64 w-64 text-offwhite"></i>
+          </div>
+          <div class="relative z-10 p-8 md:p-12">
+            <h3 class="font-serif text-2xl font-light md:text-3xl">Founder landing-page refreshes</h3>
+            <p class="mt-4 max-w-2xl text-[15px] leading-[1.8] text-muted">
+              Turn the page you launched with into the page your product has grown into. Preserve the real offer and product story while giving the entire experience a stronger visual direction.
+            </p>
+            <div class="mt-8 grid gap-px sm:grid-cols-3 border border-line">
+              <div class="border-r border-line p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Start</p>
+                <p class="mt-2 font-serif text-2xl font-light">Existing URL</p>
+              </div>
+              <div class="border-r border-line p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Direction</p>
+                <p class="mt-2 font-serif text-2xl font-light">Your prompt</p>
+              </div>
+              <div class="p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Output</p>
+                <p class="mt-2 font-serif text-2xl font-light">Full page</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marketing Teams -->
+        <div id="tab-infra" class="tab-panel hidden border border-line bg-panel relative overflow-hidden">
+          <div class="absolute right-8 top-8 opacity-[0.03]">
+            <i data-lucide="server" class="h-64 w-64 text-offwhite"></i>
+          </div>
+          <div class="relative z-10 p-8 md:p-12">
+            <h3 class="font-serif text-2xl font-light md:text-3xl">Campaign and positioning updates</h3>
+            <p class="mt-4 max-w-2xl text-[15px] leading-[1.8] text-muted">
+              Update hierarchy, calls to action, and presentation without manually rebuilding every section. Keep the approved message while testing a more focused design direction.
+            </p>
+            <div class="mt-8 grid gap-px sm:grid-cols-3 border border-line">
+              <div class="border-r border-line p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Copy</p>
+                <p class="mt-2 font-serif text-2xl font-light">Preserved</p>
+              </div>
+              <div class="border-r border-line p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Sections</p>
+                <p class="mt-2 font-serif text-2xl font-light">Reframed</p>
+              </div>
+              <div class="p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">CTA intent</p>
+                <p class="mt-2 font-serif text-2xl font-light">Retained</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Teams -->
+        <div id="tab-design" class="tab-panel hidden border border-line bg-panel relative overflow-hidden">
+          <div class="absolute right-8 top-8 opacity-[0.03]">
+            <i data-lucide="pen-tool" class="h-64 w-64 text-offwhite"></i>
+          </div>
+          <div class="relative z-10 p-8 md:p-12">
+            <h3 class="font-serif text-2xl font-light md:text-3xl">Design exploration with a clean handoff</h3>
+            <p class="mt-4 max-w-2xl text-[15px] leading-[1.8] text-muted">
+              Explore new visual systems through templates and prompts, refine the result through chat, compare committed versions, and export a usable front-end deliverable.
+            </p>
+            <div class="mt-8 grid gap-px sm:grid-cols-3 border border-line">
+              <div class="border-r border-line p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Explore</p>
+                <p class="mt-2 font-serif text-2xl font-light">10 templates</p>
+              </div>
+              <div class="border-r border-line p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Refine</p>
+                <p class="mt-2 font-serif text-2xl font-light">Chat edits</p>
+              </div>
+              <div class="p-5">
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Deliver</p>
+                <p class="mt-2 font-serif text-2xl font-light">Clean code</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROOF / INTEGRATIONS ==================== -->
+  <section id="systems" class="mx-auto max-w-[1200px] border-t border-line">
+    <div class="p-6 md:p-12">
+      <div class="reveal mb-10">
+        <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-forest">Product capabilities</p>
+        <h2 class="font-serif text-[clamp(28px,3.5vw,44px)] font-light uppercase tracking-[-0.04em]">Everything stays <em class="text-muted">connected</em></h2>
+      </div>
+
+      <div class="reveal grid border border-line sm:grid-cols-2 lg:grid-cols-4">
+        <div class="border-b border-line p-6 lg:border-r">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="git-branch" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Website capture</p>
+          <p class="mt-1 text-[12px] text-faint">Public URL to page context</p>
+        </div>
+        <div class="border-b border-line p-6 lg:border-r">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="database" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Brand profile</p>
+          <p class="mt-1 text-[12px] text-faint">Colors, type, logo, imagery</p>
+        </div>
+        <div class="border-b border-line p-6 lg:border-r sm:border-b-0">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="cloud" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Section streaming</p>
+          <p class="mt-1 text-[12px] text-faint">Live full-page generation</p>
+        </div>
+        <div class="p-6">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="webhook" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Project-aware chat</p>
+          <p class="mt-1 text-[12px] text-faint">Targeted edits and additions</p>
+        </div>
+
+        <div class="border-t border-line p-6 lg:border-r">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="shield" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Version history</p>
+          <p class="mt-1 text-[12px] text-faint">Undo, redo, and restore</p>
+        </div>
+        <div class="border-t border-line p-6 lg:border-r">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="key" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Canvas controls</p>
+          <p class="mt-1 text-[12px] text-faint">Move, select, and zoom</p>
+        </div>
+        <div class="border-t border-line p-6 lg:border-r">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="activity" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Code export</p>
+          <p class="mt-1 text-[12px] text-faint">Standalone production HTML</p>
+        </div>
+        <div class="border-t border-line p-6">
+          <div class="mb-4 flex h-9 w-9 items-center justify-center border border-line">
+            <i data-lucide="terminal" class="h-4 w-4 text-muted"></i>
+          </div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-offwhite">Design templates</p>
+          <p class="mt-1 text-[12px] text-faint">Reusable visual directions</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT FORM ==================== -->
+  <section id="contact" class="mx-auto max-w-[1200px] border-t border-line">
+    <div class="grid md:grid-cols-2">
+      <!-- Left: Heading -->
+      <div class="border-b border-line p-8 md:border-b-0 md:border-r md:p-12">
+        <div class="reveal">
+          <p class="mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-forest">Start a project</p>
+          <h2 class="font-serif text-[clamp(32px,4.5vw,56px)] font-light uppercase tracking-[-0.04em] leading-[1.0]">Reset your landing page</h2>
+          <p class="mt-6 max-w-sm text-[15px] leading-[1.8] text-muted">
+            Bring the page you already have and the direction you want next. ResetUI turns both into a redesigned, editable full-page experience.
+          </p>
+          <div class="mt-8 border-t border-line pt-6">
+            <p class="font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Current status</p>
+            <div class="mt-2 flex items-center gap-2">
+              <span class="relative flex h-2 w-2">
+                <span class="absolute h-full w-full animate-ping rounded-full bg-forest/60"></span>
+                <span class="relative h-2 w-2 rounded-full bg-forest"></span>
+              </span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Ready for new projects</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="p-8 md:p-12">
+        <form class="reveal space-y-8" onsubmit="handleSubmit(event)">
+          <div>
+            <label class="mb-2 block font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Website URL</label>
+            <input type="url" class="form-input w-full border-b border-line bg-transparent pb-3 font-mono text-[12px] text-offwhite placeholder:text-faint/50 focus:outline-none" placeholder="HTTPS://YOUR-SITE.COM" required>
+          </div>
+          <div>
+            <label class="mb-2 block font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Email</label>
+            <input type="email" class="form-input w-full border-b border-line bg-transparent pb-3 font-mono text-[12px] text-offwhite placeholder:text-faint/50 focus:outline-none" placeholder="YOU@COMPANY.COM" required>
+          </div>
+          <div>
+            <label class="mb-2 block font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Project name</label>
+            <input type="text" class="form-input w-full border-b border-line bg-transparent pb-3 font-mono text-[12px] text-offwhite placeholder:text-faint/50 focus:outline-none" placeholder="MY LANDING PAGE">
+          </div>
+          <div>
+            <label class="mb-2 block font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Starting point</label>
+            <select class="form-input w-full border-b border-line bg-transparent pb-3 font-mono text-[12px] text-muted focus:outline-none" style="appearance: none;">
+              <option value="">SELECT STARTING POINT</option>
+              <option value="template">Use a design template</option>
+              <option value="prompt">Write my own prompt</option>
+              <option value="explore">Explore both</option>
+            </select>
+          </div>
+          <div>
+            <label class="mb-2 block font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Design direction</label>
+            <textarea class="form-input w-full border-b border-line bg-transparent pb-3 font-mono text-[12px] text-offwhite placeholder:text-faint/50 focus:outline-none" rows="3" placeholder="DESCRIBE THE LOOK AND FEEL YOU WANT"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-forest py-4 font-mono text-[10px] uppercase tracking-[0.3em] text-[#f7f6f2] cta-primary" id="submit-btn">
+            Start Redesigning
+          </button>
+          <p class="text-center font-mono text-[8px] uppercase tracking-[0.2em] text-faint">
+            No credit card required · Free Starter available
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="relative z-10 border-t border-line">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="grid gap-px sm:grid-cols-2 lg:grid-cols-5">
+      <!-- Brand -->
+      <div class="p-8 lg:col-span-2 md:p-10">
+        <a href="#top" class="flex items-center gap-3 text-offwhite">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">
+          <span class="font-serif text-base uppercase tracking-tight">ResetUI</span>
+        </a>
+        <p class="mt-4 max-w-xs text-[13px] leading-[1.7] text-faint">
+          AI landing-page redesign grounded in your existing site, brand context, and design direction.
+        </p>
+      </div>
+
+      <!-- Product -->
+      <div class="border-t border-line p-8 sm:border-t-0 sm:border-l lg:border-l md:p-10">
+        <p class="mb-4 font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Product</p>
+        <div class="space-y-2.5">
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#workflow">Workflow</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#systems">Features</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#cases">Templates</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Changelog</a>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div class="border-t border-line p-8 sm:border-l lg:border-l md:p-10">
+        <p class="mb-4 font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Resources</p>
+        <div class="space-y-2.5">
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Documentation</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Dashboard</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Status</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Support</a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div class="border-t border-line p-8 sm:border-l lg:border-l md:p-10">
+        <p class="mb-4 font-mono text-[9px] uppercase tracking-[0.25em] text-faint">Legal</p>
+        <div class="space-y-2.5">
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Privacy</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Terms</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">Security</a>
+          <a class="block font-mono text-[11px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-offwhite" href="#">DPA</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-line px-8 py-6 md:px-10">
+      <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div class="flex items-center gap-6">
+          <span class="font-mono text-[8px] uppercase tracking-[0.2em] text-faint">© 2026 ResetUI</span>
+          <span class="hidden h-3 w-px bg-line md:block"></span>
+          <span class="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-faint md:block">v1.0.3</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <a class="flex h-7 w-7 items-center justify-center border border-line text-faint transition-colors hover:border-forest hover:text-forest" href="#" aria-label="GitHub">
+            <i data-lucide="github" class="h-3 w-3"></i>
+          </a>
+          <a class="flex h-7 w-7 items-center justify-center border border-line text-faint transition-colors hover:border-forest hover:text-forest" href="#" aria-label="Twitter">
+            <i data-lucide="twitter" class="h-3 w-3"></i>
+          </a>
+          <a class="flex h-7 w-7 items-center justify-center border border-line text-faint transition-colors hover:border-forest hover:text-forest" href="#" aria-label="LinkedIn">
+            <i data-lucide="linkedin" class="h-3 w-3"></i>
+          </a>
+          <span class="ml-2 flex items-center gap-1.5">
+            <span class="h-1.5 w-1.5 rounded-full bg-forest"></span>
+            <span class="font-mono text-[8px] uppercase tracking-[0.2em] text-faint">Operational</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // ---- Scroll Reveal ----
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ---- Mobile Menu ----
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  mobileToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    if (menuOpen) {
+      mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      closeMobile();
+    }
+  });
+
+  function closeMobile() {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ---- Word Reveal ----
+  const revealTextEl = document.getElementById('reveal-text');
+  const fullText = revealTextEl.textContent.trim();
+  const words = fullText.split(/\s+/);
+  revealTextEl.innerHTML = words.map(w => `<span>${w}</span>`).join(' ');
+
+  const wordSpans = revealTextEl.querySelectorAll('span');
+
+  const wordObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        activateWords();
+        wordObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  wordObserver.observe(revealTextEl);
+
+  function activateWords() {
+    wordSpans.forEach((span, i) => {
+      setTimeout(() => {
+        span.classList.add('active');
+      }, i * 80);
+    });
+  }
+
+  // Fallback: if JS observer doesn't fire, show all words
+  setTimeout(() => {
+    wordSpans.forEach(span => {
+      if (!span.classList.contains('active')) span.classList.add('active');
+    });
+  }, 5000);
+
+  // ---- Interactive Workflow ----
+  let currentStep = 0;
+  const stepTitles = ['Capture the source', 'Define the direction', 'Generate and refine'];
+  const stepStatuses = ['Capturing', 'Planning', 'Generating'];
+  const stepProgress = ['33%', '66%', '100%'];
+
+  function setWorkflowStep(index) {
+    currentStep = index;
+    const steps = document.querySelectorAll('.workflow-step');
+
+    steps.forEach((step, i) => {
+      const desc = step.querySelector('.step-desc');
+      if (i === index) {
+        step.classList.remove('inactive');
+        step.classList.add('active-step');
+        desc.style.maxHeight = '200px';
+        desc.style.opacity = '1';
+      } else {
+        step.classList.add('inactive');
+        step.classList.remove('active-step');
+        desc.style.maxHeight = '0';
+        desc.style.opacity = '0';
+      }
+    });
+
+    // Update preview
+    document.getElementById('preview-title').textContent = stepTitles[index];
+    document.getElementById('preview-status').textContent = stepStatuses[index];
+    document.getElementById('preview-progress').textContent = stepProgress[index];
+  }
+
+  // Initialize first step
+  setWorkflowStep(0);
+
+  // ---- Use Case Tabs ----
+  function switchTab(btn, panelId) {
+    // Update buttons
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('tab-active');
+    });
+    btn.classList.add('tab-active');
+
+    // Update panels
+    document.querySelectorAll('.tab-panel').forEach(p => {
+      p.classList.add('hidden');
+    });
+    document.getElementById(panelId).classList.remove('hidden');
+  }
+
+  // ---- Contact Form ----
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    btn.textContent = 'PROJECT RECEIVED';
+    btn.style.backgroundColor = '#294c47';
+    btn.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      btn.textContent = 'START REDESIGNING';
+      btn.style.backgroundColor = '';
+      btn.style.pointerEvents = '';
+    }, 3000);
+  }
+
+  // ---- Header shadow on scroll ----
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 40) {
+      header.style.borderBottomColor = 'rgba(247,246,242,0.18)';
+    } else {
+      header.style.borderBottomColor = 'rgba(247,246,242,0.10)';
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ivory Focus | Light</title>
+<meta name="application-name" content="Ivory Focus | Light">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ['Instrument Serif', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        ivory: '#FAFAF9',
+        'soft-stone': '#F5F5F4',
+        'warm-panel': '#FBF7F1',
+        ink: '#1C1917',
+        body: '#44403C',
+        muted: '#78716C',
+        faint: '#A8A29E',
+        'quiet-blue': '#2563EB',
+        'soft-blue': '#EFF6FF',
+        'quiet-violet': '#7C3AED',
+        'soft-violet': '#F5F3FF',
+        orange: { DEFAULT: '#EA580C', soft: '#FED7AA', pale: '#FFF7ED', deep: '#C2410C' },
+        stone: { border: '#E7E5E4' },
+      }
+    }
+  }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: #FAFAF9; color: #1C1917; overflow-x: hidden; }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1), transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { transition-duration: 0.01ms !important; transform: none !important; opacity: 1 !important; }
+    .card-hover { transition: none !important; }
+    .pulse-dot-anim { animation: none !important; }
+  }
+
+  /* Card hover */
+  .card-hover {
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 500ms cubic-bezier(0.22, 1, 0.36, 1), border-color 300ms ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px -12px rgba(28, 25, 23, 0.08), 0 4px 12px -4px rgba(28, 25, 23, 0.04);
+  }
+
+  /* Nav link hover */
+  .nav-pill { transition: background 200ms ease, color 200ms ease; }
+  .nav-pill:hover { background: rgba(255,255,255,0.06); color: #fff; }
+
+  /* Pricing toggle */
+  .toggle-track {
+    transition: background 300ms ease;
+  }
+  .toggle-knob {
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Dot grid for mockup */
+  .dot-grid {
+    background-image: radial-gradient(#d6d3d1 0.8px, transparent 0.8px);
+    background-size: 20px 20px;
+  }
+
+  /* Progress bar fill */
+  .progress-fill {
+    transition: width 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Focus segment */
+  .focus-segment {
+    transition: all 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .focus-segment.active {
+    background: #EA580C;
+    color: white;
+    border-color: #EA580C;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FAFAF9; }
+  ::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 999px; }
+
+  /* Mobile menu */
+  .mobile-menu-overlay {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+  .mobile-menu-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .mobile-menu-panel {
+    transform: translateY(-20px);
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mobile-menu-overlay.open .mobile-menu-panel {
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body class="bg-ivory text-ink antialiased">
+
+<!-- ==================== NAVIGATION ==================== -->
+<nav class="fixed left-1/2 top-5 z-50 flex w-[min(100%-24px,1200px)] -translate-x-1/2 items-center justify-between rounded-full border border-white/[0.08] bg-ink/[0.97] px-3 py-2.5 shadow-2xl shadow-stone-900/10 backdrop-blur-xl md:top-6 md:px-4 md:py-3" id="main-nav">
+  <!-- Logo -->
+  <a class="flex flex-shrink-0 items-center gap-2.5" href="#top">
+    <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-10 w-10 rounded-full object-cover md:h-11 md:w-11">
+    <span class="hidden font-serif text-xl text-white sm:block">ResetUI</span>
+  </a>
+
+  <!-- Center links -->
+  <div class="hidden items-center gap-0.5 md:flex">
+    <a class="nav-pill rounded-full px-4 py-2 text-[13px] text-stone-400" href="#features">Capabilities</a>
+    <a class="nav-pill rounded-full px-4 py-2 text-[13px] text-stone-400" href="#workflow">Workflow</a>
+    <a class="nav-pill rounded-full px-4 py-2 text-[13px] text-stone-400" href="#focus">Editor</a>
+    <a class="nav-pill rounded-full px-4 py-2 text-[13px] text-stone-400" href="#pricing">Pricing</a>
+  </div>
+
+  <!-- Right side -->
+  <div class="flex items-center gap-2">
+    <button class="hidden h-10 w-10 place-items-center rounded-full border border-white/[0.08] text-[13px] text-stone-400 transition-colors hover:bg-white/5 hover:text-white md:grid" title="Command menu (⌘K)">
+      <i data-lucide="search" class="h-4 w-4"></i>
+    </button>
+    <a class="rounded-full bg-orange px-5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-orange/20 transition-all hover:bg-orange-deep hover:shadow-orange/30 md:px-6 md:py-3" href="https://resetui.com">
+      Get Started
+    </a>
+    <!-- Mobile menu btn -->
+    <button class="grid h-10 w-10 place-items-center rounded-full border border-white/[0.08] text-stone-400 md:hidden" id="menu-btn" aria-label="Menu">
+      <i data-lucide="menu" class="h-4 w-4"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay fixed inset-0 z-40 bg-ink/90 backdrop-blur-xl md:hidden" id="mobile-menu">
+  <div class="mobile-menu-panel flex flex-col items-center justify-center gap-6 pt-24">
+    <a class="text-xl font-medium text-stone-300 transition-colors hover:text-white" href="#features" onclick="closeMenu()">Capabilities</a>
+    <a class="text-xl font-medium text-stone-300 transition-colors hover:text-white" href="#workflow" onclick="closeMenu()">Workflow</a>
+    <a class="text-xl font-medium text-stone-300 transition-colors hover:text-white" href="#focus" onclick="closeMenu()">Editor</a>
+    <a class="text-xl font-medium text-stone-300 transition-colors hover:text-white" href="#pricing" onclick="closeMenu()">Pricing</a>
+    <a class="mt-4 rounded-full bg-orange px-8 py-3 text-sm font-semibold text-white" href="https://resetui.com" onclick="closeMenu()">Get Started</a>
+    <button class="mt-8 text-sm text-stone-500" onclick="closeMenu()">Close</button>
+  </div>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<main id="top">
+  <section class="px-6 pb-8 pt-32 md:pb-16 md:pt-36">
+    <div class="mx-auto max-w-[1200px] text-center">
+      <!-- Status badge -->
+      <div class="reveal inline-flex items-center gap-2.5 rounded-full border border-stone-border bg-white px-4 py-2 shadow-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="pulse-dot-anim absolute h-full w-full animate-ping rounded-full bg-orange/50"></span>
+          <span class="relative h-2 w-2 rounded-full bg-orange"></span>
+        </span>
+        <span class="text-[13px] font-medium text-body">ResetUI v1.0.3 is live</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="reveal mt-6 font-serif text-[clamp(3rem,7vw,6.5rem)] leading-[0.98] tracking-[-0.02em] text-ink">
+        A clearer page,<br><span class="italic text-muted">built from yours.</span>
+      </h1>
+
+      <!-- Subcopy -->
+      <p class="reveal mx-auto mt-5 max-w-2xl text-[17px] leading-[1.7] text-muted">
+        Paste your landing-page URL, describe the visual direction, and get a production-ready redesign you can refine through chat and export as usable front-end code.
+      </p>
+
+      <!-- CTAs -->
+      <div class="reveal mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+        <a class="group flex items-center gap-2 rounded-full bg-ink px-8 py-4 text-[14px] font-semibold text-white shadow-lg shadow-ink/10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-ink/15" href="https://resetui.com">
+          Get Started
+          <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+        <a class="rounded-full border border-stone-border bg-white px-8 py-4 text-[14px] font-semibold text-body transition-all duration-300 hover:border-stone-300 hover:shadow-md" href="#workflow">
+          See workflow
+        </a>
+      </div>
+
+      <!-- Trust row -->
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-5 text-[12px] text-faint">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="users" class="h-3.5 w-3.5"></i>
+          <span>5 free credits</span>
+        </div>
+        <span class="hidden h-3 w-px bg-stone-border sm:block"></span>
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="star" class="h-3.5 w-3.5 text-orange"></i>
+          <span>100 Pro credits</span>
+        </div>
+        <span class="hidden h-3 w-px bg-stone-border sm:block"></span>
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="shield-check" class="h-3.5 w-3.5"></i>
+          <span>Clean HTML/CSS export</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRODUCT PREVIEW ==================== -->
+  <section class="px-4 pb-20 md:px-6 md:pb-28">
+    <div class="reveal mx-auto max-w-[1200px]">
+      <!-- Browser shell -->
+      <div class="rounded-t-[1.75rem] border-x border-t border-stone-border bg-white/80 p-2.5 shadow-2xl shadow-stone-900/[0.06] backdrop-blur-sm md:rounded-t-[2rem] md:p-3">
+        <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white">
+          <!-- Browser chrome -->
+          <div class="flex items-center gap-2 border-b border-stone-100 bg-soft-stone/60 px-4 py-3">
+            <span class="h-3 w-3 rounded-full bg-red-300"></span>
+            <span class="h-3 w-3 rounded-full bg-yellow-300"></span>
+            <span class="h-3 w-3 rounded-full bg-green-300"></span>
+            <div class="mx-auto hidden items-center gap-2 rounded-lg border border-stone-border bg-white px-5 py-1.5 sm:flex">
+              <i data-lucide="lock" class="h-3 w-3 text-faint"></i>
+              <span class="font-mono text-[11px] text-faint">resetui.com/project/live</span>
+            </div>
+            <div class="ml-auto flex items-center gap-1">
+              <div class="flex h-7 w-7 items-center justify-center rounded-md border border-stone-border bg-white">
+                <i data-lucide="sidebar" class="h-3.5 w-3.5 text-faint"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard content -->
+          <div class="grid min-h-[400px] grid-cols-12 bg-white md:min-h-[520px]">
+            <!-- Sidebar -->
+            <aside class="hidden border-r border-stone-100 bg-soft-stone/40 md:col-span-3 md:block lg:col-span-2">
+              <div class="p-4">
+                <div class="mb-6 flex items-center gap-2.5">
+                  <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-orange/10"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-full w-full object-cover"></div>
+                  <div>
+                    <p class="text-[12px] font-semibold text-ink">ResetUI Project</p>
+                    <p class="font-mono text-[9px] text-faint">PRO</p>
+                  </div>
+                </div>
+
+                <div class="space-y-0.5 text-[12px]">
+                  <div class="flex items-center justify-between rounded-lg border border-stone-border bg-white px-3 py-2 text-ink shadow-sm">
+                    <div class="flex items-center gap-2">
+                    <i data-lucide="layout" class="h-3.5 w-3.5 text-orange"></i>
+                      Canvas
+                    </div>
+                    <span class="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange px-1.5 font-mono text-[9px] font-bold text-white">4</span>
+                  </div>
+                  <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-muted hover:bg-white/60">
+                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i> Chat
+                  </div>
+                  <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-muted hover:bg-white/60">
+                    <i data-lucide="history" class="h-3.5 w-3.5"></i> History
+                  </div>
+                  <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-muted hover:bg-white/60">
+                    <i data-lucide="download" class="h-3.5 w-3.5"></i> Export
+                  </div>
+                  <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-muted hover:bg-white/60">
+                    <i data-lucide="coins" class="h-3.5 w-3.5"></i> Usage
+                  </div>
+                  <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-muted hover:bg-white/60">
+                    <i data-lucide="settings" class="h-3.5 w-3.5"></i> Settings
+                  </div>
+                </div>
+
+                <div class="mt-6 border-t border-stone-border pt-4">
+                  <p class="mb-2 font-mono text-[9px] uppercase tracking-[0.15em] text-faint">Versions</p>
+                  <div class="space-y-0.5 text-[12px]">
+                    <div class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-muted">
+                      <span class="h-2 w-2 rounded-full bg-quiet-blue"></span> Initial design
+                    </div>
+                    <div class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-muted">
+                      <span class="h-2 w-2 rounded-full bg-quiet-violet"></span> Chat refinement
+                    </div>
+                    <div class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-muted">
+                      <span class="h-2 w-2 rounded-full bg-orange"></span> Active version
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Main area -->
+            <main class="col-span-12 dot-grid bg-white p-5 md:col-span-9 lg:col-span-10">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h2 class="font-serif text-2xl text-ink md:text-4xl">Your redesign is ready</h2>
+                  <p class="mt-1 text-[12px] text-faint">Live canvas · Version 3 · Ready to refine</p>
+                </div>
+                <div class="hidden items-center gap-2 sm:flex">
+                  <div class="rounded-lg border border-stone-border bg-white px-3 py-1.5 text-[11px] text-muted">
+                    <i data-lucide="search" class="mr-1.5 inline h-3 w-3"></i>Search
+                  </div>
+                  <div class="rounded-lg border border-stone-border bg-white px-3 py-1.5 font-mono text-[10px] text-faint">⌘K</div>
+                </div>
+              </div>
+
+              <!-- Task cards row -->
+              <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="rounded-xl border border-stone-border bg-white p-4 shadow-sm">
+                  <div class="flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-quiet-blue"></span>
+                    <p class="font-mono text-[9px] uppercase tracking-wider text-faint">Source</p>
+                  </div>
+                  <h3 class="mt-2 text-[15px] font-semibold text-ink">Website captured</h3>
+                  <p class="mt-1 text-[11px] text-faint">Copy, media, brand</p>
+                  <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-soft-stone">
+                    <div class="progress-fill h-full rounded-full bg-quiet-blue" style="width: 65%"></div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-orange/20 bg-orange-pale p-4 shadow-sm">
+                  <div class="flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-orange"></span>
+                    <p class="font-mono text-[9px] uppercase tracking-wider text-orange">Active</p>
+                  </div>
+                  <h3 class="mt-2 text-[15px] font-semibold text-ink">Page generated</h3>
+                  <p class="mt-1 text-[11px] text-faint">8 sections · 8 ready</p>
+                  <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-orange-soft">
+                    <div class="progress-fill h-full rounded-full bg-orange" style="width: 38%"></div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-stone-border bg-white p-4 shadow-sm">
+                  <div class="flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-quiet-violet"></span>
+                    <p class="font-mono text-[9px] uppercase tracking-wider text-faint">Chat</p>
+                  </div>
+                  <h3 class="mt-2 text-[15px] font-semibold text-ink">3 refinements</h3>
+                  <p class="mt-1 text-[11px] text-faint">Committed to history</p>
+                  <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-soft-stone">
+                    <div class="progress-fill h-full rounded-full bg-quiet-violet" style="width: 80%"></div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-stone-border bg-white p-4 shadow-sm">
+                  <div class="flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                    <p class="font-mono text-[9px] uppercase tracking-wider text-faint">Shipped</p>
+                  </div>
+                  <h3 class="mt-2 text-[15px] font-semibold text-ink">Code export</h3>
+                  <p class="mt-1 text-[11px] text-faint">HTML/CSS ready ✓</p>
+                  <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-soft-stone">
+                    <div class="progress-fill h-full rounded-full bg-green-500" style="width: 100%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Task list section -->
+              <div class="mt-6 grid gap-4 lg:grid-cols-5">
+                <div class="lg:col-span-3">
+                  <div class="rounded-xl border border-stone-border bg-white p-4 shadow-sm">
+                    <div class="mb-3 flex items-center justify-between">
+                      <p class="text-[12px] font-semibold text-ink">Generation progress</p>
+                      <span class="font-mono text-[9px] text-faint">Ready</span>
+                    </div>
+                    <div class="space-y-2">
+                      <div class="flex items-center gap-3 rounded-lg bg-orange-pale px-3 py-2.5 border border-orange/10">
+                        <div class="flex h-4 w-4 items-center justify-center rounded border-2 border-orange bg-orange">
+                          <i data-lucide="check" class="h-2.5 w-2.5 text-white"></i>
+                        </div>
+                        <span class="flex-1 text-[12px] font-medium text-ink">Capture source website</span>
+                        <span class="rounded-full bg-orange/10 px-2 py-0.5 font-mono text-[8px] font-bold text-orange">HIGH</span>
+                      </div>
+                      <div class="flex items-center gap-3 rounded-lg px-3 py-2.5">
+                        <div class="h-4 w-4 rounded border-2 border-stone-border"></div>
+                        <span class="flex-1 text-[12px] text-body">Generate redesigned sections</span>
+                        <span class="rounded-full bg-soft-stone px-2 py-0.5 font-mono text-[8px] text-faint">MED</span>
+                      </div>
+                      <div class="flex items-center gap-3 rounded-lg px-3 py-2.5">
+                        <div class="h-4 w-4 rounded border-2 border-stone-border"></div>
+                        <span class="flex-1 text-[12px] text-body">Refine through project chat</span>
+                        <span class="rounded-full bg-soft-stone px-2 py-0.5 font-mono text-[8px] text-faint">MED</span>
+                      </div>
+                      <div class="flex items-center gap-3 rounded-lg px-3 py-2.5">
+                        <div class="h-4 w-4 rounded border-2 border-stone-border"></div>
+                        <span class="flex-1 text-[12px] text-body">Export latest committed version</span>
+                        <span class="rounded-full bg-soft-violet px-2 py-0.5 font-mono text-[8px] text-quiet-violet">LOW</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Calendar mini -->
+                <div class="lg:col-span-2">
+                  <div class="rounded-xl border border-stone-border bg-white p-4 shadow-sm">
+                    <p class="mb-3 text-[12px] font-semibold text-ink">Section stream</p>
+                    <div class="space-y-2">
+                      <div class="flex items-center gap-2 text-[11px]">
+                        <span class="w-8 font-mono text-[9px] text-faint">MON</span>
+                        <div class="h-5 flex-1 rounded bg-soft-stone"></div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[11px]">
+                        <span class="w-8 font-mono text-[9px] text-faint">TUE</span>
+                        <div class="flex gap-0.5 flex-1">
+                          <div class="h-5 w-1/3 rounded bg-quiet-blue/20"></div>
+                          <div class="h-5 w-1/2 rounded bg-orange/20"></div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[11px]">
+                        <span class="w-8 font-mono text-[9px] font-semibold text-ink">WED</span>
+                        <div class="flex gap-0.5 flex-1">
+                          <div class="h-5 w-1/4 rounded bg-orange/30 border border-orange/30"></div>
+                          <div class="h-5 w-2/5 rounded bg-quiet-violet/15"></div>
+                          <div class="h-5 w-1/4 rounded bg-green-100"></div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[11px]">
+                        <span class="w-8 font-mono text-[9px] text-faint">THU</span>
+                        <div class="h-5 flex-1 rounded bg-soft-stone"></div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[11px]">
+                        <span class="w-8 font-mono text-[9px] text-faint">FRI</span>
+                        <div class="flex gap-0.5 flex-1">
+                          <div class="h-5 w-1/2 rounded bg-quiet-blue/15"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FEATURE CARDS ==================== -->
+  <section id="features" class="bg-soft-stone px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-14 text-center">
+        <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-orange">Capabilities</p>
+        <h2 class="font-serif text-3xl md:text-5xl">Everything in <span class="italic text-muted">one</span> workflow</h2>
+        <p class="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
+          Source capture, generation, editing, history, and export connected in one focused workspace.
+        </p>
+      </div>
+
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Card 1 -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-pale">
+            <i data-lucide="check-square" class="h-5 w-5 text-orange"></i>
+          </div>
+          <h3 class="text-[16px] font-semibold text-ink">Website capture</h3>
+          <p class="mt-2 text-[13px] leading-relaxed text-muted">Load the source page and extract its copy, calls to action, links, media, and hierarchy.</p>
+          <!-- Mini UI -->
+          <div class="mt-5 space-y-2 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+            <div class="flex items-center gap-2 text-[11px]">
+              <div class="flex h-3.5 w-3.5 items-center justify-center rounded bg-orange"><i data-lucide="check" class="h-2 w-2 text-white"></i></div>
+              <span class="text-ink">Capture complete</span>
+              <span class="ml-auto rounded bg-orange/10 px-1.5 py-0.5 font-mono text-[7px] font-bold text-orange">P1</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <div class="h-3.5 w-3.5 rounded border border-stone-border"></div>
+              <span class="text-muted">Copy and CTA extracted</span>
+              <span class="ml-auto rounded bg-soft-stone px-1.5 py-0.5 font-mono text-[7px] text-faint">P2</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <div class="h-3.5 w-3.5 rounded border border-stone-border"></div>
+              <span class="text-muted">Media and links mapped</span>
+              <span class="ml-auto rounded bg-soft-violet px-1.5 py-0.5 font-mono text-[7px] text-quiet-violet">P3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 80ms">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-soft-blue">
+            <i data-lucide="link" class="h-5 w-5 text-quiet-blue"></i>
+          </div>
+          <h3 class="text-[16px] font-semibold text-ink">Brand context</h3>
+          <p class="mt-2 text-[13px] leading-relaxed text-muted">Carry colors, fonts, logo references, imagery, and light or dark signals into generation.</p>
+          <!-- Mini UI -->
+          <div class="mt-5 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+            <div class="flex items-center gap-2 text-[11px]">
+              <i data-lucide="file-text" class="h-3.5 w-3.5 text-quiet-blue"></i>
+              <span class="text-ink font-medium">Source brand profile</span>
+            </div>
+            <div class="mt-2 flex gap-1.5">
+              <span class="rounded-full border border-quiet-blue/20 bg-soft-blue px-2 py-0.5 font-mono text-[8px] text-quiet-blue">8 colors</span>
+              <span class="rounded-full border border-stone-border bg-white px-2 py-0.5 font-mono text-[8px] text-faint">2 fonts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 160ms">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-soft-violet">
+            <i data-lucide="layout-dashboard" class="h-5 w-5 text-quiet-violet"></i>
+          </div>
+          <h3 class="text-[16px] font-semibold text-ink">Section planning</h3>
+          <p class="mt-2 text-[13px] leading-relaxed text-muted">Build a clear full-page plan before generation and keep every intended section visible.</p>
+          <!-- Mini UI -->
+          <div class="mt-5 grid grid-cols-3 gap-1.5 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+            <div>
+              <p class="mb-1.5 font-mono text-[7px] uppercase tracking-wider text-faint">To do</p>
+              <div class="space-y-1">
+                <div class="rounded bg-white p-1.5 text-[8px] text-body shadow-sm">Hero</div>
+                <div class="rounded bg-white p-1.5 text-[8px] text-body shadow-sm">Features</div>
+              </div>
+            </div>
+            <div>
+              <p class="mb-1.5 font-mono text-[7px] uppercase tracking-wider text-orange">Active</p>
+              <div class="space-y-1">
+                <div class="rounded border border-orange/20 bg-orange-pale p-1.5 text-[8px] text-ink shadow-sm">Pricing</div>
+              </div>
+            </div>
+            <div>
+              <p class="mb-1.5 font-mono text-[7px] uppercase tracking-wider text-faint">Done</p>
+              <div class="space-y-1">
+                <div class="rounded bg-white p-1.5 text-[8px] text-faint shadow-sm">Footer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 40ms">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-pale">
+            <i data-lucide="calendar-days" class="h-5 w-5 text-orange"></i>
+          </div>
+          <h3 class="text-[16px] font-semibold text-ink">Streamed redesign</h3>
+          <p class="mt-2 text-[13px] leading-relaxed text-muted">Watch redesigned sections arrive in the canvas as generation progresses.</p>
+          <div class="mt-5 space-y-1.5 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+            <div class="flex items-center gap-2 text-[10px]">
+              <span class="font-mono text-[8px] text-faint">9am</span>
+              <div class="h-4 flex-1 rounded bg-orange/15 border border-orange/20"></div>
+            </div>
+            <div class="flex items-center gap-2 text-[10px]">
+              <span class="font-mono text-[8px] text-faint">11am</span>
+              <div class="h-4 w-3/4 rounded bg-quiet-blue/10 border border-quiet-blue/15"></div>
+            </div>
+            <div class="flex items-center gap-2 text-[10px]">
+              <span class="font-mono text-[8px] text-faint">2pm</span>
+              <div class="h-4 w-1/2 rounded bg-quiet-violet/10 border border-quiet-violet/15"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 120ms">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-soft-blue">
+            <i data-lucide="brain" class="h-5 w-5 text-quiet-blue"></i>
+          </div>
+          <h3 class="text-[16px] font-semibold text-ink">Project-aware chat</h3>
+          <p class="mt-2 text-[13px] leading-relaxed text-muted">Request targeted edits or new sections with chat that understands the current page structure.</p>
+          <div class="mt-5 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+            <div class="flex items-center gap-2 rounded-lg bg-soft-blue p-2 text-[10px]">
+              <i data-lucide="sparkles" class="h-3 w-3 text-quiet-blue"></i>
+              <span class="text-quiet-blue">"Update the hero and keep the current brand colors"</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 200ms">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-soft-violet">
+            <i data-lucide="timer" class="h-5 w-5 text-quiet-violet"></i>
+          </div>
+          <h3 class="text-[16px] font-semibold text-ink">Version history</h3>
+          <p class="mt-2 text-[13px] leading-relaxed text-muted">Undo, redo, and restore committed designs without losing a direction that worked.</p>
+          <div class="mt-5 flex items-center gap-3 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange text-white">
+              <i data-lucide="play" class="h-4 w-4"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-semibold text-ink">Version 3 active</p>
+              <p class="font-mono text-[9px] text-faint">Restore available</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== WORKFLOW / PLANNING ==================== -->
+  <section id="workflow" class="bg-ivory px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-14 text-center">
+        <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-orange">Workflow</p>
+        <h2 class="font-serif text-3xl md:text-5xl">From URL to export in <span class="italic text-muted">one</span> flow</h2>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-5">
+        <!-- Left: Weekly plan mockup -->
+        <div class="reveal lg:col-span-3">
+          <div class="rounded-2xl border border-stone-border bg-white p-5 shadow-lg shadow-stone-900/[0.04]">
+            <div class="mb-4 flex items-center justify-between">
+              <div>
+                <h3 class="text-[16px] font-semibold text-ink">Project pipeline</h3>
+                <p class="font-mono text-[9px] text-faint">4 stages · 8 sections · Version 3 active</p>
+              </div>
+              <div class="flex gap-1">
+                <button class="rounded-lg border border-stone-border bg-white px-2.5 py-1 text-[10px] text-muted">Plan</button>
+                <button class="rounded-lg bg-ink px-2.5 py-1 text-[10px] text-white">Live</button>
+              </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <div class="w-10 text-right">
+                  <p class="font-mono text-[9px] text-faint">01</p>
+                </div>
+                <div class="flex-1 rounded-xl border border-orange/20 bg-orange-pale p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-orange"></span>
+                    <p class="text-[12px] font-semibold text-ink">Capture source website</p>
+                  </div>
+                  <p class="mt-1 pl-4 text-[10px] text-muted">Copy, links, media, brand context</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-10 text-right">
+                  <p class="font-mono text-[9px] text-faint">02</p>
+                </div>
+                <div class="flex-1 rounded-xl border border-stone-border bg-white p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-quiet-blue"></span>
+                    <p class="text-[12px] font-medium text-ink">Plan redesigned sections</p>
+                  </div>
+                  <p class="mt-1 pl-4 text-[10px] text-muted">Hero, proof, features, pricing, CTA</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-10 text-right">
+                  <p class="font-mono text-[9px] text-faint">03</p>
+                </div>
+                <div class="flex-1 rounded-xl border border-stone-border bg-soft-stone/50 p-3">
+                  <p class="text-[12px] text-faint">Stream full-page generation</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-10 text-right">
+                  <p class="font-mono text-[9px] text-faint">04</p>
+                </div>
+                <div class="flex-1 rounded-xl border border-quiet-violet/20 bg-soft-violet p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-quiet-violet"></span>
+                    <p class="text-[12px] font-medium text-ink">Refine and export</p>
+                  </div>
+                  <p class="mt-1 pl-4 text-[10px] text-muted">Chat edits · version history · HTML/CSS</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-10 text-right">
+                  <p class="font-mono text-[9px] text-faint">Done</p>
+                </div>
+                <div class="flex-1 rounded-xl border border-orange/20 bg-orange-pale p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-orange"></span>
+                    <p class="text-[12px] font-semibold text-ink">Latest version committed</p>
+                  </div>
+                  <p class="mt-1 pl-4 text-[10px] text-muted">Ready for download</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Linked notes + project status -->
+        <div class="reveal space-y-5 lg:col-span-2" style="transition-delay: 100ms">
+          <div class="rounded-2xl border border-stone-border bg-white p-5 shadow-sm">
+            <div class="mb-3 flex items-center justify-between">
+              <p class="text-[13px] font-semibold text-ink">Project context</p>
+              <span class="font-mono text-[9px] text-faint">3 sources</span>
+            </div>
+            <div class="space-y-2">
+              <div class="rounded-lg border border-stone-border p-3 transition-colors hover:border-orange/20 hover:bg-orange-pale/50">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="file-text" class="h-3.5 w-3.5 text-orange"></i>
+                  <p class="text-[12px] font-medium text-ink">Captured page structure</p>
+                </div>
+                <p class="mt-1 text-[10px] text-faint">8 sections · 34 content blocks</p>
+              </div>
+              <div class="rounded-lg border border-stone-border p-3 transition-colors hover:border-quiet-blue/20 hover:bg-soft-blue/50">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="file-text" class="h-3.5 w-3.5 text-quiet-blue"></i>
+                  <p class="text-[12px] font-medium text-ink">Brand profile</p>
+                </div>
+                <p class="mt-1 text-[10px] text-faint">Colors · fonts · logo · imagery</p>
+              </div>
+              <div class="rounded-lg border border-stone-border p-3 transition-colors hover:border-quiet-violet/20 hover:bg-soft-violet/50">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="file-text" class="h-3.5 w-3.5 text-quiet-violet"></i>
+                  <p class="text-[12px] font-medium text-ink">Design direction</p>
+                </div>
+                <p class="mt-1 text-[10px] text-faint">Prompt and refinement history</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-stone-border bg-white p-5 shadow-sm">
+            <p class="mb-3 text-[13px] font-semibold text-ink">Section progress</p>
+            <div class="space-y-3">
+              <div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-ink">Generated</span>
+                  <span class="font-mono text-[9px] text-orange">8/8</span>
+                </div>
+                <div class="mt-1.5 h-2 overflow-hidden rounded-full bg-soft-stone">
+                  <div class="h-full rounded-full bg-orange" style="width: 67%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-ink">Reviewed</span>
+                  <span class="font-mono text-[9px] text-quiet-violet">6/8</span>
+                </div>
+                <div class="mt-1.5 h-2 overflow-hidden rounded-full bg-soft-stone">
+                  <div class="h-full rounded-full bg-quiet-violet" style="width: 56%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-ink">Export-ready</span>
+                  <span class="font-mono text-[9px] text-quiet-blue">8/8</span>
+                </div>
+                <div class="mt-1.5 h-2 overflow-hidden rounded-full bg-soft-stone">
+                  <div class="h-full rounded-full bg-quiet-blue" style="width: 50%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOCUS MODES ==================== -->
+  <section id="focus" class="bg-warm-panel px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <!-- Left: Explanation -->
+        <div class="reveal">
+          <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-orange">Editor</p>
+          <h2 class="font-serif text-3xl md:text-5xl">Refine without losing <span class="italic text-muted">direction</span></h2>
+          <p class="mt-6 max-w-md text-[15px] leading-relaxed text-muted">
+            Move through the canvas, target the right section, and keep every meaningful iteration recoverable while the design evolves.
+          </p>
+          <div class="mt-8 space-y-4">
+            <div class="flex items-start gap-3">
+              <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-orange-pale">
+                <i data-lucide="shield" class="h-4 w-4 text-orange"></i>
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-ink">Canvas controls</p>
+                <p class="text-[13px] text-muted">Move, select, and zoom through the generated full-page design.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-soft-blue">
+                <i data-lucide="zap" class="h-4 w-4 text-quiet-blue"></i>
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-ink">Chat refinements</p>
+                <p class="text-[13px] text-muted">Update or insert sections through project-aware streaming chat.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-soft-violet">
+                <i data-lucide="bar-chart-3" class="h-4 w-4 text-quiet-violet"></i>
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-ink">Recoverable history</p>
+                <p class="text-[13px] text-muted">Undo, redo, or restore a committed design version whenever needed.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Focus mode UI -->
+        <div class="reveal" style="transition-delay: 120ms">
+          <div class="rounded-2xl border border-stone-border bg-white p-6 shadow-lg shadow-stone-900/[0.04]">
+            <!-- Segmented control -->
+            <div class="mb-6 flex rounded-xl border border-stone-border bg-soft-stone p-1">
+              <button class="focus-segment flex-1 rounded-lg py-2 text-[12px] font-medium text-muted" onclick="setFocusMode(this, 'deep')">Move</button>
+              <button class="focus-segment active flex-1 rounded-lg py-2 text-[12px] font-medium" onclick="setFocusMode(this, 'planning')">Select</button>
+              <button class="focus-segment flex-1 rounded-lg py-2 text-[12px] font-medium text-muted" onclick="setFocusMode(this, 'review')">History</button>
+            </div>
+
+            <!-- Focus timer -->
+            <div class="mb-6 text-center">
+              <div class="mx-auto flex h-32 w-32 items-center justify-center rounded-full border-4 border-orange/20 bg-orange-pale">
+                <div>
+                  <p class="font-mono text-2xl font-bold text-ink" id="focus-timer">100%</p>
+                  <p class="font-mono text-[9px] text-orange">VIEW</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Current task -->
+            <div class="rounded-xl border border-orange/20 bg-orange-pale p-4">
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-orange animate-pulse"></span>
+                <p class="text-[12px] font-semibold text-ink">Active instruction</p>
+              </div>
+              <p class="mt-2 text-[14px] font-medium text-ink">Make the hero more editorial</p>
+              <p class="mt-1 text-[11px] text-muted">Target: Hero · Version 3</p>
+              <div class="mt-3 flex gap-2">
+                <span class="rounded-full bg-orange/10 px-2 py-0.5 font-mono text-[8px] font-bold text-orange">HIGH</span>
+                <span class="rounded-full bg-soft-stone px-2 py-0.5 font-mono text-[8px] text-faint">1 section</span>
+              </div>
+            </div>
+
+            <!-- Task queue -->
+            <div class="mt-4 space-y-2">
+              <p class="font-mono text-[9px] uppercase tracking-wider text-faint">Suggested refinements</p>
+              <div class="flex items-center gap-2 rounded-lg border border-stone-border px-3 py-2 text-[12px]">
+                <div class="h-3.5 w-3.5 rounded border border-stone-border"></div>
+                <span class="text-muted">Tighten section spacing</span>
+                <span class="ml-auto font-mono text-[8px] text-faint">Edit</span>
+              </div>
+              <div class="flex items-center gap-2 rounded-lg border border-stone-border px-3 py-2 text-[12px]">
+                <div class="h-3.5 w-3.5 rounded border border-stone-border"></div>
+                <span class="text-muted">Add customer proof</span>
+                <span class="ml-auto font-mono text-[8px] text-faint">Add</span>
+              </div>
+            </div>
+
+            <!-- Focus stats -->
+            <div class="mt-5 flex items-center justify-between rounded-xl border border-stone-border bg-soft-stone/50 px-4 py-3">
+              <div class="text-center">
+                <p class="font-mono text-[16px] font-bold text-ink">8</p>
+                <p class="font-mono text-[8px] text-faint">Sections</p>
+              </div>
+              <div class="h-8 w-px bg-stone-border"></div>
+              <div class="text-center">
+                <p class="font-mono text-[16px] font-bold text-green-600">3</p>
+                <p class="font-mono text-[8px] text-faint">Versions</p>
+              </div>
+              <div class="h-8 w-px bg-stone-border"></div>
+              <div class="text-center">
+                <p class="font-mono text-[16px] font-bold text-ink">54</p>
+                <p class="font-mono text-[8px] text-faint">Credits</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRICING ==================== -->
+  <section id="pricing" class="bg-ivory px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-14 text-center">
+        <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-orange">Pricing</p>
+        <h2 class="font-serif text-3xl md:text-5xl">Simple plans, <span class="italic text-muted">clear credits</span></h2>
+        <p class="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-muted">Start free, then upgrade to Indie Pro for more redesigns, chat edits, and code exports.</p>
+      </div>
+
+      <div class="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
+        <!-- Free -->
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-7">
+          <p class="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">Free Starter</p>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="font-serif text-4xl text-ink">$0</span>
+            <span class="text-[13px] text-faint">/month</span>
+          </div>
+          <p class="mt-3 text-[13px] text-muted">For solo founders validating their first landing-page design.</p>
+          <a class="mt-6 block w-full rounded-full border border-stone-border bg-white py-3 text-center text-[13px] font-semibold text-ink transition-colors hover:bg-soft-stone" href="https://resetui.com">Get Started</a>
+          <div class="mt-6 space-y-2.5">
+            <div class="flex items-center gap-2 text-[12px] text-body"><i data-lucide="check" class="h-3.5 w-3.5 text-green-500"></i>5 AI credits included</div>
+            <div class="flex items-center gap-2 text-[12px] text-body"><i data-lucide="check" class="h-3.5 w-3.5 text-green-500"></i>1 design generation</div>
+            <div class="flex items-center gap-2 text-[12px] text-body"><i data-lucide="check" class="h-3.5 w-3.5 text-green-500"></i>Up to 10 sections per design</div>
+            <div class="flex items-center gap-2 text-[12px] text-body"><i data-lucide="check" class="h-3.5 w-3.5 text-green-500"></i>Standard generation queue</div>
+            <div class="flex items-center gap-2 text-[12px] text-body"><i data-lucide="check" class="h-3.5 w-3.5 text-green-500"></i>ResetUI watermark</div>
+            <div class="flex items-center gap-2 text-[12px] text-faint"><i data-lucide="x" class="h-3.5 w-3.5 text-red-400"></i>No chat edits or code export</div>
+          </div>
+        </div>
+
+        <!-- Pro (featured) -->
+        <div class="reveal card-hover rounded-2xl border-2 border-ink bg-ink p-7 shadow-xl shadow-ink/10 md:-translate-y-3" style="transition-delay: 80ms">
+          <div class="flex items-center justify-between">
+            <p class="font-mono text-[10px] uppercase tracking-[0.15em] text-stone-400">Indie Pro</p>
+            <span class="rounded-full bg-orange px-2.5 py-0.5 font-mono text-[8px] font-bold text-white">EARLY ACCESS</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="font-serif text-4xl text-white">$25</span>
+            <span class="text-[13px] text-stone-400">/month</span>
+          </div>
+          <p class="mt-1 text-[12px] text-stone-500"><span class="line-through">$39/month</span> · Early Access Offer</p>
+          <p class="mt-3 text-[13px] text-stone-400">For founders building and shipping products frequently.</p>
+          <a class="mt-6 block w-full rounded-full bg-orange py-3 text-center text-[13px] font-semibold text-white shadow-lg shadow-orange/20 transition-all hover:bg-orange-deep" href="https://resetui.com/#pricing">Upgrade to Pro</a>
+          <div class="mt-6 space-y-2.5">
+            <div class="flex items-center gap-2 text-[12px] text-stone-300"><i data-lucide="check" class="h-3.5 w-3.5 text-orange"></i>100 AI credits included monthly</div>
+            <div class="flex items-center gap-2 text-[12px] text-stone-300"><i data-lucide="check" class="h-3.5 w-3.5 text-orange"></i>Up to 20 design generations</div>
+            <div class="flex items-center gap-2 text-[12px] text-stone-300"><i data-lucide="check" class="h-3.5 w-3.5 text-orange"></i>Up to 20 sections per design</div>
+            <div class="flex items-center gap-2 text-[12px] text-stone-300"><i data-lucide="check" class="h-3.5 w-3.5 text-orange"></i>Priority generation queue</div>
+            <div class="flex items-center gap-2 text-[12px] text-stone-300"><i data-lucide="check" class="h-3.5 w-3.5 text-orange"></i>Chat edits and HTML/CSS export</div>
+            <div class="flex items-center gap-2 text-[12px] text-stone-300"><i data-lucide="check" class="h-3.5 w-3.5 text-orange"></i>No watermark + priority support</div>
+            <div class="flex items-center gap-2 text-[12px] text-stone-400"><i data-lucide="coins" class="h-3.5 w-3.5 text-orange"></i>Usage: Generation 5 · Chat 1 · Export 2 credits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SOCIAL PROOF ==================== -->
+  <section class="bg-soft-stone px-6 py-24 md:py-28">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="reveal mb-12 text-center">
+        <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-orange">Product principles</p>
+        <h2 class="font-serif text-3xl md:text-4xl">Built for <span class="italic text-muted">safe iteration</span></h2>
+      </div>
+
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6 text-center">
+          <p class="font-serif text-3xl text-orange">URL</p>
+          <p class="mt-1 text-[12px] text-muted">Real source context</p>
+        </div>
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6 text-center" style="transition-delay: 60ms">
+          <p class="font-serif text-3xl text-quiet-blue">Live</p>
+          <p class="mt-1 text-[12px] text-muted">Streamed sections</p>
+        </div>
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6 text-center" style="transition-delay: 120ms">
+          <p class="font-serif text-3xl text-quiet-violet">History</p>
+          <p class="mt-1 text-[12px] text-muted">Recoverable versions</p>
+        </div>
+        <div class="reveal card-hover rounded-2xl border border-stone-border bg-white p-6 text-center" style="transition-delay: 180ms">
+          <p class="font-serif text-3xl text-ink">HTML</p>
+          <p class="mt-1 text-[12px] text-muted">Usable code export</p>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        <div class="reveal rounded-2xl border border-stone-border bg-white p-6">
+          <p class="font-serif text-[15px] leading-snug italic text-ink">"Existing copy, calls to action, links, media, and hierarchy remain available as the redesign changes direction."</p>
+          <div class="mt-4 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-full bg-orange-pale flex items-center justify-center font-serif text-sm text-orange">S</div>
+            <div>
+              <p class="text-[12px] font-semibold text-ink">Source-aware</p>
+              <p class="font-mono text-[9px] text-faint">Capture rules</p>
+            </div>
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 80ms">
+          <p class="font-serif text-[15px] leading-snug italic text-ink">"Chat edits, undo, redo, and restores create committed versions instead of mutating history in place."</p>
+          <div class="mt-4 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-full bg-soft-blue flex items-center justify-center font-serif text-sm text-quiet-blue">M</div>
+            <div>
+              <p class="text-[12px] font-semibold text-ink">Recoverable</p>
+              <p class="font-mono text-[9px] text-faint">Versioning rules</p>
+            </div>
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-stone-border bg-white p-6" style="transition-delay: 160ms">
+          <p class="font-serif text-[15px] leading-snug italic text-ink">"Export reads the latest committed design and assembles a clean standalone HTML/CSS document."</p>
+          <div class="mt-4 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-full bg-soft-violet flex items-center justify-center font-serif text-sm text-quiet-violet">A</div>
+            <div>
+              <p class="text-[12px] font-semibold text-ink">Deliverable</p>
+              <p class="font-mono text-[9px] text-faint">Export rules</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FINAL CTA ==================== -->
+  <section class="px-6 py-24 md:py-32">
+    <div class="reveal mx-auto max-w-[1200px]">
+      <div class="relative overflow-hidden rounded-3xl bg-ink px-8 py-16 text-center md:px-16 md:py-20">
+        <!-- Orange glow -->
+        <div class="absolute left-1/2 top-0 h-[50%] w-[40%] -translate-x-1/2 -translate-y-1/3 rounded-full bg-orange/15 blur-3xl"></div>
+
+        <div class="relative z-10">
+          <h2 class="font-serif text-3xl md:text-5xl text-white">
+            Ready to reset your <span class="italic text-stone-400">landing page</span>?
+          </h2>
+          <p class="mx-auto mt-5 max-w-lg text-[15px] leading-relaxed text-stone-400">
+            Bring the URL, describe the direction, and let ResetUI turn the current page into a sharper production-ready front-end.
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <a class="group flex items-center gap-2 rounded-full bg-orange px-8 py-4 text-[14px] font-semibold text-white shadow-lg shadow-orange/25 transition-all hover:bg-orange-deep hover:-translate-y-0.5" href="https://resetui.com">
+              Get Started
+              <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-0.5"></i>
+            </a>
+            <a class="rounded-full border border-white/10 px-8 py-4 text-[14px] font-semibold text-stone-300 transition-all hover:border-white/20 hover:text-white" href="#workflow">
+              See Workflow
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="border-t border-stone-border bg-white px-6 py-16">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="grid gap-10 md:grid-cols-5">
+      <!-- Brand -->
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2.5">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">
+          <span class="font-serif text-xl text-ink">ResetUI</span>
+        </div>
+        <p class="mt-3 text-[12px] leading-relaxed text-muted">AI landing-page redesign grounded in your site.</p>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Product</p>
+        <div class="space-y-2 text-[13px]">
+          <a class="block text-body transition-colors hover:text-ink" href="#features">Capabilities</a>
+          <a class="block text-body transition-colors hover:text-ink" href="#pricing">Pricing</a>
+          <a class="block text-body transition-colors hover:text-ink" href="#workflow">Workflow</a>
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/changelog">Changelog</a>
+        </div>
+      </div>
+      <div>
+        <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Resources</p>
+        <div class="space-y-2 text-[13px]">
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/contact">Contact</a>
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/security">Security</a>
+          <a class="block text-body transition-colors hover:text-ink" href="mailto:support@resetui.com">Support</a>
+          <a class="block text-body transition-colors hover:text-ink" href="mailto:security@resetui.com">Report an issue</a>
+        </div>
+      </div>
+      <div>
+        <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Company</p>
+        <div class="space-y-2 text-[13px]">
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/privacy">Privacy</a>
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/terms">Terms</a>
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/refund">Refunds</a>
+          <a class="block text-body transition-colors hover:text-ink" href="https://resetui.com/contact">Company</a>
+        </div>
+      </div>
+      <div>
+        <p class="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-faint">Connect</p>
+        <div class="flex gap-2">
+          <a class="flex h-8 w-8 items-center justify-center rounded-full border border-stone-border text-muted transition-colors hover:border-ink/20 hover:text-ink" href="#" aria-label="Twitter"><i data-lucide="twitter" class="h-3.5 w-3.5"></i></a>
+          <a class="flex h-8 w-8 items-center justify-center rounded-full border border-stone-border text-muted transition-colors hover:border-ink/20 hover:text-ink" href="#" aria-label="GitHub"><i data-lucide="github" class="h-3.5 w-3.5"></i></a>
+          <a class="flex h-8 w-8 items-center justify-center rounded-full border border-stone-border text-muted transition-colors hover:border-ink/20 hover:text-ink" href="#" aria-label="LinkedIn"><i data-lucide="linkedin" class="h-3.5 w-3.5"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-12 flex flex-col items-center justify-between gap-3 border-t border-stone-border pt-6 md:flex-row">
+      <p class="font-mono text-[9px] text-faint">© 2026 ResetUI. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <p class="font-mono text-[9px] text-faint">v1.0.3</p>
+        <span class="h-1 w-1 rounded-full bg-stone-border"></span>
+        <div class="flex items-center gap-1.5">
+          <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+          <p class="font-mono text-[9px] text-faint">Live</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // ---- Scroll Reveal ----
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ---- Mobile Menu ----
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  menuBtn.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    if (menuOpen) {
+      mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      closeMenu();
+    }
+  });
+
+  function closeMenu() {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ---- Focus Mode Segments ----
+  function setFocusMode(btn, mode) {
+    const segments = btn.parentElement.querySelectorAll('.focus-segment');
+    segments.forEach(s => {
+      s.classList.remove('active');
+      s.classList.add('text-muted');
+    });
+    btn.classList.add('active');
+    btn.classList.remove('text-muted');
+
+    const timerEl = document.getElementById('focus-timer');
+    if (mode === 'deep') timerEl.textContent = '75%';
+    else if (mode === 'planning') timerEl.textContent = '100%';
+    else timerEl.textContent = 'V3';
+  }
+
+  // ---- Nav shadow on scroll ----
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 60) {
+      nav.style.boxShadow = '0 8px 32px -8px rgba(0,0,0,0.25)';
+    } else {
+      nav.style.boxShadow = '0 16px 40px -12px rgba(0,0,0,0.15)';
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>

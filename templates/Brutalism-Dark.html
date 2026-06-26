@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brutalism | Dark</title>
+<meta name="application-name" content="Brutalism | Dark">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Space Grotesk', 'Inter', 'sans-serif'] },
+      colors: {
+        'rich': '#09090B',
+        'off': '#FAFAFA',
+        'acid': '#DFE104',
+        'surface': '#27272A',
+        'border': '#3F3F46',
+        'muted': '#A1A1AA',
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: #09090B;
+    color: #FAFAFA;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise overlay */
+  .noise {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    opacity: 0.03; mix-blend-mode: overlay; pointer-events: none; z-index: 9999;
+  }
+
+  /* Focus ring */
+  *:focus-visible {
+    outline: 2px solid #DFE104;
+    outline-offset: 2px;
+  }
+
+  /* Selection */
+  ::selection { background: #DFE104; color: #000; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #09090B; }
+  ::-webkit-scrollbar-thumb { background: #3F3F46; }
+  ::-webkit-scrollbar-thumb:hover { background: #DFE104; }
+
+  /* Marquee */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-track {
+      animation: marquee-left var(--marquee-duration, 30s) linear infinite;
+    }
+    .marquee-track.reverse {
+      animation: marquee-right var(--marquee-duration, 30s) linear infinite;
+    }
+  }
+  @keyframes marquee-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes marquee-right {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+  .testimonial-card {
+    width: 500px;
+    height: 300px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  @media (min-width: 1024px) {
+    .testimonial-card {
+      width: 700px;
+      height: 340px;
+    }
+  }
+
+  /* Flip hover */
+  .flip {
+    background-color: #09090B;
+    color: #FAFAFA;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .flip:hover {
+    background-color: #DFE104;
+    color: #000000;
+  }
+  .muted { color: #A1A1AA; transition: color 0.3s ease; }
+  .flip:hover .muted { color: rgba(0,0,0,0.65); }
+  .deco-num { color: #27272A; transition: color 0.3s ease; }
+  .flip:hover .deco-num { color: rgba(0,0,0,0.1); }
+
+  /* Benefit row */
+  .benefit-row { transition: background-color 0.3s ease; }
+  .benefit-title { transition: transform 0.3s ease; }
+  .benefit-desc {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  @media (hover: hover) {
+    .benefit-row:hover .benefit-title { transform: translateX(2rem); }
+    .benefit-row:hover .benefit-desc { opacity: 1; transform: translateX(0); }
+  }
+  @media (max-width: 1023px) {
+    .benefit-desc { opacity: 1; transform: none; }
+  }
+
+  /* FAQ */
+  .faq-item { transition: background-color 0.3s ease, color 0.3s ease; }
+  .faq-item.open { background-color: #DFE104; color: #000; }
+  .faq-item.open .muted { color: rgba(0,0,0,0.65); }
+  .faq-item.open .deco-num { color: rgba(0,0,0,0.1); }
+  .faq-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .faq-item.open .faq-content { max-height: 400px; }
+
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  /* Nav scrolled */
+  .nav-inner { transition: padding 0.2s ease; }
+  .nav-scrolled .nav-inner { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+
+  /* Mobile overlay */
+  #mobile-overlay { display: none; }
+  #mobile-overlay.open { display: flex; }
+
+  /* Staircase connectors */
+  .step-connector {
+    position: absolute;
+    background: #3F3F46;
+    z-index: 0;
+  }
+
+  /* Pricing toggle active */
+  .toggle-btn { transition: background-color 0.2s, color 0.2s; }
+  .toggle-btn.active { background-color: #DFE104; color: #000; }
+
+  /* Vertical label */
+  .vlabel {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+  }
+
+  /* Mark */
+  mark { background: #DFE104; color: #000; padding: 0 0.15em; }
+
+  /* Touch target minimum */
+  button, a[role="button"] { min-height: 44px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none !important; }
+    .marquee-track { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Noise overlay -->
+<svg class="noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noiseFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/>
+    <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+
+<!-- ============ 1. NAVBAR ============ -->
+<nav id="navbar" class="sticky top-0 z-50 border-y-2 border-border bg-rich">
+  <div class="nav-inner flex items-stretch max-w-[1200px] mx-auto">
+    <!-- Brand -->
+    <a href="#top" class="flex items-center gap-3 px-4 sm:px-6 py-4 border-r-2 border-border font-bold tracking-tighter text-lg sm:text-xl shrink-0">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">
+      <span>ResetUI</span>
+    </a>
+
+    <!-- Ticker -->
+    <div class="hidden">
+      <div class="marquee-track" style="--marquee-duration: 30s;">
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap">RESETUI 1.0.3</span>
+        <span class="text-acid">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap">URL CAPTURE</span>
+        <span class="text-acid">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap">5 FREE CREDITS</span>
+        <span class="text-acid">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap">FULL-PAGE REDESIGN</span>
+        <span class="text-acid">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap">CHAT EDITS</span>
+        <span class="text-acid">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap">HTML EXPORT</span>
+        <span class="text-acid">·</span>
+        <!-- duplicate -->
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap" aria-hidden="true">RESETUI 1.0.3</span>
+        <span class="text-acid" aria-hidden="true">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap" aria-hidden="true">URL CAPTURE</span>
+        <span class="text-acid" aria-hidden="true">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap" aria-hidden="true">5 FREE CREDITS</span>
+        <span class="text-acid" aria-hidden="true">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap" aria-hidden="true">FULL-PAGE REDESIGN</span>
+        <span class="text-acid" aria-hidden="true">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap" aria-hidden="true">CHAT EDITS</span>
+        <span class="text-acid" aria-hidden="true">·</span>
+        <span class="px-6 py-4 text-sm uppercase tracking-widest text-muted whitespace-nowrap" aria-hidden="true">HTML EXPORT</span>
+        <span class="text-acid" aria-hidden="true">·</span>
+      </div>
+    </div>
+
+    <!-- Nav links -->
+    <div class="hidden lg:flex flex-1 items-stretch justify-center">
+      <a href="#features" class="flex items-center px-5 py-4 text-sm font-bold uppercase tracking-tight hover:bg-acid hover:text-black transition-colors">
+        <sup class="text-muted mr-1 text-xs">01</sup> Product
+      </a>
+      <a href="#pricing" class="flex items-center px-5 py-4 text-sm font-bold uppercase tracking-tight hover:bg-acid hover:text-black transition-colors">
+        <sup class="text-muted mr-1 text-xs">02</sup> Plans
+      </a>
+      <a href="#faq" class="flex items-center px-5 py-4 text-sm font-bold uppercase tracking-tight hover:bg-acid hover:text-black transition-colors">
+        <sup class="text-muted mr-1 text-xs">03</sup> FAQ
+      </a>
+      <a href="#blog" class="flex items-center px-5 py-4 text-sm font-bold uppercase tracking-tight hover:bg-acid hover:text-black transition-colors">
+        <sup class="text-muted mr-1 text-xs">04</sup> Notes
+      </a>
+    </div>
+
+    <!-- CTA -->
+    <a href="#cta" class="hidden lg:flex items-center bg-acid text-black px-8 font-bold uppercase tracking-tight text-sm hover:scale-105 transition-transform shrink-0">
+      Start Free →
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button id="menu-toggle" aria-label="Open menu" aria-expanded="false" class="lg:hidden flex items-center justify-center px-6 ml-auto">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile overlay -->
+<div id="mobile-overlay" class="fixed inset-0 bg-acid text-black z-[100] flex-col items-center justify-center" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <button id="close-mobile" aria-label="Close menu" class="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border-2 border-black">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M6 6l12 12M6 18L18 6"/></svg>
+  </button>
+  <nav class="flex flex-col items-center gap-2">
+    <a href="#features" class="mobile-link text-[12vw] font-bold tracking-tighter uppercase leading-none">Product</a>
+    <a href="#pricing" class="mobile-link text-[12vw] font-bold tracking-tighter uppercase leading-none">Plans</a>
+    <a href="#faq" class="mobile-link text-[12vw] font-bold tracking-tighter uppercase leading-none">FAQ</a>
+    <a href="#blog" class="mobile-link text-[12vw] font-bold tracking-tighter uppercase leading-none">Notes</a>
+    <a href="#cta" class="mobile-link text-[12vw] font-bold tracking-tighter uppercase leading-none mt-8 bg-black text-acid px-6">Start Free →</a>
+  </nav>
+</div>
+
+<main id="top">
+
+<!-- ============ 2. HERO ============ -->
+<section id="hero" class="relative min-h-[90vh] flex items-center max-w-[1200px] mx-auto py-20 lg:py-32 overflow-hidden">
+  <!-- BG number -->
+  <span class="absolute top-0 right-0 text-[30vw] lg:text-[20vw] font-bold text-surface leading-none select-none pointer-events-none" aria-hidden="true">01</span>
+
+  <!-- Vertical label -->
+  <div class="absolute left-0 top-1/2 -translate-y-1/2 hidden sm:block">
+    <span class="vlabel text-xs tracking-[0.3em] text-muted uppercase">RESETUI — URL + PROMPT — EXPORT</span>
+  </div>
+
+  <!-- Lockup -->
+  <div class="hero-lockup ml-0 sm:ml-16 relative z-10">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="w-3 h-3 bg-acid"></span>
+      <span class="text-xs uppercase tracking-widest text-muted">1.0.3 — URL capture online</span>
+    </div>
+
+    <h1 class="text-[clamp(3rem,12vw,14rem)] font-bold tracking-tighter leading-[0.8] uppercase">
+      <span class="relative z-20 block text-off">Reset</span>
+      <mark class="relative z-10 block w-fit">your</mark>
+      <span class="relative z-20 block text-off">page.</span>
+    </h1>
+
+    <p class="normal-case text-lg lg:text-2xl text-muted max-w-2xl mt-8 leading-relaxed font-medium">
+      ResetUI captures your existing landing page, combines it with your design direction, and generates a refreshed, editable, production-ready redesign.
+    </p>
+
+    <div class="flex flex-wrap gap-4 mt-10">
+      <a href="#cta" class="bg-acid text-black h-14 px-8 flex items-center font-bold uppercase tracking-tight hover:scale-105 active:scale-95 transition-transform">
+        Start Redesigning →
+      </a>
+      <a href="#how" class="border-2 border-border h-14 px-8 flex items-center font-bold uppercase tracking-tight hover:bg-off hover:text-black transition-colors">
+        See Workflow
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. LOGO MARQUEE ============ -->
+<section class="border-y-2 border-border overflow-hidden">
+  <!-- Top row - left -->
+  <div class="overflow-hidden py-6 border-b-2 border-acid">
+    <div class="marquee-track" style="--marquee-duration: 35s;">
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">URL CAPTURE</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">BRAND CONTEXT</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">SECTION PLANNING</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">LIVE GENERATION</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">CHAT EDITS</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">HTML EXPORT</span>
+      <!-- duplicate -->
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">URL CAPTURE</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">BRAND CONTEXT</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">SECTION PLANNING</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">LIVE GENERATION</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">CHAT EDITS</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">HTML EXPORT</span>
+    </div>
+  </div>
+  <!-- Bottom row - right -->
+  <div class="overflow-hidden py-6">
+    <div class="marquee-track reverse" style="--marquee-duration: 35s;">
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">CANVAS CONTROLS</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">VERSION HISTORY</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">PROJECT CHAT</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">CREDIT SYSTEM</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">CLEAN CODE</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap">RESPONSIVE OUTPUT</span>
+      <!-- duplicate -->
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">CANVAS CONTROLS</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">VERSION HISTORY</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">PROJECT CHAT</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">CREDIT SYSTEM</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">CLEAN CODE</span>
+      <span class="px-8 text-3xl lg:text-5xl font-bold uppercase tracking-tighter text-muted hover:text-acid transition-colors cursor-default whitespace-nowrap" aria-hidden="true">RESPONSIVE OUTPUT</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. FEATURES BENTO ============ -->
+<section id="features" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="mb-12 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ ResetUI</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      One URL.<br>Every redesign.
+    </h2>
+  </div>
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border border-2 border-border reveal">
+    <!-- Hero cell: 2x2 -->
+    <div class="col-span-2 lg:row-span-2 flip p-8 lg:p-10 relative flex flex-col min-h-[300px] lg:min-h-[400px]">
+      <span class="deco-num absolute top-2 right-4 text-[7rem] lg:text-[10rem] font-bold leading-none pointer-events-none" aria-hidden="true">01</span>
+      <div class="relative z-10 mt-auto">
+        <h3 class="text-2xl lg:text-4xl font-bold uppercase tracking-tighter mb-3">URL + Prompt Workflow</h3>
+        <p class="muted text-base lg:text-lg normal-case font-medium leading-relaxed max-w-md">Capture a live landing page, add the direction you want, and generate a redesigned page that keeps source intent while changing the visual system.</p>
+      </div>
+      <div class="overflow-hidden mt-6 pt-6 border-t border-border relative z-10">
+        <div class="marquee-track" style="--marquee-duration: 20s;">
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">CAPTURE</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">PLAN</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">GENERATE</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">EXPORT</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">CAPTURE</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap" aria-hidden="true">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">PLAN</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap" aria-hidden="true">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">GENERATE</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap" aria-hidden="true">→</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">EXPORT</span>
+          <span class="text-lg lg:text-2xl font-bold uppercase tracking-tight mr-4 text-muted whitespace-nowrap" aria-hidden="true">→</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cell 2 -->
+    <div class="flip p-6 lg:p-8 relative min-h-[180px]">
+      <span class="deco-num absolute top-1 right-3 text-[5rem] lg:text-[7rem] font-bold leading-none pointer-events-none" aria-hidden="true">02</span>
+      <div class="relative z-10 mt-auto">
+        <h3 class="text-xl lg:text-2xl font-bold uppercase tracking-tight mb-2">Website Capture</h3>
+        <p class="muted text-sm lg:text-base normal-case font-medium">Extract copy, links, media, hierarchy, colors, fonts, and brand signals from one URL.</p>
+      </div>
+    </div>
+
+    <!-- Cell 3 -->
+    <div class="flip p-6 lg:p-8 relative min-h-[180px]">
+      <span class="deco-num absolute top-1 right-3 text-[5rem] lg:text-[7rem] font-bold leading-none pointer-events-none" aria-hidden="true">03</span>
+      <div class="relative z-10 mt-auto">
+        <h3 class="text-xl lg:text-2xl font-bold uppercase tracking-tight mb-2">Live Generation</h3>
+        <p class="muted text-sm lg:text-base normal-case font-medium">Stream a full-page redesign into the canvas section by section.</p>
+      </div>
+    </div>
+
+    <!-- Cell 4: wide 2x1 -->
+    <div class="col-span-2 flip p-6 lg:p-8 relative min-h-[180px] flex items-center gap-6">
+      <span class="deco-num absolute top-1 right-3 text-[5rem] lg:text-[7rem] font-bold leading-none pointer-events-none" aria-hidden="true">04</span>
+      <div class="relative z-10">
+        <h3 class="text-xl lg:text-2xl font-bold uppercase tracking-tight mb-2">Project Memory</h3>
+        <p class="muted text-sm lg:text-base normal-case font-medium">Keep generated HTML, chat edits, and committed design versions connected.</p>
+      </div>
+    </div>
+
+    <!-- Cell 5 -->
+    <div class="flip p-6 lg:p-8 relative min-h-[180px]">
+      <span class="deco-num absolute top-1 right-3 text-[5rem] lg:text-[7rem] font-bold leading-none pointer-events-none" aria-hidden="true">05</span>
+      <div class="relative z-10 mt-auto">
+        <h3 class="text-xl lg:text-2xl font-bold uppercase tracking-tight mb-2">Chat Edits</h3>
+        <p class="muted text-sm lg:text-base normal-case font-medium">Ask for targeted section changes without losing page context.</p>
+      </div>
+    </div>
+
+    <!-- Cell 6 -->
+    <div class="flip p-6 lg:p-8 relative min-h-[180px]">
+      <span class="deco-num absolute top-1 right-3 text-[5rem] lg:text-[7rem] font-bold leading-none pointer-events-none" aria-hidden="true">06</span>
+      <div class="relative z-10 mt-auto">
+        <h3 class="text-xl lg:text-2xl font-bold uppercase tracking-tight mb-2">Clean Export</h3>
+        <p class="muted text-sm lg:text-base normal-case font-medium">Download standalone HTML that is ready to edit, host, or hand off.</p>
+      </div>
+    </div>
+
+    <!-- Cell 7: wide 2x1 -->
+    <div class="col-span-2 flip p-6 lg:p-8 relative min-h-[180px] flex items-center gap-6">
+      <span class="deco-num absolute top-1 right-3 text-[5rem] lg:text-[7rem] font-bold leading-none pointer-events-none" aria-hidden="true">07</span>
+      <div class="relative z-10">
+        <h3 class="text-xl lg:text-2xl font-bold uppercase tracking-tight mb-2">High Fidelity Templates / Prompts</h3>
+        <p class="muted text-sm lg:text-base normal-case font-medium">Use refined design templates and detailed prompts to generate polished landing page directions faster.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. BENEFITS ============ -->
+<section id="benefits" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="mb-12 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ Outcomes</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      Measurable<br>outcomes.
+    </h2>
+  </div>
+
+  <div class="border-t-2 border-border reveal">
+    <!-- 01 -->
+    <div class="benefit-row border-b-2 border-border group cursor-default">
+      <div class="grid lg:grid-cols-[auto_1fr_1fr] gap-4 lg:gap-8 py-8 lg:py-12 items-center px-2">
+        <span class="text-[4rem] lg:text-[8rem] font-bold deco-num leading-none">01</span>
+        <h3 class="benefit-title text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Start with real page context</h3>
+        <p class="benefit-desc muted text-lg lg:text-xl normal-case font-medium leading-relaxed">ResetUI starts from the live page you already have, preserving useful copy, calls to action, links, media, and brand cues.</p>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="benefit-row border-b-2 border-border group cursor-default">
+      <div class="grid lg:grid-cols-[auto_1fr_1fr] gap-4 lg:gap-8 py-8 lg:py-12 items-center px-2">
+        <span class="text-[4rem] lg:text-[8rem] font-bold deco-num leading-none">02</span>
+        <h3 class="benefit-title text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Generate sections live</h3>
+        <p class="benefit-desc muted text-lg lg:text-xl normal-case font-medium leading-relaxed">Planned sections appear as skeletons, then resolve into redesigned content as generation streams back.</p>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="benefit-row border-b-2 border-border group cursor-default">
+      <div class="grid lg:grid-cols-[auto_1fr_1fr] gap-4 lg:gap-8 py-8 lg:py-12 items-center px-2">
+        <span class="text-[4rem] lg:text-[8rem] font-bold deco-num leading-none">03</span>
+        <h3 class="benefit-title text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Edit without losing context</h3>
+        <p class="benefit-desc muted text-lg lg:text-xl normal-case font-medium leading-relaxed">Project-aware chat can update, add, or explain sections while staying grounded in the current page map.</p>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="benefit-row border-b-2 border-border group cursor-default">
+      <div class="grid lg:grid-cols-[auto_1fr_1fr] gap-4 lg:gap-8 py-8 lg:py-12 items-center px-2">
+        <span class="text-[4rem] lg:text-[8rem] font-bold deco-num leading-none">04</span>
+        <h3 class="benefit-title text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Restore any committed version</h3>
+        <p class="benefit-desc muted text-lg lg:text-xl normal-case font-medium leading-relaxed">Undo, redo, and version history keep each design state available as you explore directions.</p>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="benefit-row border-b-2 border-border group cursor-default">
+      <div class="grid lg:grid-cols-[auto_1fr_1fr] gap-4 lg:gap-8 py-8 lg:py-12 items-center px-2">
+        <span class="text-[4rem] lg:text-[8rem] font-bold deco-num leading-none">05</span>
+        <h3 class="benefit-title text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Export clean front-end code</h3>
+        <p class="benefit-desc muted text-lg lg:text-xl normal-case font-medium leading-relaxed">The latest committed design becomes a standalone HTML artifact with clean sections and no runtime lock-in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. HOW IT WORKS — STAIRCASE ============ -->
+<section id="how" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="mb-12 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ Workflow</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      URL to<br>export.
+    </h2>
+  </div>
+
+  <!-- Desktop staircase -->
+  <div class="hidden lg:flex items-start reveal">
+    <div class="flex-1 border-2 border-r-0 border-border p-8 bg-rich" style="margin-top: 0px;">
+      <div class="text-[5rem] font-bold deco-num leading-none">01</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-4">Capture</h3>
+      <p class="muted text-base normal-case font-medium mt-2">Paste a public landing-page URL and let ResetUI map the rendered page.</p>
+    </div>
+    <div class="flex-1 border-2 border-r-0 border-border p-8 bg-rich" style="margin-top: 60px;">
+      <div class="text-[5rem] font-bold deco-num leading-none">02</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-4">Direct</h3>
+      <p class="muted text-base normal-case font-medium mt-2">Describe the redesign direction, tone, and visual system you want.</p>
+    </div>
+    <div class="flex-1 border-2 border-r-0 border-border p-8 bg-acid text-black" style="margin-top: 120px;">
+      <div class="text-[5rem] font-bold leading-none" style="color: rgba(0,0,0,0.12);">03</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-4">Generate</h3>
+      <p class="text-base normal-case font-medium mt-2" style="color: rgba(0,0,0,0.65);">Sections stream into the canvas with captured context baked in.</p>
+    </div>
+    <div class="flex-1 border-2 border-border p-8 bg-rich" style="margin-top: 180px;">
+      <div class="text-[5rem] font-bold deco-num leading-none">04</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-4">Export</h3>
+      <p class="muted text-base normal-case font-medium mt-2">Download clean standalone HTML when the design is ready.</p>
+    </div>
+  </div>
+
+  <!-- Mobile vertical -->
+  <div class="lg:hidden border-l-2 border-border pl-8 space-y-12 reveal">
+    <div>
+      <div class="text-[4rem] font-bold deco-num leading-none">01</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-2">Capture</h3>
+      <p class="muted text-base normal-case font-medium mt-2">Paste a public landing-page URL.</p>
+    </div>
+    <div>
+      <div class="text-[4rem] font-bold deco-num leading-none">02</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-2">Direct</h3>
+      <p class="muted text-base normal-case font-medium mt-2">Describe the visual direction you want.</p>
+    </div>
+    <div class="bg-acid text-black p-6 -ml-8 pl-8">
+      <div class="text-[4rem] font-bold leading-none" style="color: rgba(0,0,0,0.15);">03</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-2">Generate</h3>
+      <p class="text-base normal-case font-medium mt-2" style="color: rgba(0,0,0,0.65);">Sections stream into the canvas.</p>
+    </div>
+    <div>
+      <div class="text-[4rem] font-bold deco-num leading-none">04</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mt-2">Export</h3>
+      <p class="muted text-base normal-case font-medium mt-2">Download standalone HTML.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. ALTERNATING FEATURE ROWS ============ -->
+<section id="deep-dive" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="mb-16 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ In Depth</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      Four stages.<br>One canvas.
+    </h2>
+  </div>
+
+  <div class="border-y-2 border-border">
+
+    <!-- Row 1: block LEFT, text RIGHT -->
+    <div class="grid lg:grid-cols-2 border-b-2 border-border">
+      <div class="flip relative min-h-[300px] lg:min-h-[420px] flex flex-col justify-between p-8 lg:p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-border">
+        <div class="text-[7rem] lg:text-[12rem] font-bold deco-num leading-none">01</div>
+        <div class="overflow-hidden">
+          <div class="marquee-track" style="--marquee-duration: 20s;">
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">CAPTURE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">READ</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">MAP</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">PROFILE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">CAPTURE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">READ</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">MAP</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">PROFILE</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-8 lg:p-12 flex flex-col justify-center">
+        <span class="text-xs uppercase tracking-widest text-acid font-bold mb-3">Source Capture</span>
+        <h3 class="text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Context from the page you already have</h3>
+        <p class="muted text-lg lg:text-xl normal-case font-medium mt-4 max-w-lg leading-relaxed">ResetUI renders the source page, extracts useful structure, and keeps the original content available for the redesign.</p>
+        <ul class="mt-8 space-y-3">
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Copy and CTA extraction</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Images, links, and media</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Brand colors and fonts</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Section-level hierarchy</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 2: text LEFT, block RIGHT -->
+    <div class="grid lg:grid-cols-2 border-b-2 border-border">
+      <div class="p-8 lg:p-12 flex flex-col justify-center order-2 lg:order-1">
+        <span class="text-xs uppercase tracking-widest text-acid font-bold mb-3">Full-Page Generation</span>
+        <h3 class="text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Redesigns that stream into view</h3>
+        <p class="muted text-lg lg:text-xl normal-case font-medium mt-4 max-w-lg leading-relaxed">ResetUI combines captured context with your prompt, plans the page, and streams the new design section by section.</p>
+        <ul class="mt-8 space-y-3">
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Section plan first</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Skeleton loading states</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Live canvas updates</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Responsive output</span></li>
+        </ul>
+      </div>
+      <div class="flip relative min-h-[300px] lg:min-h-[420px] flex flex-col justify-between p-8 lg:p-12 order-1 lg:order-2 border-b-2 lg:border-b-0 lg:border-l-2 border-border">
+        <div class="text-[7rem] lg:text-[12rem] font-bold deco-num leading-none">02</div>
+        <div class="overflow-hidden">
+          <div class="marquee-track" style="--marquee-duration: 20s;">
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">PLAN</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">STREAM</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">RENDER</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">READY</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">PLAN</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">STREAM</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">RENDER</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">READY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: block LEFT, text RIGHT -->
+    <div class="grid lg:grid-cols-2 border-b-2 border-border">
+      <div class="flip relative min-h-[300px] lg:min-h-[420px] flex flex-col justify-between p-8 lg:p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-border">
+        <div class="text-[7rem] lg:text-[12rem] font-bold deco-num leading-none">03</div>
+        <div class="overflow-hidden">
+          <div class="marquee-track" style="--marquee-duration: 20s;">
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">TARGET</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">EDIT</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">COMMIT</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">RESTORE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">TARGET</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">EDIT</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">COMMIT</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">RESTORE</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-8 lg:p-12 flex flex-col justify-center">
+        <span class="text-xs uppercase tracking-widest text-acid font-bold mb-3">Project-Aware Chat</span>
+        <h3 class="text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Edits that know the page</h3>
+        <p class="muted text-lg lg:text-xl normal-case font-medium mt-4 max-w-lg leading-relaxed">ResetUI keeps the page map, source context, and design history close to every chat edit so requests stay targeted.</p>
+        <ul class="mt-8 space-y-3">
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Targeted section edits</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">New section generation</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Reply or update routing</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Committed versions</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 4: text LEFT, block RIGHT -->
+    <div class="grid lg:grid-cols-2">
+      <div class="p-8 lg:p-12 flex flex-col justify-center order-2 lg:order-1">
+        <span class="text-xs uppercase tracking-widest text-acid font-bold mb-3">Export & Versions</span>
+        <h3 class="text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-tight">Output that stays yours</h3>
+        <p class="muted text-lg lg:text-xl normal-case font-medium mt-4 max-w-lg leading-relaxed">ResetUI turns the latest committed design into a standalone HTML artifact and keeps prior versions available for restore.</p>
+        <ul class="mt-8 space-y-3">
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Clean HTML document</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Tailwind-ready sections</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">Undo and redo history</span></li>
+          <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-sm font-bold">No runtime lock-in</span></li>
+        </ul>
+      </div>
+      <div class="flip relative min-h-[300px] lg:min-h-[420px] flex flex-col justify-between p-8 lg:p-12 order-1 lg:order-2 border-b-2 lg:border-b-0 lg:border-l-2 border-border">
+        <div class="text-[7rem] lg:text-[12rem] font-bold deco-num leading-none">04</div>
+        <div class="overflow-hidden">
+          <div class="marquee-track" style="--marquee-duration: 20s;">
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">SAVE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">RESTORE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">EXPORT</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap">SHIP</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">SAVE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">RESTORE</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">EXPORT</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 muted whitespace-nowrap" aria-hidden="true">/</span>
+            <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight mr-4 whitespace-nowrap" aria-hidden="true">SHIP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 8. TESTIMONIALS ============ -->
+<section id="testimonials" class="border-y-2 border-border overflow-hidden py-16 lg:py-24 scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto mb-12 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ Proof</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      Designs reset<br>differently.
+    </h2>
+  </div>
+
+  <div class="overflow-hidden">
+    <div class="marquee-track" style="--marquee-duration: 50s;">
+      <!-- Card 1 -->
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none" aria-hidden="true">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">
+          "ResetUI one-shotted a landing page that felt more unique than the other tools we tried."
+        </blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10">
+          <div class="font-bold uppercase tracking-tight">Advanced_Breakfast83</div>
+          <div class="muted uppercase tracking-widest text-xs mt-1">Reddit / Builder</div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none" aria-hidden="true">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">
+          "The URL capture made the result feel grounded in our actual product instead of a generic prompt."
+        </blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10">
+          <div class="font-bold uppercase tracking-tight">SaaS Founder</div>
+          <div class="muted uppercase tracking-widest text-xs mt-1">Beta Workflow</div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none" aria-hidden="true">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">
+          "Chat edits were specific because the canvas already knew the sections we were talking about."
+        </blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10">
+          <div class="font-bold uppercase tracking-tight">Product Designer</div>
+          <div class="muted uppercase tracking-widest text-xs mt-1">Landing Page Sprint</div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none" aria-hidden="true">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">
+          "Version history let us explore harder directions without worrying about losing the clean pass."
+        </blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10">
+          <div class="font-bold uppercase tracking-tight">Agency Lead</div>
+          <div class="muted uppercase tracking-widest text-xs mt-1">Client Redesign</div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="testimonial-card flip border-2 border-border p-8 lg:p-12 relative">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none" aria-hidden="true">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">
+          "Export gave us a standalone HTML file we could inspect, edit, and hand off immediately."
+        </blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10">
+          <div class="font-bold uppercase tracking-tight">Frontend Lead</div>
+          <div class="muted uppercase tracking-widest text-xs mt-1">Code Export</div>
+        </div>
+      </div>
+      <!-- duplicate -->
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative" aria-hidden="true">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">"ResetUI one-shotted a landing page that felt more unique than the other tools we tried."</blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10"><div class="font-bold uppercase tracking-tight">Advanced_Breakfast83</div><div class="muted uppercase tracking-widest text-xs mt-1">Reddit / Builder</div></div>
+      </div>
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative" aria-hidden="true">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">"The URL capture made the result feel grounded in our actual product."</blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10"><div class="font-bold uppercase tracking-tight">SaaS Founder</div><div class="muted uppercase tracking-widest text-xs mt-1">Beta Workflow</div></div>
+      </div>
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative" aria-hidden="true">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">"Chat edits were specific because the canvas already knew the page."</blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10"><div class="font-bold uppercase tracking-tight">Product Designer</div><div class="muted uppercase tracking-widest text-xs mt-1">Landing Page Sprint</div></div>
+      </div>
+      <div class="testimonial-card flip border-2 border-r-0 border-border p-8 lg:p-12 relative" aria-hidden="true">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">"Version history let us explore harder directions without losing the clean pass."</blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10"><div class="font-bold uppercase tracking-tight">Agency Lead</div><div class="muted uppercase tracking-widest text-xs mt-1">Client Redesign</div></div>
+      </div>
+      <div class="testimonial-card flip border-2 border-border p-8 lg:p-12 relative" aria-hidden="true">
+        <span class="absolute top-0 right-4 text-[8rem] lg:text-[12rem] font-bold deco-num leading-none pointer-events-none">"</span>
+        <blockquote class="text-xl lg:text-3xl font-medium leading-tight max-w-2xl relative z-10">"Export gave us a standalone HTML file we could hand off immediately."</blockquote>
+        <div class="mt-8 pt-4 border-t border-border relative z-10"><div class="font-bold uppercase tracking-tight">Frontend Lead</div><div class="muted uppercase tracking-widest text-xs mt-1">Code Export</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. PRICING ============ -->
+<section id="pricing" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="text-center mb-12 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ Plans</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      Credits for<br>every reset.
+    </h2>
+  </div>
+
+  <!-- Toggle -->
+  <div class="flex justify-center mb-12 reveal">
+    <div class="inline-flex border-2 border-border">
+      <button id="btn-monthly" class="toggle-btn active px-6 py-3 font-bold uppercase tracking-tight text-sm">Monthly</button>
+      <button id="btn-annual" class="toggle-btn px-6 py-3 font-bold uppercase tracking-tight text-sm">Annual <span class="text-xs">-20%</span></button>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-px bg-border border-2 border-border reveal">
+    <!-- Starter -->
+    <div class="bg-rich p-8 lg:p-10 flex flex-col">
+      <h3 class="text-2xl font-bold uppercase tracking-tight mb-2">Free</h3>
+      <p class="muted text-sm normal-case font-medium mb-8">For trying one landing-page redesign.</p>
+      <div class="mb-8">
+        <span class="price text-[5rem] lg:text-[6rem] font-bold tracking-tighter leading-none" data-monthly="5" data-annual="5">5</span>
+        <span class="muted text-sm uppercase tracking-widest">credits</span>
+      </div>
+      <a href="#cta" class="border-2 border-border h-14 px-6 flex items-center justify-center font-bold uppercase tracking-tight text-sm hover:bg-off hover:text-black transition-colors mb-8">Start free</a>
+      <ul class="space-y-4 flex-1">
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">1 project limit</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">URL + prompt creation</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Full-page generation</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">HTML export available</span></li>
+      </ul>
+    </div>
+
+    <!-- Team (recommended) -->
+    <div class="bg-acid text-black p-8 lg:p-10 flex flex-col relative">
+      <div class="absolute top-0 right-0 bg-black text-acid px-3 py-1 text-xs font-bold uppercase tracking-widest">Recommended</div>
+      <h3 class="text-2xl font-bold uppercase tracking-tight mb-2">Pro</h3>
+      <p class="text-sm normal-case font-medium mb-8" style="color: rgba(0,0,0,0.6);">For repeat landing-page redesigns.</p>
+      <div class="mb-8">
+        <span class="price text-[5rem] lg:text-[6rem] font-bold tracking-tighter leading-none" data-monthly="100" data-annual="100">100</span>
+        <span class="text-sm uppercase tracking-widest" style="color: rgba(0,0,0,0.6);">credits</span>
+      </div>
+      <a href="#cta" class="bg-black text-acid h-14 px-6 flex items-center justify-center font-bold uppercase tracking-tight text-sm hover:scale-105 transition-transform mb-8">Upgrade to Pro →</a>
+      <ul class="space-y-4 flex-1">
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-black shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Unlimited projects</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-black shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Chat edits</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-black shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Version history</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-black shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Undo and redo controls</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-black shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">HTML export</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-black shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Priority support</span></li>
+      </ul>
+    </div>
+
+    <!-- Studio -->
+    <div class="bg-rich p-8 lg:p-10 flex flex-col">
+      <h3 class="text-2xl font-bold uppercase tracking-tight mb-2">Studio</h3>
+      <p class="muted text-sm normal-case font-medium mb-8">For agencies and teams redesigning at scale.</p>
+      <div class="mb-8">
+        <span class="text-[5rem] lg:text-[6rem] font-bold tracking-tighter leading-none">Custom</span>
+      </div>
+      <a href="#cta" class="border-2 border-border h-14 px-6 flex items-center justify-center font-bold uppercase tracking-tight text-sm hover:bg-off hover:text-black transition-colors mb-8">Contact team</a>
+      <ul class="space-y-4 flex-1">
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Everything in Pro, plus:</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Team workflows</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Custom credit packages</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Export governance</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Dedicated support</span></li>
+        <li class="flex items-center gap-3"><span class="w-3 h-3 bg-acid shrink-0"></span><span class="uppercase tracking-widest text-xs font-bold">Roadmap input</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. FAQ ============ -->
+<section id="faq" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="mb-12 reveal">
+    <span class="text-xs uppercase tracking-widest text-acid font-bold">/ FAQ</span>
+    <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+      Questions,<br>answered.
+    </h2>
+  </div>
+
+  <div class="border-t-2 border-border reveal">
+    <!-- FAQ 1 -->
+    <div class="faq-item border-b-2 border-border">
+      <button class="faq-trigger w-full flex items-center gap-6 lg:gap-12 py-8 lg:py-10 text-left px-2" aria-expanded="false">
+        <span class="text-[3rem] lg:text-[5rem] font-bold deco-num leading-none shrink-0">01</span>
+        <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight flex-1">How does ResetUI capture an existing page?</span>
+        <span class="faq-icon text-3xl lg:text-4xl font-bold shrink-0">+</span>
+      </button>
+      <div class="faq-content">
+        <p class="muted text-lg lg:text-xl normal-case font-medium pb-8 px-2 pl-20 lg:pl-32 max-w-3xl leading-relaxed">Paste a public URL. ResetUI renders the page, extracts copy, calls to action, links, media, brand colors, typography, logo references, and section structure.</p>
+      </div>
+    </div>
+    <!-- FAQ 2 -->
+    <div class="faq-item border-b-2 border-border">
+      <button class="faq-trigger w-full flex items-center gap-6 lg:gap-12 py-8 lg:py-10 text-left px-2" aria-expanded="false">
+        <span class="text-[3rem] lg:text-[5rem] font-bold deco-num leading-none shrink-0">02</span>
+        <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight flex-1">Can I edit the generated design?</span>
+        <span class="faq-icon text-3xl lg:text-4xl font-bold shrink-0">+</span>
+      </button>
+      <div class="faq-content">
+        <p class="muted text-lg lg:text-xl normal-case font-medium pb-8 px-2 pl-20 lg:pl-32 max-w-3xl leading-relaxed">Yes. Use project-aware chat for edits, additions, or explanations, and use undo, redo, and version history to move between committed design states.</p>
+      </div>
+    </div>
+    <!-- FAQ 3 -->
+    <div class="faq-item border-b-2 border-border">
+      <button class="faq-trigger w-full flex items-center gap-6 lg:gap-12 py-8 lg:py-10 text-left px-2" aria-expanded="false">
+        <span class="text-[3rem] lg:text-[5rem] font-bold deco-num leading-none shrink-0">03</span>
+        <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight flex-1">What happens to my source content?</span>
+        <span class="faq-icon text-3xl lg:text-4xl font-bold shrink-0">+</span>
+      </button>
+      <div class="faq-content">
+        <p class="muted text-lg lg:text-xl normal-case font-medium pb-8 px-2 pl-20 lg:pl-32 max-w-3xl leading-relaxed">The source page supplies context for the redesign. ResetUI preserves useful copy and intent while generating a new visual direction rather than cloning the original layout.</p>
+      </div>
+    </div>
+    <!-- FAQ 4 -->
+    <div class="faq-item border-b-2 border-border">
+      <button class="faq-trigger w-full flex items-center gap-6 lg:gap-12 py-8 lg:py-10 text-left px-2" aria-expanded="false">
+        <span class="text-[3rem] lg:text-[5rem] font-bold deco-num leading-none shrink-0">04</span>
+        <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight flex-1">What can I export?</span>
+        <span class="faq-icon text-3xl lg:text-4xl font-bold shrink-0">+</span>
+      </button>
+      <div class="faq-content">
+        <p class="muted text-lg lg:text-xl normal-case font-medium pb-8 px-2 pl-20 lg:pl-32 max-w-3xl leading-relaxed">Export creates a standalone HTML document with the generated sections, metadata, smooth anchors, and static behavior needed for the page to run without ResetUI.</p>
+      </div>
+    </div>
+    <!-- FAQ 5 -->
+    <div class="faq-item border-b-2 border-border">
+      <button class="faq-trigger w-full flex items-center gap-6 lg:gap-12 py-8 lg:py-10 text-left px-2" aria-expanded="false">
+        <span class="text-[3rem] lg:text-[5rem] font-bold deco-num leading-none shrink-0">05</span>
+        <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight flex-1">How do credits work?</span>
+        <span class="faq-icon text-3xl lg:text-4xl font-bold shrink-0">+</span>
+      </button>
+      <div class="faq-content">
+        <p class="muted text-lg lg:text-xl normal-case font-medium pb-8 px-2 pl-20 lg:pl-32 max-w-3xl leading-relaxed">Generation uses credits, chat edits use credits, and export uses credits. Free users start with 5 credits and Pro users receive 100 credits.</p>
+      </div>
+    </div>
+    <!-- FAQ 6 -->
+    <div class="faq-item border-b-2 border-border">
+      <button class="faq-trigger w-full flex items-center gap-6 lg:gap-12 py-8 lg:py-10 text-left px-2" aria-expanded="false">
+        <span class="text-[3rem] lg:text-[5rem] font-bold deco-num leading-none shrink-0">06</span>
+        <span class="text-xl lg:text-3xl font-bold uppercase tracking-tight flex-1">Does ResetUI support multi-page sites?</span>
+        <span class="faq-icon text-3xl lg:text-4xl font-bold shrink-0">+</span>
+      </button>
+      <div class="faq-content">
+        <p class="muted text-lg lg:text-xl normal-case font-medium pb-8 px-2 pl-20 lg:pl-32 max-w-3xl leading-relaxed">The current product centers on landing-page redesigns. Multi-page design, deployment, watermarking, and mobile preview workflows are planned future work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. BLOGS ============ -->
+<section id="blog" class="max-w-[1200px] mx-auto py-24 lg:py-32 scroll-mt-20">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 reveal">
+    <div>
+      <span class="text-xs uppercase tracking-widest text-acid font-bold">/ Notes</span>
+      <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase leading-[0.85] mt-4">
+        Field notes.
+      </h2>
+    </div>
+    <a href="#" class="border-2 border-border h-12 px-6 flex items-center font-bold uppercase tracking-tight text-sm hover:bg-acid hover:text-black hover:border-acid transition-colors">
+      All notes →
+    </a>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-px bg-border border-2 border-border reveal">
+    <!-- Featured (3 cols) -->
+    <article class="lg:col-span-3 flip p-8 lg:p-12 flex flex-col justify-between min-h-[400px]">
+      <div>
+        <div class="flex items-center gap-4 mb-6">
+          <span class="bg-acid text-black px-3 py-1 text-xs font-bold uppercase tracking-widest">Product</span>
+          <span class="muted text-xs uppercase tracking-widest">v1.0.3</span>
+        </div>
+        <h3 class="text-3xl lg:text-6xl font-bold uppercase tracking-tighter leading-[0.9] mb-6">
+          Why URL context beats blank-canvas prompting
+        </h3>
+        <p class="muted text-lg lg:text-xl normal-case font-medium max-w-2xl leading-relaxed">
+          A real page carries copy, hierarchy, media, brand cues, and intent. ResetUI uses that context before it generates a new visual system.
+        </p>
+      </div>
+      <a href="#" class="inline-flex items-center gap-2 mt-8 font-bold uppercase tracking-tight border-b-2 border-acid pb-1 self-start">
+        Read more →
+      </a>
+    </article>
+
+    <!-- Index list (2 cols) -->
+    <div class="lg:col-span-2 bg-rich flex flex-col">
+      <article class="flip p-6 lg:p-8 border-b border-border flex-1 flex flex-col justify-center">
+        <div class="muted text-xs uppercase tracking-widest mb-2">Capture · Context</div>
+        <h4 class="text-lg lg:text-2xl font-bold uppercase tracking-tight leading-tight">How ResetUI reads source pages</h4>
+      </article>
+      <article class="flip p-6 lg:p-8 border-b border-border flex-1 flex flex-col justify-center">
+        <div class="muted text-xs uppercase tracking-widest mb-2">Generation · Stream</div>
+        <h4 class="text-lg lg:text-2xl font-bold uppercase tracking-tight leading-tight">Why section streaming changes the canvas</h4>
+      </article>
+      <article class="flip p-6 lg:p-8 border-b border-border flex-1 flex flex-col justify-center">
+        <div class="muted text-xs uppercase tracking-widest mb-2">Editing · History</div>
+        <h4 class="text-lg lg:text-2xl font-bold uppercase tracking-tight leading-tight">Design versions as a creative safety net</h4>
+      </article>
+      <article class="flip p-6 lg:p-8 flex-1 flex flex-col justify-center">
+        <div class="muted text-xs uppercase tracking-widest mb-2">Export · Code</div>
+        <h4 class="text-lg lg:text-2xl font-bold uppercase tracking-tight leading-tight">What makes a generated page handoff-ready</h4>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. CTA ============ -->
+<section id="cta" class="bg-acid text-black border-y-2 border-black scroll-mt-20">
+  <div class="max-w-[1200px] mx-auto py-20 lg:py-32">
+    <div class="reveal">
+      <h2 class="text-[clamp(3rem,12vw,14rem)] font-bold tracking-tighter uppercase leading-[0.8]">
+        Start<br>redesigning<br>today.
+      </h2>
+      <p class="text-lg lg:text-2xl normal-case font-medium mt-8 max-w-2xl" style="color: rgba(0,0,0,0.7);">
+        Paste a URL, describe the direction, and let ResetUI generate a refreshed landing page you can edit, version, and export.
+      </p>
+
+      <form id="cta-form" class="mt-12 max-w-3xl">
+        <div class="flex flex-col sm:flex-row items-stretch gap-4">
+          <input
+            type="email"
+            required
+            placeholder="YOUR@EMAIL.COM"
+            class="flex-1 bg-transparent border-0 border-b-2 border-black/30 h-16 lg:h-24 text-xl lg:text-3xl uppercase placeholder:text-black/40 focus:outline-none focus:border-black pb-2 font-medium tracking-tight"
+          >
+          <button type="submit" class="bg-black text-acid h-16 lg:h-24 px-8 lg:px-12 font-bold uppercase tracking-tight text-base lg:text-lg hover:scale-105 active:scale-95 transition-transform whitespace-nowrap">
+            Start Free →
+          </button>
+        </div>
+        <p id="cta-success" class="hidden mt-4 text-lg font-bold uppercase tracking-tight text-black">
+          ✓ Thanks — check your inbox to confirm.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Closing marquee -->
+  <div class="overflow-hidden border-t-2 border-black">
+    <div class="marquee-track" style="--marquee-duration: 15s;">
+      <span class="text-[8vw] lg:text-[6vw] font-bold uppercase tracking-tighter text-black whitespace-nowrap px-4">START REDESIGNING WITH RESETUI →</span>
+      <span class="text-[8vw] lg:text-[6vw] font-bold uppercase tracking-tighter text-black whitespace-nowrap px-4">START REDESIGNING WITH RESETUI →</span>
+      <span class="text-[8vw] lg:text-[6vw] font-bold uppercase tracking-tighter text-black whitespace-nowrap px-4" aria-hidden="true">START REDESIGNING WITH RESETUI →</span>
+      <span class="text-[8vw] lg:text-[6vw] font-bold uppercase tracking-tighter text-black whitespace-nowrap px-4" aria-hidden="true">START REDESIGNING WITH RESETUI →</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ 13. FOOTER ============ -->
+<footer class="border-t-2 border-border bg-rich overflow-hidden">
+  <!-- Connected columns -->
+  <div class="max-w-[1200px] mx-auto pt-16 lg:pt-24">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border border-2 border-border">
+      <div class="bg-rich p-6 lg:p-8">
+        <a href="#top" class="mb-6 flex items-center gap-3 font-bold tracking-tighter text-lg">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">
+          <span>ResetUI</span>
+        </a>
+        <h4 class="font-bold uppercase tracking-widest text-xs text-acid mb-4">Product</h4>
+        <ul class="space-y-3">
+          <li><a href="#features" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Features</a></li>
+          <li><a href="#how" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">How it works</a></li>
+          <li><a href="#pricing" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Plans</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Changelog</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="bg-rich p-6 lg:p-8">
+        <h4 class="font-bold uppercase tracking-widest text-xs text-acid mb-4">Platform</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Dashboard</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Projects</a></li>
+          <li><a href="#blog" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Notes</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Changelog</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Support</a></li>
+        </ul>
+      </div>
+      <div class="bg-rich p-6 lg:p-8">
+        <h4 class="font-bold uppercase tracking-widest text-xs text-acid mb-4">Resources</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Docs</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Export guide</a></li>
+          <li><a href="#faq" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Security</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="bg-rich p-6 lg:p-8">
+        <h4 class="font-bold uppercase tracking-widest text-xs text-acid mb-4">Legal</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Privacy</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Terms</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Security</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Refund</a></li>
+          <li><a href="#" class="text-sm font-medium uppercase tracking-tight hover:text-acid transition-colors">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Viewport wordmark -->
+  <div class="overflow-hidden py-8 lg:py-12 flex justify-center">
+    <h2 class="text-[18vw] lg:text-[20vw] font-bold tracking-tighter leading-[0.8] uppercase text-off whitespace-nowrap select-none px-4 text-center">
+      ResetUI
+    </h2>
+  </div>
+
+  <!-- Legal -->
+  <div class="border-t-2 border-border">
+    <div class="max-w-[1200px] mx-auto py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs uppercase tracking-widest text-muted">© 2026 RESETUI. ALL RIGHTS RESERVED.</p>
+      <p class="text-xs uppercase tracking-widest text-muted">URL CAPTURE · AI REDESIGN · CODE EXPORT</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Mobile menu
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileOverlay = document.getElementById('mobile-overlay');
+  const closeMobile = document.getElementById('close-mobile');
+
+  function openMenu() {
+    mobileOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    menuToggle.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenuFn() {
+    mobileOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }
+  menuToggle.addEventListener('click', openMenu);
+  closeMobile.addEventListener('click', closeMenuFn);
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', closeMenuFn);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileOverlay.classList.contains('open')) closeMenuFn();
+  });
+
+  // 2. Navbar scroll tightening
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  // 3. Hero parallax (reduced-motion safe)
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const heroLockup = document.querySelector('.hero-lockup');
+    const heroSection = document.getElementById('hero');
+    if (heroLockup && heroSection) {
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
+            const heroHeight = heroSection.offsetHeight;
+            const progress = Math.min(scrollY / heroHeight, 1);
+            const scale = 1 + progress * 0.15;
+            const opacity = Math.max(1 - progress * 1.5, 0);
+            heroLockup.style.transform = `scale(${scale})`;
+            heroLockup.style.opacity = opacity;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    }
+  }
+
+  // 4. FAQ accordion
+  document.querySelectorAll('.faq-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item = trigger.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+    // Keyboard
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+
+  // 5. Pricing toggle
+  const btnMonthly = document.getElementById('btn-monthly');
+  const btnAnnual = document.getElementById('btn-annual');
+
+  function setBilling(isAnnual) {
+    if (isAnnual) {
+      btnAnnual.classList.add('active');
+      btnMonthly.classList.remove('active');
+    } else {
+      btnMonthly.classList.add('active');
+      btnAnnual.classList.remove('active');
+    }
+    document.querySelectorAll('.price').forEach(el => {
+      const val = isAnnual ? el.dataset.annual : el.dataset.monthly;
+      if (val) el.textContent = val;
+    });
+  }
+  btnMonthly.addEventListener('click', () => setBilling(false));
+  btnAnnual.addEventListener('click', () => setBilling(true));
+
+  // 6. Scroll reveal
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // 7. Smooth scroll with offset
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // 8. CTA form
+  const ctaForm = document.getElementById('cta-form');
+  if (ctaForm) {
+    ctaForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = ctaForm.querySelector('input');
+      const success = document.getElementById('cta-success');
+      if (input.value && success) {
+        input.value = '';
+        success.classList.remove('hidden');
+        setTimeout(() => success.classList.add('hidden'), 4000);
+      }
+    });
+  }
+});
+</script>
+
+</body>
+</html>

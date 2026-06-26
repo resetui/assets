@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinetic Spec | Light</title>
+<meta name="application-name" content="Kinetic Spec | Light">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .font-display { font-family: 'Archivo Black', sans-serif; }
+  .font-mono { font-family: 'Space Mono', monospace; }
+  
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-track-reverse {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite reverse;
+  }
+  
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .spin-slow { animation: spin-slow 4s linear infinite; }
+  
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .marquee-track-reverse, .spin-slow, .reveal { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+  }
+  
+  ::selection { background: #000000; color: #ffffff; }
+  
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f7f7f2; }
+  ::-webkit-scrollbar-thumb { background: #000000; }
+</style>
+</head>
+<body class="bg-white text-black antialiased">
+
+<!-- Floating Pill Nav -->
+<nav class="fixed left-1/2 top-6 z-50 flex w-[min(1200px,calc(100%-48px))] -translate-x-1/2 items-center justify-between">
+  <a href="#top" class="flex items-center gap-2.5 rounded-full border-2 border-black bg-white px-3 py-1.5 font-display text-lg tracking-[-0.04em] shadow-[0_4px_18px_rgba(0,0,0,0.12)] transition hover:bg-gray-100">
+    <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full border border-black object-cover">
+    <span>ResetUI</span>
+  </a>
+  <div class="hidden rounded-full bg-black p-1.5 font-mono text-xs uppercase text-white md:block">
+    <a class="rounded-full px-4 py-1.5 transition hover:bg-white hover:text-black" href="#specs">Workflow</a>
+    <a class="rounded-full px-4 py-1.5 transition hover:bg-white hover:text-black" href="#services">Capabilities</a>
+    <a class="rounded-full px-4 py-1.5 transition hover:bg-white hover:text-black" href="#work">Stages</a>
+    <a class="rounded-full px-4 py-1.5 transition hover:bg-white hover:text-black" href="#contact">Contact</a>
+  </div>
+  <a href="https://resetui.com" class="rounded-full border-2 border-black bg-white px-5 py-2 font-mono text-xs uppercase shadow-[0_4px_18px_rgba(0,0,0,0.12)] transition hover:bg-black hover:text-white">Get Started</a>
+</nav>
+
+<!-- Typographic Hero -->
+<section id="top" class="flex min-h-screen flex-col justify-center px-6 pb-10 pt-28 md:px-8">
+  <div class="mx-auto w-full max-w-[1200px]">
+    <h1 class="reveal text-center font-display uppercase leading-[0.88] tracking-[-0.05em] text-[clamp(46px,8vw,122px)]">
+      Reset The Page<br>Keep The<br>Brand
+    </h1>
+    <div class="reveal mx-auto mt-8 grid w-full max-w-[1200px] grid-cols-1 border-t-2 border-black pt-5 font-mono text-xs uppercase md:grid-cols-3">
+      <p>Start with your live URL</p>
+      <p class="text-center flex items-center justify-center gap-2 py-2 md:py-0">
+        <svg class="spin-slow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 11-6.219-8.56"></path>
+        </svg>
+        Scroll through the workflow
+      </p>
+      <p class="text-right">Export production HTML/CSS</p>
+    </div>
+  </div>
+</section>
+
+<!-- Skewed Kinetic Marquee -->
+<section class="-skew-y-2 overflow-hidden bg-black border-y-4 border-black py-8">
+  <div class="skew-y-2 overflow-hidden">
+    <div class="marquee-track font-display uppercase leading-none tracking-[-0.04em] text-[7vw] text-white">
+      <span class="px-6">Capture</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Redesign</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Refine</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Capture</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Redesign</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Refine</span>
+      <span class="px-6">/</span>
+    </div>
+    <div class="marquee-track-reverse mt-2 font-display uppercase leading-none tracking-[-0.04em] text-[5vw] text-white/40">
+      <span class="px-6">URL + Prompt</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Live Canvas</span>
+      <span class="px-6">/</span>
+      <span class="px-6">HTML + CSS</span>
+      <span class="px-6">/</span>
+      <span class="px-6">URL + Prompt</span>
+      <span class="px-6">/</span>
+      <span class="px-6">Live Canvas</span>
+      <span class="px-6">/</span>
+      <span class="px-6">HTML + CSS</span>
+      <span class="px-6">/</span>
+    </div>
+  </div>
+</section>
+
+<!-- Spec Grid -->
+<section id="specs" class="bg-black">
+  <div class="mx-auto grid max-w-[1200px] grid-cols-1 gap-[2px] border-b-[2px] border-black bg-black md:grid-cols-4">
+    <div class="bg-white p-8 flex flex-col justify-between min-h-[260px]">
+      <p class="font-mono text-xs uppercase text-gray-500">[ 001 ]</p>
+      <div>
+        <h3 class="font-display uppercase text-3xl md:text-4xl tracking-tighter leading-none">URL</h3>
+        <p class="font-mono text-sm text-gray-600 mt-3">Capture the source page, including copy, media, links, and hierarchy.</p>
+      </div>
+    </div>
+    <div class="bg-white p-8 flex flex-col justify-between min-h-[260px]">
+      <p class="font-mono text-xs uppercase text-gray-500">[ 002 ]</p>
+      <div>
+        <h3 class="font-display uppercase text-3xl md:text-4xl tracking-tighter leading-none">Prompt</h3>
+        <p class="font-mono text-sm text-gray-600 mt-3">Describe the visual direction while preserving the product's core story.</p>
+      </div>
+    </div>
+    <div class="bg-white p-8 flex flex-col justify-between min-h-[260px]">
+      <p class="font-mono text-xs uppercase text-gray-500">[ 003 ]</p>
+      <div>
+        <h3 class="font-display uppercase text-3xl md:text-4xl tracking-tighter leading-none">Live</h3>
+        <p class="font-mono text-sm text-gray-600 mt-3">Watch redesigned sections stream directly into an editable canvas.</p>
+      </div>
+    </div>
+    <div class="bg-white p-8 flex flex-col justify-between min-h-[260px]">
+      <p class="font-mono text-xs uppercase text-gray-500">[ 004 ]</p>
+      <div>
+        <h3 class="font-display uppercase text-3xl md:text-4xl tracking-tighter leading-none">HTML</h3>
+        <p class="font-mono text-sm text-gray-600 mt-3">Export the latest committed version as standalone production HTML/CSS.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vertical Service List (Black) -->
+<section id="services" class="bg-black px-6 md:px-8 py-24 text-white">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="flex justify-between items-end mb-12">
+      <h2 class="font-display uppercase text-[clamp(36px,5vw,72px)] leading-none tracking-[-0.04em]">Capabilities</h2>
+      <p class="font-mono text-xs uppercase text-white/50 hidden md:block">[ 002 ] ResetUI Workflow</p>
+    </div>
+    
+    <article class="group flex flex-col md:flex-row md:items-center justify-between border-t border-white/20 py-8 transition hover:border-white/60">
+      <div class="flex items-center gap-6 md:gap-12 flex-1">
+        <span class="font-mono text-sm uppercase text-white/50 w-12">01</span>
+        <div class="flex-1">
+          <h3 class="font-display uppercase leading-none tracking-[-0.04em] text-[clamp(28px,3.5vw,50px)] transition duration-500 group-hover:translate-x-6">Website Capture</h3>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mt-4 md:mt-0">
+        <div class="flex gap-2 font-mono text-[10px] uppercase">
+          <span class="border border-white/30 px-3 py-1 rounded-full">Copy</span>
+          <span class="border border-white/30 px-3 py-1 rounded-full">Media</span>
+        </div>
+        <span class="opacity-0 transition duration-500 group-hover:rotate-45 group-hover:opacity-100 text-3xl font-display">→</span>
+      </div>
+    </article>
+    
+    <article class="group flex flex-col md:flex-row md:items-center justify-between border-t border-white/20 py-8 transition hover:border-white/60">
+      <div class="flex items-center gap-6 md:gap-12 flex-1">
+        <span class="font-mono text-sm uppercase text-white/50 w-12">02</span>
+        <div class="flex-1">
+          <h3 class="font-display uppercase leading-none tracking-[-0.04em] text-[clamp(28px,3.5vw,50px)] transition duration-500 group-hover:translate-x-6">Full-Page Generation</h3>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mt-4 md:mt-0">
+        <div class="flex gap-2 font-mono text-[10px] uppercase">
+          <span class="border border-white/30 px-3 py-1 rounded-full">Plan</span>
+          <span class="border border-white/30 px-3 py-1 rounded-full">Stream</span>
+        </div>
+        <span class="opacity-0 transition duration-500 group-hover:rotate-45 group-hover:opacity-100 text-3xl font-display">→</span>
+      </div>
+    </article>
+    
+    <article class="group flex flex-col md:flex-row md:items-center justify-between border-t border-white/20 py-8 transition hover:border-white/60">
+      <div class="flex items-center gap-6 md:gap-12 flex-1">
+        <span class="font-mono text-sm uppercase text-white/50 w-12">03</span>
+        <div class="flex-1">
+          <h3 class="font-display uppercase leading-none tracking-[-0.04em] text-[clamp(28px,3.5vw,50px)] transition duration-500 group-hover:translate-x-6">Project-Aware Editing</h3>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mt-4 md:mt-0">
+        <div class="flex gap-2 font-mono text-[10px] uppercase">
+          <span class="border border-white/30 px-3 py-1 rounded-full">Chat</span>
+          <span class="border border-white/30 px-3 py-1 rounded-full">Canvas</span>
+        </div>
+        <span class="opacity-0 transition duration-500 group-hover:rotate-45 group-hover:opacity-100 text-3xl font-display">→</span>
+      </div>
+    </article>
+    
+    <article class="group flex flex-col md:flex-row md:items-center justify-between border-t border-b border-white/20 py-8 transition hover:border-white/60">
+      <div class="flex items-center gap-6 md:gap-12 flex-1">
+        <span class="font-mono text-sm uppercase text-white/50 w-12">04</span>
+        <div class="flex-1">
+          <h3 class="font-display uppercase leading-none tracking-[-0.04em] text-[clamp(28px,3.5vw,50px)] transition duration-500 group-hover:translate-x-6">Version History + Export</h3>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mt-4 md:mt-0">
+        <div class="flex gap-2 font-mono text-[10px] uppercase">
+          <span class="border border-white/30 px-3 py-1 rounded-full">Restore</span>
+          <span class="border border-white/30 px-3 py-1 rounded-full">HTML/CSS</span>
+        </div>
+        <span class="opacity-0 transition duration-500 group-hover:rotate-45 group-hover:opacity-100 text-3xl font-display">→</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- Work / Proof -->
+<section id="work" class="bg-white px-6 md:px-8 py-24">
+  <div class="mx-auto max-w-[1200px]">
+    <div class="flex justify-between items-end mb-16">
+      <h2 class="font-display uppercase text-[clamp(36px,5vw,72px)] leading-none tracking-[-0.04em]">Core Workflow</h2>
+      <p class="font-mono text-xs uppercase text-gray-500 hidden md:block">[ 003 ] Stages</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+      <a href="#specs" class="group relative border-2 border-black overflow-hidden aspect-[4/3]">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Website analytics displayed on a laptop" class="w-full h-full object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0">
+        <div class="absolute inset-0 flex flex-col justify-between p-6 mix-blend-difference text-white">
+          <div class="flex justify-between font-mono text-xs uppercase">
+            <span>[ 001 ]</span>
+            <span>Step 01</span>
+          </div>
+          <h3 class="font-display uppercase text-2xl md:text-3xl tracking-tight">Capture</h3>
+        </div>
+      </a>
+      <a href="#services" class="group relative border-2 border-black overflow-hidden aspect-[4/3]">
+        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Designer working on a digital interface" class="w-full h-full object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0">
+        <div class="absolute inset-0 flex flex-col justify-between p-6 mix-blend-difference text-white">
+          <div class="flex justify-between font-mono text-xs uppercase">
+            <span>[ 002 ]</span>
+            <span>Step 02</span>
+          </div>
+          <h3 class="font-display uppercase text-2xl md:text-3xl tracking-tight">Generate</h3>
+        </div>
+      </a>
+      <a href="#services" class="group relative border-2 border-black overflow-hidden aspect-[4/3]">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Code editor and web development workspace" class="w-full h-full object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0">
+        <div class="absolute inset-0 flex flex-col justify-between p-6 mix-blend-difference text-white">
+          <div class="flex justify-between font-mono text-xs uppercase">
+            <span>[ 003 ]</span>
+            <span>Step 03</span>
+          </div>
+          <h3 class="font-display uppercase text-2xl md:text-3xl tracking-tight">Refine</h3>
+        </div>
+      </a>
+      <a href="#contact" class="group relative border-2 border-black overflow-hidden aspect-[4/3]">
+        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Production-ready source code on a screen" class="w-full h-full object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0">
+        <div class="absolute inset-0 flex flex-col justify-between p-6 mix-blend-difference text-white">
+          <div class="flex justify-between font-mono text-xs uppercase">
+            <span>[ 004 ]</span>
+            <span>Step 04</span>
+          </div>
+          <h3 class="font-display uppercase text-2xl md:text-3xl tracking-tight">Export</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Giant CTA -->
+<section id="contact" class="bg-white border-t-2 border-black py-32">
+  <div class="mx-auto max-w-[1200px] text-center px-6">
+    <p class="font-mono text-xs uppercase text-gray-500 mb-5">[ 004 ] Ready To Reset</p>
+    <h2 class="font-display uppercase text-[clamp(48px,7vw,104px)] leading-none tracking-[-0.04em] mb-9">
+      Get Started
+    </h2>
+    <a href="https://resetui.com" class="inline-block rounded-full bg-black px-12 py-5 font-mono text-sm uppercase text-white transition hover:scale-105 hover:bg-gray-800">Reset Your Website</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white border-t-2 border-black">
+  <div class="mx-auto max-w-[1200px] px-8 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 font-mono text-xs uppercase">
+    <div>
+      <a href="#top" class="mb-3 flex items-center gap-2.5 font-display text-lg tracking-tight">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full border border-black object-cover">
+        <span>ResetUI</span>
+      </a>
+      <p class="text-gray-500">AI landing-page redesign.</p>
+    </div>
+    <div>
+      <p class="mb-3 text-gray-400">Links</p>
+      <a href="#work" class="block py-1 text-black/70 hover:text-black transition">Stages</a>
+      <a href="#services" class="block py-1 text-black/70 hover:text-black transition">Capabilities</a>
+      <a href="#specs" class="block py-1 text-black/70 hover:text-black transition">Workflow</a>
+    </div>
+    <div>
+      <p class="mb-3 text-gray-400">Product</p>
+      <a href="https://resetui.com" class="block py-1 text-black/70 hover:text-black transition">Website</a>
+      <a href="https://x.com/resetui" class="block py-1 text-black/70 hover:text-black transition">Twitter</a>
+      <a href="https://resetui.com/security" class="block py-1 text-black/70 hover:text-black transition">Security</a>
+    </div>
+    <div>
+      <p class="mb-3 text-gray-400">Status</p>
+      <p class="py-1 text-gray-500 flex items-center gap-2">
+        <span class="inline-block h-2 w-2 bg-black rounded-full"></span>
+        Live / v1.0.3
+      </p>
+    </div>
+  </div>
+  <div class="border-t border-gray-200">
+    <div class="mx-auto max-w-[1200px] px-8 py-4 flex flex-col md:flex-row justify-between font-mono text-[10px] uppercase text-gray-500 gap-2">
+      <p>&copy; 2026 ResetUI</p>
+      <p>URL + Prompt / Current Workflow</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection observer for reveal animations
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach((el) => io.observe(el));
+</script>
+</body>
+</html>

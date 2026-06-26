@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aesthetic Paper | Light</title>
+  <meta name="application-name" content="Aesthetic Paper | Light" />
+  <meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code." />
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#F2EFE9',
+            paper: '#FBFAF7',
+            ink: '#1A1916',
+            'ink-soft': '#4A4842',
+            taupe: '#9B968C',
+            line: '#E3DED3',
+            signal: '#2B4DFF',
+            'signal-press': '#1E3AD1',
+          },
+          fontFamily: {
+            display: ['Archivo', 'sans-serif'],
+            sans: ['"IBM Plex Sans"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+          },
+          maxWidth: {
+            page: '1200px',
+            content: '1200px',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .reveal { opacity: 0; }
+    .reveal.in { animation: rise .6s cubic-bezier(.2,.7,.2,1) forwards; }
+    .stagger > * { opacity: 0; }
+    .stagger.in > * { animation: rise .6s cubic-bezier(.2,.7,.2,1) forwards; }
+    .stagger.in > *:nth-child(1) { animation-delay: 0ms; }
+    .stagger.in > *:nth-child(2) { animation-delay: 60ms; }
+    .stagger.in > *:nth-child(3) { animation-delay: 120ms; }
+    .stagger.in > *:nth-child(4) { animation-delay: 180ms; }
+    .stagger.in > *:nth-child(5) { animation-delay: 240ms; }
+    .stagger.in > *:nth-child(6) { animation-delay: 300ms; }
+
+    :focus-visible {
+      outline: 2px solid #2B4DFF;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* faint column guides behind the content (drawing-board feel) */
+    .guides {
+      background-image:
+        linear-gradient(to right, transparent calc(100% - 1px), rgba(227,222,211,.45) calc(100% - 1px));
+      background-size: 8.3333% 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .stagger > * { opacity: 1 !important; animation: none !important; }
+      html { scroll-behavior: auto !important; }
+    }
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased">
+
+  <!-- ============ PAGE WRAPPER (1200) — hosts the coordinate rail ============ -->
+  <div class="relative mx-auto max-w-page">
+
+    <!-- Faint full-height column guides (drawing-board) -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 hidden lg:block">
+      <div class="absolute inset-y-0 left-[8.333%] w-px bg-line/60"></div>
+      <div class="absolute inset-y-0 left-[25%] w-px bg-line/50"></div>
+      <div class="absolute inset-y-0 left-[41.666%] w-px bg-line/60"></div>
+      <div class="absolute inset-y-0 left-[58.333%] w-px bg-line/60"></div>
+      <div class="absolute inset-y-0 left-[75%] w-px bg-line/50"></div>
+      <div class="absolute inset-y-0 left-[91.666%] w-px bg-line/60"></div>
+    </div>
+
+    <!-- SIGNATURE: coordinate rail (lg+ only) -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 left-6 hidden lg:block">
+      <!-- vertical hairline -->
+      <div class="absolute inset-y-0 left-0 w-px bg-line"></div>
+      <!-- top origin marker -->
+      <div class="absolute left-0 top-0 h-2 w-2 -translate-x-1/2 rounded-full border border-ink"></div>
+    </div>
+
+    <header class="relative">
+      <nav class="mx-auto flex max-w-content items-center justify-between px-6 py-6 lg:px-12">
+        <a href="#" class="flex items-center gap-3 font-display text-lg font-extrabold tracking-tight">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-8 w-8 rounded-full object-cover" />
+          <span>Reset<span class="text-signal">·</span>UI</span>
+        </a>
+        <div class="hidden items-center gap-8 font-mono text-xs uppercase tracking-[0.08em] text-ink-soft md:flex">
+          <a href="#features" class="transition-colors hover:text-ink">Features</a>
+          <a href="#how" class="transition-colors hover:text-ink">How it works</a>
+          <a href="#showcase" class="transition-colors hover:text-ink">Showcase</a>
+          <a href="#faq" class="transition-colors hover:text-ink">FAQ</a>
+        </div>
+        <a href="#cta" class="rounded-md bg-signal px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] text-paper transition-colors hover:bg-signal-press">Start free</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <section class="relative mx-auto max-w-content px-6 pb-24 pt-10 lg:px-12 lg:pt-24">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+          <!-- thesis headline spans 8 -->
+          <div class="stagger lg:col-span-8">
+            <p class="mb-8 font-mono text-xs uppercase tracking-[0.08em] text-taupe">AI landing-page redesign</p>
+            <h1 class="font-display text-[clamp(3.25rem,6vw,5.25rem)] font-extrabold leading-[0.98] tracking-[-0.02em]">
+              Paste a URL.<br />Reset the page.
+            </h1>
+            <p class="mt-7 max-w-[60ch] text-[1.0625rem] leading-relaxed text-ink-soft">
+              ResetUI reads your existing landing page, combines it with your design direction, and returns a refreshed full-page design with captured copy, brand signals, and production-ready code.
+            </p>
+            <div class="mt-9 flex flex-wrap items-center gap-4">
+              <a href="#cta" class="rounded-md bg-signal px-6 py-3 font-mono text-xs uppercase tracking-[0.08em] text-paper transition-colors hover:bg-signal-press">Start redesigning</a>
+              <a href="#how" class="rounded-md border border-line bg-paper px-6 py-3 font-mono text-xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink">See the workflow</a>
+            </div>
+            <p class="mt-5 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Free starter credits included.</p>
+          </div>
+
+          <!-- instrument readout spans 4 (non-cliché supporting element) -->
+          <aside class="reveal lg:col-span-4 lg:border-l lg:border-line lg:pl-8">
+            <p class="font-mono text-xs uppercase tracking-[0.08em] text-taupe">Readout</p>
+            <!-- measurement ticks -->
+            <div class="mt-4 flex items-end gap-1" aria-hidden="true">
+              <span class="h-3 w-px bg-line"></span>
+              <span class="h-5 w-px bg-line"></span>
+              <span class="h-8 w-px bg-signal"></span>
+              <span class="h-5 w-px bg-line"></span>
+              <span class="h-3 w-px bg-line"></span>
+              <span class="h-6 w-px bg-line"></span>
+              <span class="h-4 w-px bg-line"></span>
+              <span class="h-7 w-px bg-line"></span>
+              <span class="h-3 w-px bg-line"></span>
+              <span class="h-5 w-px bg-line"></span>
+              <span class="h-9 w-px bg-signal"></span>
+              <span class="h-4 w-px bg-line"></span>
+              <span class="h-3 w-px bg-line"></span>
+            </div>
+            <dl class="mt-6 space-y-3 font-mono text-sm">
+              <div class="flex justify-between border-b border-line pb-2">
+                <dt class="text-taupe">free credits</dt>
+                <dd>5</dd>
+              </div>
+              <div class="flex justify-between border-b border-line pb-2">
+                <dt class="text-taupe">workflow</dt>
+                <dd>URL + prompt</dd>
+              </div>
+              <div class="flex justify-between border-b border-line pb-2">
+                <dt class="text-taupe">versions</dt>
+                <dd>undo · redo</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-taupe">export</dt>
+                <dd class="text-signal">HTML</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section class="relative mx-auto max-w-content px-6 lg:px-12">
+        <div class="border-y border-line py-6">
+          <p class="mb-4 text-center font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Built for</p>
+          <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 font-mono text-xs uppercase tracking-[0.08em] text-ink-soft">
+            <span>Landing teams</span>
+            <span class="text-line">/</span>
+            <span>SaaS founders</span>
+            <span class="text-line">/</span>
+            <span>Agencies</span>
+            <span class="text-line">/</span>
+            <span>Designers</span>
+            <span class="text-line">/</span>
+            <span>Product teams</span>
+            <span class="text-line">/</span>
+            <span>Marketing ops</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="relative mx-auto max-w-content px-6 py-24 lg:px-12 lg:py-32">
+        <div class="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div class="lg:col-span-8">
+            <h2 class="reveal font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-tight tracking-[-0.01em]">
+              A ResetUI workflow that holds together past the fold.
+            </h2>
+          </div>
+          <p class="reveal self-end text-[1.0625rem] leading-relaxed text-ink-soft lg:col-span-4">
+            Each output starts from real site context, then streams into an editable page your team can refine, version, and export.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+          <!-- 01 -->
+          <article class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-taupe">01</p>
+            <h3 class="mt-3 font-display text-xl font-bold">Systems, not recolors</h3>
+            <p class="mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-ink-soft">ResetUI captures brand colors, fonts, copy, media, links, calls to action, and hierarchy before redesigning the page.</p>
+            <!-- line-art: token grid -->
+            <svg viewBox="0 0 120 60" class="mt-6 h-14 w-full" fill="none" stroke="#1A1916" stroke-width="1">
+              <rect x="2" y="2" width="20" height="20" />
+              <rect x="26" y="2" width="20" height="20" />
+              <rect x="50" y="2" width="20" height="20" />
+              <rect x="74" y="2" width="20" height="20" />
+              <rect x="98" y="2" width="20" height="20" />
+              <rect x="2" y="26" width="44" height="14" stroke="#9B968C" />
+              <rect x="50" y="26" width="68" height="14" stroke="#9B968C" />
+              <line x1="2" y1="48" x2="118" y2="48" stroke="#2B4DFF" />
+              <line x1="2" y1="52" x2="60" y2="52" stroke="#E3DED3" />
+            </svg>
+          </article>
+          <!-- 02 -->
+          <article class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-taupe">02</p>
+            <h3 class="mt-3 font-display text-xl font-bold">Editable by design</h3>
+            <p class="mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-ink-soft">Export clean standalone HTML with semantic structure and Tailwind-ready sections — handed off, not locked in.</p>
+            <!-- line-art: code brackets -->
+            <svg viewBox="0 0 120 60" class="mt-6 h-14 w-full" fill="none" stroke="#1A1916" stroke-width="1">
+              <polyline points="18,12 4,30 18,48" />
+              <polyline points="102,12 116,30 102,48" />
+              <line x1="44" y1="14" x2="64" y2="46" stroke="#9B968C" />
+              <line x1="64" y1="14" x2="84" y2="46" stroke="#2B4DFF" />
+              <circle cx="34" cy="30" r="2" fill="#1A1916" stroke="none" />
+              <circle cx="86" cy="30" r="2" fill="#1A1916" stroke="none" />
+            </svg>
+          </article>
+          <!-- 03 -->
+          <article class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-taupe">03</p>
+            <h3 class="mt-3 font-display text-xl font-bold">Type that earns its size</h3>
+            <p class="mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-ink-soft">The generated page keeps hierarchy clear while applying your requested direction to type, spacing, contrast, and rhythm.</p>
+            <!-- line-art: type scale bars -->
+            <svg viewBox="0 0 120 60" class="mt-6 h-14 w-full" fill="none" stroke="#1A1916" stroke-width="1">
+              <line x1="2" y1="10" x2="80" y2="10" />
+              <line x1="2" y1="24" x2="58" y2="24" stroke="#4A4842" />
+              <line x1="2" y1="38" x2="44" y2="38" stroke="#9B968C" />
+              <line x1="2" y1="52" x2="30" y2="52" stroke="#2B4DFF" />
+            </svg>
+          </article>
+          <!-- 04 -->
+          <article class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-taupe">04</p>
+            <h3 class="mt-3 font-display text-xl font-bold">Hierarchy you can defend</h3>
+            <p class="mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-ink-soft">One navbar, planned sections, preserved intent, and a page map that keeps chat edits targeted instead of vague.</p>
+            <!-- line-art: nested hierarchy -->
+            <svg viewBox="0 0 120 60" class="mt-6 h-14 w-full" fill="none" stroke="#1A1916" stroke-width="1">
+              <rect x="2" y="6" width="116" height="10" />
+              <rect x="2" y="22" width="70" height="8" stroke="#4A4842" />
+              <rect x="2" y="36" width="40" height="6" stroke="#9B968C" />
+              <rect x="48" y="36" width="30" height="6" stroke="#9B968C" />
+              <line x1="2" y1="52" x2="20" y2="52" stroke="#2B4DFF" />
+            </svg>
+          </article>
+          <!-- 05 -->
+          <article class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-taupe">05</p>
+            <h3 class="mt-3 font-display text-xl font-bold">Responsive to 360px</h3>
+            <p class="mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-ink-soft">Mobile isn't an afterthought — generated pages are expected to reflow cleanly across narrow and wide screens.</p>
+            <!-- line-art: viewport frames -->
+            <svg viewBox="0 0 120 60" class="mt-6 h-14 w-full" fill="none" stroke="#1A1916" stroke-width="1">
+              <rect x="2" y="8" width="24" height="44" />
+              <rect x="34" y="14" width="36" height="38" stroke="#4A4842" />
+              <rect x="78" y="4" width="40" height="52" stroke="#2B4DFF" />
+            </svg>
+          </article>
+          <!-- 06 -->
+          <article class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-taupe">06</p>
+            <h3 class="mt-3 font-display text-xl font-bold">One justified risk</h3>
+            <p class="mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-ink-soft">Every template gets one memorable move. The rest stays disciplined so the source content remains the hero.</p>
+            <!-- line-art: single signal mark -->
+            <svg viewBox="0 0 120 60" class="mt-6 h-14 w-full" fill="none" stroke="#1A1916" stroke-width="1">
+              <line x1="2" y1="30" x2="50" y2="30" />
+              <line x1="70" y1="30" x2="118" y2="30" />
+              <circle cx="60" cy="30" r="6" stroke="#2B4DFF" />
+              <circle cx="60" cy="30" r="2" fill="#2B4DFF" stroke="none" />
+            </svg>
+          </article>
+        </div>
+      </section>
+
+      <section id="showcase" class="relative mx-auto max-w-content px-6 py-24 lg:px-12 lg:py-32">
+        <div class="mb-12">
+          <p class="reveal mb-6 font-mono text-xs uppercase tracking-[0.08em] text-taupe">Before &amp; after</p>
+          <h2 class="reveal font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-tight tracking-[-0.01em] max-w-[20ch]">
+            Same content. Sharper ResetUI output.
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2">
+          <!-- BEFORE -->
+          <div class="reveal bg-canvas p-8 lg:p-10">
+            <div class="mb-6 flex items-center justify-between">
+              <p class="font-mono text-xs uppercase tracking-[0.08em] text-taupe">Before / input</p>
+              <span class="font-mono text-xs text-taupe">↩ source url</span>
+            </div>
+            <!-- mini wireframe: cluttered -->
+            <div class="rounded-sm border border-line bg-paper p-5">
+              <div class="mb-3 h-2 w-1/2 bg-line"></div>
+              <div class="mb-1 h-4 w-full bg-taupe/40"></div>
+              <div class="mb-1 h-4 w-4/5 bg-taupe/40"></div>
+              <div class="mb-4 h-4 w-3/5 bg-taupe/40"></div>
+              <div class="mb-3 flex gap-2">
+                <span class="h-6 w-20 rounded-full bg-taupe/30"></span>
+                <span class="h-6 w-20 rounded-full bg-taupe/30"></span>
+                <span class="h-6 w-20 rounded-full bg-taupe/30"></span>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <div class="h-12 rounded-md bg-taupe/20"></div>
+                <div class="h-12 rounded-md bg-taupe/20"></div>
+                <div class="h-12 rounded-md bg-taupe/20"></div>
+              </div>
+              <div class="mt-3 h-2 w-2/3 bg-line"></div>
+              <div class="mt-1 h-2 w-1/2 bg-line"></div>
+            </div>
+            <p class="mt-5 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Issues: rounded everything · gradient hero · no scale · shadow cards</p>
+          </div>
+
+          <!-- AFTER -->
+          <div class="reveal bg-paper p-8 lg:p-10">
+            <div class="mb-6 flex items-center justify-between">
+              <p class="font-mono text-xs uppercase tracking-[0.08em] text-signal">After / ResetUI output</p>
+              <span class="font-mono text-xs text-taupe">↳ shipped html</span>
+            </div>
+            <!-- mini wireframe: disciplined -->
+            <div class="rounded-sm border border-line bg-canvas p-5">
+              <div class="mb-2 h-1.5 w-1/3 bg-taupe"></div>
+              <div class="mb-1 h-5 w-full bg-ink"></div>
+              <div class="mb-1 h-5 w-4/5 bg-ink"></div>
+              <div class="mb-4 h-2 w-2/3 bg-taupe/60"></div>
+              <div class="mb-3 flex gap-2">
+                <span class="h-6 w-24 bg-signal"></span>
+                <span class="h-6 w-24 border border-ink"></span>
+              </div>
+              <div class="grid grid-cols-2 gap-px bg-line">
+                <div class="h-12 bg-paper"></div>
+                <div class="h-12 bg-paper"></div>
+              </div>
+              <div class="mt-3 h-1 w-1/2 bg-line"></div>
+            </div>
+            <p class="mt-5 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-signal">Fixed: hairline depth · type scale · one accent · squared structure</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="relative mx-auto max-w-content px-6 py-24 lg:px-12 lg:py-32">
+        <div class="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div class="lg:col-span-8">
+            <h2 class="reveal font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-tight tracking-[-0.01em]">
+              Four steps from source page to export.
+            </h2>
+          </div>
+        </div>
+
+        <ol class="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2 lg:grid-cols-4">
+          <li class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-signal">STEP 01</p>
+            <h3 class="mt-3 font-display text-lg font-bold">Paste a URL</h3>
+            <p class="mt-3 text-[1.0625rem] leading-relaxed text-ink-soft">Drop your live page. ResetUI captures the rendered page, media, links, brand signals, and section structure.</p>
+            <p class="mt-6 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">capture</p>
+          </li>
+          <li class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-signal">STEP 02</p>
+            <h3 class="mt-3 font-display text-lg font-bold">Describe direction</h3>
+            <p class="mt-3 text-[1.0625rem] leading-relaxed text-ink-soft">Tell ResetUI the visual direction you want. The source site supplies context; your prompt supplies the redesign goal.</p>
+            <p class="mt-6 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">URL + prompt</p>
+          </li>
+          <li class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-signal">STEP 03</p>
+            <h3 class="mt-3 font-display text-lg font-bold">Generate the redesign</h3>
+            <p class="mt-3 text-[1.0625rem] leading-relaxed text-ink-soft">A section plan streams into the canvas while ResetUI builds the refreshed full-page design.</p>
+            <p class="mt-6 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">live stream</p>
+          </li>
+          <li class="reveal bg-paper p-8 lg:p-10">
+            <p class="font-mono text-xs text-signal">STEP 04</p>
+            <h3 class="mt-3 font-display text-lg font-bold">Export &amp; ship</h3>
+            <p class="mt-3 text-[1.0625rem] leading-relaxed text-ink-soft">Download a standalone HTML deliverable with clean structure, responsive sections, and no runtime lock-in.</p>
+            <p class="mt-6 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">HTML · Tailwind</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="relative">
+        <!-- full-bleed ink band -->
+        <div class="bg-ink text-canvas">
+          <div class="mx-auto max-w-content px-6 py-24 lg:px-12 lg:py-32">
+            <p class="reveal mb-12 font-mono text-xs uppercase tracking-[0.08em] text-taupe">Measured outcomes</p>
+            <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+              <div class="reveal border-t border-ink-soft pt-6">
+                <p class="font-display text-[clamp(2.5rem,5vw,3.75rem)] font-extrabold leading-none tracking-[-0.02em]">5</p>
+                <p class="mt-3 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">free starter credits</p>
+              </div>
+              <div class="reveal border-t border-ink-soft pt-6">
+                <p class="font-display text-[clamp(2.5rem,5vw,3.75rem)] font-extrabold leading-none tracking-[-0.02em]">1</p>
+                <p class="mt-3 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">free project limit</p>
+              </div>
+              <div class="reveal border-t border-ink-soft pt-6">
+                <p class="font-display text-[clamp(2.5rem,5vw,3.75rem)] font-extrabold leading-none tracking-[-0.02em]">100</p>
+                <p class="mt-3 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">pro plan credits</p>
+              </div>
+              <div class="reveal border-t border-ink-soft pt-6">
+                <p class="font-display text-[clamp(2.5rem,5vw,3.75rem)] font-extrabold leading-none tracking-[-0.02em]">1.0.3</p>
+                <p class="mt-3 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">current version</p>
+              </div>
+            </div>
+            <p class="reveal mt-12 max-w-[60ch] text-[1.0625rem] leading-relaxed text-taupe">
+              Current ResetUI product model: URL capture, prompt-guided generation, project-aware chat edits, version history, and standalone export.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="relative mx-auto max-w-content px-6 py-24 lg:px-12 lg:py-32">
+        <p class="reveal mb-10 font-mono text-xs uppercase tracking-[0.08em] text-taupe">From the field</p>
+        <blockquote class="reveal max-w-[20ch] font-display text-[clamp(1.75rem,3.5vw,3rem)] font-bold leading-[1.1] tracking-[-0.01em] lg:max-w-[28ch]">
+          <span class="text-signal">"</span>ResetUI gave us a page we could actually iterate on: captured context, generated sections, chat edits, and clean export all stayed connected.<span class="text-signal">"</span>
+        </blockquote>
+        <div class="reveal mt-10 flex items-center gap-4 border-t border-line pt-6">
+          <div class="h-10 w-10 rounded-sm border border-ink"></div>
+          <div>
+            <p class="font-mono text-sm">ResetUI beta user</p>
+            <p class="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Landing-page redesign workflow</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="relative mx-auto max-w-content px-6 py-24 lg:px-12 lg:py-32">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+          <div class="lg:col-span-4">
+            <h2 class="reveal font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-tight tracking-[-0.01em]">
+              The questions that come up every time.
+            </h2>
+          </div>
+
+          <div class="lg:col-span-8">
+            <div class="border-t border-line">
+              <!-- item -->
+              <div class="border-b border-line">
+                <button data-acc class="flex w-full items-center justify-between py-5 text-left transition-colors hover:text-signal" aria-expanded="false" aria-controls="faq-1">
+                  <span class="font-display text-lg font-bold">Do I keep ownership of the output?</span>
+                  <span class="ml-6 font-mono text-xs text-taupe" data-acc-icon>+</span>
+                </button>
+                <div id="faq-1" data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                  <p class="max-w-[60ch] pb-6 text-[1.0625rem] leading-relaxed text-ink-soft">Yes. The exported HTML is yours. No watermark, no runtime dependency, no call home. Edit it, fork it, delete it.</p>
+                </div>
+              </div>
+              <!-- item -->
+              <div class="border-b border-line">
+                <button data-acc class="flex w-full items-center justify-between py-5 text-left transition-colors hover:text-signal" aria-expanded="false" aria-controls="faq-2">
+                  <span class="font-display text-lg font-bold">What does "one justified risk" mean?</span>
+                  <span class="ml-6 font-mono text-xs text-taupe" data-acc-icon>+</span>
+                </button>
+                <div id="faq-2" data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                  <p class="max-w-[60ch] pb-6 text-[1.0625rem] leading-relaxed text-ink-soft">Every template picks exactly one memorable element — a coordinate rail, a display face, a split grid — and lets the rest stay disciplined. Boldness is a budget. Spend it once, well.</p>
+                </div>
+              </div>
+              <!-- item -->
+              <div class="border-b border-line">
+                <button data-acc class="flex w-full items-center justify-between py-5 text-left transition-colors hover:text-signal" aria-expanded="false" aria-controls="faq-3">
+                  <span class="font-display text-lg font-bold">Can it handle pages that aren't in English?</span>
+                  <span class="ml-6 font-mono text-xs text-taupe" data-acc-icon>+</span>
+                </button>
+                <div id="faq-3" data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                  <p class="max-w-[60ch] pb-6 text-[1.0625rem] leading-relaxed text-ink-soft">Yes. ResetUI remaps structure, not copy. The output preserves your language and direction while redesigning the surrounding page system.</p>
+                </div>
+              </div>
+              <!-- item -->
+              <div class="border-b border-line">
+                <button data-acc class="flex w-full items-center justify-between py-5 text-left transition-colors hover:text-signal" aria-expanded="false" aria-controls="faq-4">
+                  <span class="font-display text-lg font-bold">Is the output accessible?</span>
+                  <span class="ml-6 font-mono text-xs text-taupe" data-acc-icon>+</span>
+                </button>
+                <div id="faq-4" data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                  <p class="max-w-[60ch] pb-6 text-[1.0625rem] leading-relaxed text-ink-soft">Every output targets AA contrast, semantic landmarks, visible focus rings, and <code class="font-mono text-sm text-signal">prefers-reduced-motion</code>. The 96% Lighthouse number above is the median, not the ceiling.</p>
+                </div>
+              </div>
+              <!-- item -->
+              <div class="border-b border-line">
+                <button data-acc class="flex w-full items-center justify-between py-5 text-left transition-colors hover:text-signal" aria-expanded="false" aria-controls="faq-5">
+                  <span class="font-display text-lg font-bold">What context does ResetUI capture?</span>
+                  <span class="ml-6 font-mono text-xs text-taupe" data-acc-icon>+</span>
+                </button>
+                <div id="faq-5" data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                  <p class="max-w-[60ch] pb-6 text-[1.0625rem] leading-relaxed text-ink-soft">Copy, calls to action, links, media, screenshots, section hierarchy, brand colors, fonts, radius, logo references, and light or dark visual signals.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cta" class="relative mx-auto max-w-content px-6 pb-24 lg:px-12 lg:pb-32">
+        <div class="overflow-hidden rounded-sm border border-line bg-paper">
+          <div class="grid grid-cols-1 gap-8 p-8 lg:grid-cols-12 lg:p-12">
+            <div class="lg:col-span-8">
+              <p class="reveal mb-6 font-mono text-xs uppercase tracking-[0.08em] text-taupe">Ship the page</p>
+              <h2 class="reveal font-display text-[clamp(2rem,4vw,3.25rem)] font-extrabold leading-[1.02] tracking-[-0.02em]">
+                Your next landing page<br />is one URL away.
+              </h2>
+              <p class="reveal mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-ink-soft">
+                Start with a URL and design direction. ResetUI captures the page, generates the redesign, and keeps every revision export-ready.
+              </p>
+            </div>
+            <div class="reveal flex flex-col justify-center gap-4 lg:col-span-4">
+              <a href="#" class="rounded-md bg-signal px-6 py-4 text-center font-mono text-xs uppercase tracking-[0.08em] text-paper transition-colors hover:bg-signal-press">Start redesigning</a>
+              <a href="#how" class="rounded-md border border-line bg-canvas px-6 py-4 text-center font-mono text-xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink">See the workflow</a>
+              <p class="text-center font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">5 free credits · HTML export</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="relative border-t border-line">
+      <div class="mx-auto max-w-content px-6 py-16 lg:px-12">
+        <div class="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+          <div class="col-span-2 lg:col-span-1">
+            <a href="#" class="flex items-center gap-3 font-display text-lg font-extrabold tracking-tight">
+              <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-8 w-8 rounded-full object-cover" />
+              <span>Reset<span class="text-signal">·</span>UI</span>
+            </a>
+            <p class="mt-3 max-w-[32ch] font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">AI landing-page redesign grounded in your existing site and design direction.</p>
+          </div>
+          <div>
+            <p class="mb-4 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Product</p>
+            <ul class="space-y-2 font-mono text-xs text-ink-soft">
+              <li><a href="#features" class="transition-colors hover:text-signal">Features</a></li>
+              <li><a href="#how" class="transition-colors hover:text-signal">How it works</a></li>
+              <li><a href="#showcase" class="transition-colors hover:text-signal">Showcase</a></li>
+              <li><a href="#cta" class="transition-colors hover:text-signal">Start free</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-4 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Resources</p>
+            <ul class="space-y-2 font-mono text-xs text-ink-soft">
+              <li><a href="#" class="transition-colors hover:text-signal">Dashboard</a></li>
+              <li><a href="#" class="transition-colors hover:text-signal">Docs</a></li>
+              <li><a href="#" class="transition-colors hover:text-signal">Changelog</a></li>
+              <li><a href="#" class="transition-colors hover:text-signal">Support</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-4 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">Legal</p>
+            <ul class="space-y-2 font-mono text-xs text-ink-soft">
+              <li><a href="#" class="transition-colors hover:text-signal">Privacy</a></li>
+              <li><a href="#" class="transition-colors hover:text-signal">Terms</a></li>
+              <li><a href="#" class="transition-colors hover:text-signal">Security</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 md:flex-row md:items-center">
+          <p class="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-taupe">© 2026 ResetUI · All rights reserved</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ============ ONE INLINE SCRIPT: scroll reveal + FAQ accordion + reduced-motion ============ -->
+  <script>
+    (function () {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Scroll reveal (once)
+      const targets = document.querySelectorAll('.reveal, .stagger');
+      if (reduce || !('IntersectionObserver' in window)) {
+        targets.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+        targets.forEach((el) => io.observe(el));
+      }
+
+      // FAQ accordion — <button data-acc> + <div data-panel>
+      document.querySelectorAll('[data-acc]').forEach((btn) => {
+        const panel = btn.nextElementSibling;
+        const icon = btn.querySelector('[data-acc-icon]');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.addEventListener('click', () => {
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!open));
+          if (panel) {
+            panel.style.maxHeight = open ? '0px' : panel.scrollHeight + 'px';
+          }
+          if (icon) {
+            icon.textContent = open ? '+' : '−';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

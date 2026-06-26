@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Minimal | Dark</title>
+<meta name="application-name" content="Minimal | Dark" />
+<meta name="description" content="ResetUI redesigns existing landing pages from a URL and your design direction, then exports production-ready front-end code." />
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --obsidian: #080808;
+    --black: #000000;
+    --elevated: #0F0F0F;
+    --panel: #141414;
+    --white: #FFFFFF;
+    --silver: #E2E8F0;
+    --bright-silver: #F8FAFC;
+    --cool-gray: #94A3B8;
+  }
+
+  * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  html { background: var(--obsidian); }
+  body { background: var(--obsidian); font-family: 'Inter', sans-serif; color: var(--silver); }
+
+  ::selection { background: var(--white); color: var(--black); }
+
+  /* Fonts */
+  .font-serif { font-family: 'DM Serif Display', serif; }
+  .font-mono { font-family: 'Space Mono', monospace; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 0; height: 0; }
+
+  /* Testimonial Loop */
+  @keyframes scroll-up {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+  .scroll-col-1 { animation: scroll-up 28s linear infinite; }
+  .scroll-col-2 { animation: scroll-up 22s linear infinite; }
+  .scroll-col-3 { animation: scroll-up 34s linear infinite; }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-col-1, .scroll-col-2, .scroll-col-3 { animation: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+</style>
+</head>
+
+<body class="bg-[#080808] text-white antialiased">
+
+  <!-- ============ HEADER / NAV ============ -->
+  <header class="relative z-10 mx-auto flex w-[92vw] max-w-[1200px] items-center justify-between py-8 font-mono text-xs uppercase tracking-[0.28em]">
+    <a href="#top" class="flex items-center gap-3 text-white">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-10 w-10 rounded-full object-cover" />
+      <span>ResetUI</span>
+    </a>
+    <nav class="hidden items-center overflow-hidden rounded-full border border-white/10 bg-white/[0.04] text-white/60 md:flex">
+      <a class="border-r border-white/10 px-5 py-3 transition-colors hover:bg-white hover:text-black" href="#features">Features</a>
+      <a class="border-r border-white/10 px-5 py-3 transition-colors hover:bg-white hover:text-black" href="#manifesto">Method</a>
+      <a class="px-5 py-3 transition-colors hover:bg-white hover:text-black" href="#testimonials">Voices</a>
+    </nav>
+    <button class="rounded-full bg-white px-5 py-3 font-bold text-black transition hover:-translate-y-px">Start Creating</button>
+  </header>
+
+  <main id="top" class="relative z-10">
+
+    <!-- ============ HERO ============ -->
+    <section class="mx-auto flex min-h-[calc(100vh-160px)] w-[92vw] max-w-[1200px] flex-col items-center justify-center py-20 text-center">
+      <p class="reveal mb-8 font-mono text-[11px] uppercase tracking-[0.45em] text-white/40">Your website / redesigned</p>
+      <h1 class="reveal mx-auto max-w-5xl font-serif text-[clamp(46px,8vw,112px)] italic leading-[0.92] tracking-[-0.055em] text-white">
+        Reset your landing page. <span class="bg-gradient-to-br from-[#F8FAFC] to-[#94A3B8] bg-clip-text text-transparent">Keep what matters.</span>
+      </h1>
+      <p class="reveal mx-auto mt-8 max-w-2xl text-base leading-8 text-white/55 md:text-lg">
+        Paste your URL, describe the direction, and turn your existing site into a redesigned, production-ready landing page.
+      </p>
+
+      <!-- Hero Actions -->
+      <div class="reveal mx-auto mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <button class="rounded-xl bg-gradient-to-br from-[#F8FAFC] to-[#94A3B8] px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.24em] text-black transition hover:-translate-y-px">
+          Start Redesigning
+        </button>
+        <a href="#manifesto" class="rounded-xl border border-white/15 px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.24em] text-white/70 transition hover:border-white/30 hover:text-white">
+          See How It Works
+        </a>
+      </div>
+
+      <!-- Text-only Stats -->
+      <div class="reveal mt-20 grid w-full max-w-4xl gap-12 md:grid-cols-3">
+        <div class="text-center md:text-left">
+          <p class="font-serif text-5xl italic tracking-[-0.04em] text-white md:text-6xl">10</p>
+          <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-white/35">Design templates</p>
+        </div>
+        <div class="text-center">
+          <p class="font-serif text-5xl italic tracking-[-0.04em] text-white md:text-6xl">250+</p>
+          <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-white/35">Designs generated</p>
+        </div>
+        <div class="text-center md:text-right">
+          <p class="font-serif text-5xl italic tracking-[-0.04em] text-white md:text-6xl">100%</p>
+          <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-white/35">Editable code output</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BENTO FEATURE GRID ============ -->
+    <section id="features" class="mx-auto w-[92vw] max-w-[1200px] border-t border-white/10 py-24">
+      <div class="reveal mb-16 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <h2 class="font-serif text-[clamp(36px,5vw,72px)] italic tracking-[-0.04em] text-white">Your site, reimagined.</h2>
+        <p class="max-w-xs font-mono text-xs uppercase leading-6 tracking-[0.2em] text-white/40 md:text-right">
+          From source website to editable redesign in one connected workflow.
+        </p>
+      </div>
+
+      <div class="reveal grid border border-white/10 md:grid-cols-4">
+        <!-- Card 1 -->
+        <article class="border-b border-white/10 p-8 transition-colors hover:bg-white/[0.02] md:border-r md:border-b-0">
+          <p class="mb-10 font-mono text-[10px] uppercase tracking-[0.35em] text-white/35">01 / Capture</p>
+          <h3 class="font-serif text-3xl italic tracking-[-0.04em] text-white">Start with your site.</h3>
+          <p class="mt-4 text-sm leading-7 text-white/50">ResetUI captures your copy, calls to action, media, hierarchy, and brand context from a single URL.</p>
+        </article>
+        <!-- Card 2 -->
+        <article class="border-b border-white/10 p-8 transition-colors hover:bg-white/[0.02] md:border-r md:border-b-0">
+          <p class="mb-10 font-mono text-[10px] uppercase tracking-[0.35em] text-white/35">02 / Direction</p>
+          <h3 class="font-serif text-3xl italic tracking-[-0.04em] text-white">Describe the change.</h3>
+          <p class="mt-4 text-sm leading-7 text-white/50">Tell ResetUI how the page should feel, look, and behave. Your prompt guides the redesign—not the content.</p>
+        </article>
+        <!-- Card 3 -->
+        <article class="border-b border-white/10 p-8 transition-colors hover:bg-white/[0.02] md:border-r md:border-b-0">
+          <p class="mb-10 font-mono text-[10px] uppercase tracking-[0.35em] text-white/35">03 / Generate</p>
+          <h3 class="font-serif text-3xl italic tracking-[-0.04em] text-white">Watch it rebuild.</h3>
+          <p class="mt-4 text-sm leading-7 text-white/50">A refreshed full-page design streams in section by section, grounded in the context of your original site.</p>
+        </article>
+        <!-- Card 4 -->
+        <article class="p-8 transition-colors hover:bg-white/[0.02]">
+          <p class="mb-10 font-mono text-[10px] uppercase tracking-[0.35em] text-white/35">04 / Refine</p>
+          <h3 class="font-serif text-3xl italic tracking-[-0.04em] text-white">Edit, restore, export.</h3>
+          <p class="mt-4 text-sm leading-7 text-white/50">Refine through chat, move through version history, and export the final design as usable front-end code.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ VALUE PROPOSITION / MANIFESTO ============ -->
+    <section id="manifesto" class="mx-auto w-[92vw] max-w-[1200px] py-32 text-center">
+      <p class="reveal mb-8 font-mono text-[11px] uppercase tracking-[0.45em] text-white/40">[ The ResetUI Method ]</p>
+      <h2 class="reveal mx-auto max-w-4xl font-serif text-[clamp(40px,7vw,96px)] italic leading-[0.95] tracking-[-0.04em] text-white">
+        Keep the context. Change the <span class="bg-gradient-to-br from-[#F8FAFC] to-[#94A3B8] bg-clip-text text-transparent">design.</span>
+      </h2>
+      <div class="reveal mx-auto mt-12 h-px w-24 bg-white/20"></div>
+      <p class="reveal mx-auto mt-12 max-w-xl text-base leading-8 text-white/50">
+        ResetUI is not a blank canvas and it does not clone your old layout. It preserves the intent of your site, then gives the entire experience a deliberate new direction.
+      </p>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section id="testimonials" class="mx-auto w-[92vw] max-w-[1200px] overflow-hidden border-t border-white/10 py-24">
+      <div class="reveal mb-16 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <h2 class="font-serif text-[clamp(36px,5vw,72px)] italic tracking-[-0.04em] text-white">Redesign without the restart.</h2>
+        <p class="max-w-xs font-mono text-xs uppercase leading-6 tracking-[0.2em] text-white/40 md:text-right">
+          Built for founders, designers, marketers, and teams who already have something worth improving.
+        </p>
+      </div>
+
+      <div class="reveal grid h-[640px] gap-6 overflow-hidden md:grid-cols-3">
+
+        <!-- Column 1 -->
+        <div class="[mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] overflow-hidden">
+          <div class="flex flex-col gap-6 pb-6 scroll-col-1">
+            <!-- Card 1 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">ResetUI kept the message of our existing page, but gave the whole experience a much stronger design direction.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-maya/100/100.jpg" alt="Maya Chen" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Maya Chen</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Founder</p>
+                </div>
+              </div>
+            </article>
+            <!-- Card 2 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">Starting from a real URL made the redesign immediately useful. We were refining in minutes instead of rebuilding for days.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-arun/100/100.jpg" alt="Arun Patel" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Arun Patel</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Product Lead</p>
+                </div>
+              </div>
+            </article>
+            <!-- Card 3 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">The chat editing loop feels natural. I can ask for a targeted change without losing the rest of the page.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-elena/100/100.jpg" alt="Elena Rostova" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Elena Rostova</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Design Engineer</p>
+                </div>
+              </div>
+            </article>
+            <!-- Duplicated for loop -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">ResetUI kept the message of our existing page, but gave the whole experience a much stronger design direction.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-maya/100/100.jpg" alt="Maya Chen" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Maya Chen</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Founder</p>
+                </div>
+              </div>
+            </article>
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">Starting from a real URL made the redesign immediately useful. We were refining in minutes instead of rebuilding for days.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-arun/100/100.jpg" alt="Arun Patel" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Arun Patel</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Product Lead</p>
+                </div>
+              </div>
+            </article>
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">The chat editing loop feels natural. I can ask for a targeted change without losing the rest of the page.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-elena/100/100.jpg" alt="Elena Rostova" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Elena Rostova</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Design Engineer</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] overflow-hidden md:block">
+          <div class="flex flex-col gap-6 pb-6 scroll-col-2">
+            <!-- Card 4 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">Watching each section arrive made the workflow feel fast, and the final HTML was ready to hand to engineering.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-marcus/100/100.jpg" alt="Marcus Vance" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Marcus Vance</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">CTO</p>
+                </div>
+              </div>
+            </article>
+            <!-- Card 5 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">It understood our brand context before redesigning. The result felt like us, only much more polished.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-sarah/100/100.jpg" alt="Sarah Jenkins" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Sarah Jenkins</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Head of Ops</p>
+                </div>
+              </div>
+            </article>
+            <!-- Card 6 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">I went from an outdated landing page to editable front-end code without starting from a blank canvas.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-david/100/100.jpg" alt="David Lin" />
+                <div>
+                  <p class="font-medium leading-5 text-white">David Lin</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Indie Dev</p>
+                </div>
+              </div>
+            </article>
+            <!-- Duplicated for loop -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">Watching each section arrive made the workflow feel fast, and the final HTML was ready to hand to engineering.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-marcus/100/100.jpg" alt="Marcus Vance" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Marcus Vance</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">CTO</p>
+                </div>
+              </div>
+            </article>
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">It understood our brand context before redesigning. The result felt like us, only much more polished.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-sarah/100/100.jpg" alt="Sarah Jenkins" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Sarah Jenkins</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Head of Ops</p>
+                </div>
+              </div>
+            </article>
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">I went from an outdated landing page to editable front-end code without starting from a blank canvas.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-david/100/100.jpg" alt="David Lin" />
+                <div>
+                  <p class="font-medium leading-5 text-white">David Lin</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Indie Dev</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] overflow-hidden md:block">
+          <div class="flex flex-col gap-6 pb-6 scroll-col-3">
+            <!-- Card 7 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">Version history makes exploration feel safe. We can push a direction, compare it, and restore what worked.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-julia/100/100.jpg" alt="Julia Thorne" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Julia Thorne</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Studio Director</p>
+                </div>
+              </div>
+            </article>
+            <!-- Card 8 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">ResetUI preserves the important calls to action while changing the layout enough to feel genuinely redesigned.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-robert/100/100.jpg" alt="Robert Fox" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Robert Fox</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Engineering Manager</p>
+                </div>
+              </div>
+            </article>
+            <!-- Card 9 -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">It is the first AI redesign workflow I have used where the output feels grounded in the actual product.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-lisa/100/100.jpg" alt="Lisa Wong" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Lisa Wong</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Product Designer</p>
+                </div>
+              </div>
+            </article>
+            <!-- Duplicated for loop -->
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">Version history makes exploration feel safe. We can push a direction, compare it, and restore what worked.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-julia/100/100.jpg" alt="Julia Thorne" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Julia Thorne</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Studio Director</p>
+                </div>
+              </div>
+            </article>
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">ResetUI preserves the important calls to action while changing the layout enough to feel genuinely redesigned.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-robert/100/100.jpg" alt="Robert Fox" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Robert Fox</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Engineering Manager</p>
+                </div>
+              </div>
+            </article>
+            <article class="w-full rounded-3xl border border-white/10 bg-[#0F0F0F] p-10 shadow-lg shadow-white/5">
+              <p class="text-sm leading-7 text-white/70">It is the first AI redesign workflow I have used where the output feels grounded in the actual product.</p>
+              <div class="mt-8 flex items-center gap-3">
+                <img class="h-10 w-10 rounded-full grayscale" src="https://picsum.photos/seed/obsidian-lisa/100/100.jpg" alt="Lisa Wong" />
+                <div>
+                  <p class="font-medium leading-5 text-white">Lisa Wong</p>
+                  <p class="font-mono text-[10px] uppercase leading-5 tracking-widest text-white/45">Product Designer</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FINAL CTA & FOOTER ============ -->
+  <footer class="border-t border-white/10">
+    <div class="mx-auto w-[92vw] max-w-[1200px] py-32 text-center">
+      <p class="reveal mb-8 font-mono text-[11px] uppercase tracking-[0.45em] text-white/40">Ready for a reset</p>
+      <h2 class="reveal mx-auto max-w-4xl font-serif text-[clamp(48px,8vw,120px)] italic leading-[0.9] tracking-[-0.05em] text-white">
+        Give your landing page a <span class="bg-gradient-to-br from-[#F8FAFC] to-[#94A3B8] bg-clip-text text-transparent">better direction.</span>
+      </h2>
+      <div class="reveal mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <button class="rounded-xl bg-gradient-to-br from-[#F8FAFC] to-[#94A3B8] px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.24em] text-black transition hover:-translate-y-px">
+          Start Redesigning
+        </button>
+        <button class="rounded-xl border border-white/14 px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.24em] text-white/70 transition hover:border-white/30 hover:text-white">
+          See How It Works
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer Base -->
+    <div class="border-t border-white/10">
+      <div class="mx-auto flex w-[92vw] max-w-[1200px] flex-col gap-8 py-12 font-mono text-xs uppercase tracking-[0.2em] text-white/40 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center gap-3">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover" />
+          <span class="text-white">ResetUI</span>
+          <span class="text-white/20">/</span>
+          <span>Version 1.0.3</span>
+        </div>
+        <div class="flex gap-8">
+          <a href="#" class="transition-colors hover:text-white">Privacy</a>
+          <a href="#" class="transition-colors hover:text-white">Terms</a>
+          <a href="#" class="transition-colors hover:text-white">Status</a>
+        </div>
+        <p>© 2026 ResetUI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach((el) => io.observe(el));
+
+  </script>
+</body>
+</html>

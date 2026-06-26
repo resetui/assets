@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clean Mono | Light</title>
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: rgb(28, 25, 23);
+    --muted: rgb(87, 83, 77);
+    --dim: rgb(121, 113, 107);
+    --line: rgb(239, 238, 237);
+    --line-strong: rgb(231, 229, 228);
+    --card: rgb(250, 250, 249);
+    --card-deep: rgb(239, 238, 237);
+    --red: rgb(239, 68, 68);
+    --red-light: rgb(248, 113, 113);
+    --red-dark: rgb(220, 38, 38);
+    --green: rgb(95, 186, 147);
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .font-mono { font-family: 'Geist Mono', monospace; }
+  
+  .diag-bg {
+    background-color: rgb(242, 242, 242);
+    background-image: repeating-linear-gradient(135deg, rgba(0,0,0,0.028) 0 1px, transparent 1px 12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .placeholder-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: rgb(160, 160, 160);
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+  .tag {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600;
+    color: var(--red);
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+  
+  /* Hide scrollbar for carousel */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Accordion */
+  .faq-item.open .faq-icon {
+    transform: rotate(45deg);
+    background-color: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .faq-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .faq-item.open .faq-content {
+    max-height: 200px;
+  }
+
+  /* Marquee */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .marquee-track {
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  
+  /* Carousel progress */
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background-color: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .progress-fill {
+    height: 100%;
+    background-color: var(--ink);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .progress-bar.active .progress-fill {
+    width: 100%;
+  }
+
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      transition: opacity .7s ease-out, transform .7s ease-out;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+    .marquee-track { animation: none; }
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="max-w-[1200px] mx-auto relative flex flex-col items-center pt-32 px-4">
+
+  <!-- Nav -->
+  <nav class="fixed top-4 w-[1200px] max-w-[calc(100%-32px)] h-[60px] rounded-full bg-white/90 backdrop-blur-md border border-[var(--line)] flex items-center justify-between px-4 z-50 shadow-sm">
+    <div class="font-bold flex items-center gap-2 text-[var(--ink)]">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-6 h-6 rounded-full object-cover">
+      ResetUI
+    </div>
+    <div class="hidden md:flex gap-6 text-sm font-medium text-[var(--muted)]">
+      <a href="#features" class="hover:text-[var(--ink)] transition-colors">Product</a>
+      <a href="#stories" class="hover:text-[var(--ink)] transition-colors">Showcase</a>
+      <a href="#pricing" class="hover:text-[var(--ink)] transition-colors">Pricing</a>
+      <a href="#enterprise" class="hover:text-[var(--ink)] transition-colors">Export</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="hidden sm:flex items-center px-4 py-2 rounded-full text-sm font-medium text-[var(--ink)] hover:bg-gray-100 transition-colors h-10">Sign In</button>
+      <button class="flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[var(--ink)] text-white hover:bg-black transition-colors h-10">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="flex flex-col items-center text-center gap-8 w-full max-w-[860px] reveal">
+    <div class="inline-flex items-center gap-2 px-2 py-1 rounded-full border border-[var(--line)] bg-[var(--card)] text-sm font-medium text-[var(--muted)]">
+      <span class="bg-[var(--red)] text-white px-2 py-0.5 rounded-full text-xs">New</span>
+      URL capture and AI redesign
+    </div>
+    <h1 class="text-[48px] md:text-[67px] leading-[60px] md:leading-[70px] font-medium tracking-[-1.4px] text-balance text-[var(--ink)]">Redesign your landing page from real context.</h1>
+    <p class="text-[17px] text-[var(--muted)] max-w-[600px] text-pretty">Paste your current landing-page URL, describe the direction you want, and let ResetUI generate a refreshed, editable, production-ready page.</p>
+    <div class="flex gap-3">
+      <button class="px-6 py-3 rounded-full text-sm font-medium bg-[var(--ink)] text-white hover:bg-black transition-colors h-12 flex items-center">Start for free</button>
+      <button class="px-6 py-3 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line)] hover:bg-gray-50 transition-colors flex items-center gap-2 h-12">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        See workflow
+      </button>
+    </div>
+  </section>
+
+  <!-- Laptop Mockup -->
+  <div class="mt-12 w-[1120px] max-w-full rounded-2xl bg-black/5 border border-[var(--line)] p-2 relative mx-auto reveal" style="aspect-ratio: 1120/647;">
+    <div class="absolute top-0 left-4 h-11 flex items-center gap-2 opacity-30">
+      <div class="w-3 h-3 rounded-full bg-red-500"></div>
+      <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+      <div class="w-3 h-3 rounded-full bg-green-500"></div>
+    </div>
+    <div class="absolute top-11 left-2 right-2 bottom-2 bg-white rounded-xl overflow-hidden relative">
+      <!-- Overlapping UI Card -->
+      <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[470px] max-w-[85%] bg-white rounded-xl border border-[var(--line)] shadow-lg p-4 z-10">
+        <div class="flex items-center justify-between border-b border-[var(--line)] pb-3 mb-3">
+          <span class="font-semibold text-sm text-[var(--ink)]">Generated Sections</span>
+          <span class="text-xs text-[var(--dim)] font-mono">3 ready</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-3 text-sm text-[var(--muted)]">
+            <div class="w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="flex-1 text-left">Capture source page</span>
+            <span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono border border-[var(--line)] text-[var(--dim)]">⌘ R</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-[var(--muted)]">
+            <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs shrink-0">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+            <span class="flex-1 text-left">Apply design direction</span>
+            <span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono border border-[var(--line)] text-[var(--dim)]">⌘ B</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-[var(--muted)]">
+            <div class="w-5 h-5 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+            </div>
+            <span class="flex-1 text-left">Export clean HTML</span>
+            <span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono border border-[var(--line)] text-[var(--dim)]">⌘ M</span>
+          </div>
+        </div>
+      </div>
+      <div class="w-full h-full diag-bg">
+        <span class="placeholder-label">ResetUI page preview</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo Marquee -->
+  <div class="w-full mt-24 marquee-mask overflow-hidden reveal">
+    <div class="flex gap-12 marquee-track w-max">
+      <div class="h-8 w-32 diag-bg rounded-md opacity-50"><span class="placeholder-label">URL</span></div>
+      <div class="h-8 w-24 diag-bg rounded-md opacity-50"><span class="placeholder-label">PROMPT</span></div>
+      <div class="h-8 w-40 diag-bg rounded-md opacity-50"><span class="placeholder-label">CANVAS</span></div>
+      <div class="h-8 w-28 diag-bg rounded-md opacity-50"><span class="placeholder-label">CHAT</span></div>
+      <div class="h-8 w-36 diag-bg rounded-md opacity-50"><span class="placeholder-label">EXPORT</span></div>
+      <div class="h-8 w-32 diag-bg rounded-md opacity-50"><span class="placeholder-label">VERSIONS</span></div>
+      <!-- Duplicate -->
+      <div class="h-8 w-32 diag-bg rounded-md opacity-50" aria-hidden="true"><span class="placeholder-label">URL</span></div>
+      <div class="h-8 w-24 diag-bg rounded-md opacity-50" aria-hidden="true"><span class="placeholder-label">PROMPT</span></div>
+      <div class="h-8 w-40 diag-bg rounded-md opacity-50" aria-hidden="true"><span class="placeholder-label">CANVAS</span></div>
+      <div class="h-8 w-28 diag-bg rounded-md opacity-50" aria-hidden="true"><span class="placeholder-label">CHAT</span></div>
+      <div class="h-8 w-36 diag-bg rounded-md opacity-50" aria-hidden="true"><span class="placeholder-label">EXPORT</span></div>
+      <div class="h-8 w-32 diag-bg rounded-md opacity-50" aria-hidden="true"><span class="placeholder-label">VERSIONS</span></div>
+    </div>
+  </div>
+
+  <!-- Feature Cards Grid -->
+  <section id="features" class="w-full max-w-[1200px] mt-24 flex flex-col items-center gap-12 reveal">
+    <div class="text-center flex flex-col gap-4">
+      <span class="tag">Features</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Everything you need to reset a landing page.</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+      <div class="w-full rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col">
+        <div class="diag-bg h-[240px]"><span class="placeholder-label">Capture illustration</span></div>
+        <div class="p-6 flex flex-col gap-3">
+          <span class="tag">Capture</span>
+          <h3 class="text-xl font-medium tracking-tight text-[var(--ink)]">URL-to-context capture</h3>
+          <p class="text-[15px] text-[var(--muted)] leading-relaxed text-pretty">Extract copy, hierarchy, media, brand cues, and page structure from an existing landing page URL.</p>
+          <button class="mt-2 self-start px-4 py-2 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line)] hover:bg-gray-50 transition-colors flex items-center gap-2 h-10">Learn more <span>-></span></button>
+        </div>
+      </div>
+      <div class="w-full rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col">
+        <div class="diag-bg h-[240px]"><span class="placeholder-label">Generation illustration</span></div>
+        <div class="p-6 flex flex-col gap-3">
+          <span class="tag">Generation</span>
+          <h3 class="text-xl font-medium tracking-tight text-[var(--ink)]">Prompt-led redesign</h3>
+          <p class="text-[15px] text-[var(--muted)] leading-relaxed text-pretty">Describe the visual direction and generate an editable redesign that keeps the original intent intact.</p>
+          <button class="mt-2 self-start px-4 py-2 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line)] hover:bg-gray-50 transition-colors flex items-center gap-2 h-10">Learn more <span>-></span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Split Testimonial -->
+  <section class="w-full max-w-[1200px] mt-24 flex flex-col md:flex-row gap-8 items-center reveal">
+    <div class="w-full md:w-1/2 flex flex-col gap-4">
+      <div class="diag-bg w-full h-[320px] rounded-2xl"><span class="placeholder-label">Builder preview</span></div>
+      <div class="h-[80px] bg-[var(--card)] rounded-2xl border border-[var(--line)] flex items-center justify-center">
+        <span class="placeholder-label">ResetUI output</span>
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 flex flex-col gap-6">
+      <blockquote class="text-2xl md:text-3xl font-medium tracking-tight leading-snug text-balance text-[var(--ink)]">"ResetUI turned our existing landing page into a cleaner direction we could inspect, edit, and ship without starting from a blank canvas."</blockquote>
+      <div class="flex flex-col gap-1">
+        <span class="font-semibold text-[var(--ink)]">Sarah Chen</span>
+        <span class="text-sm text-[var(--dim)]">Founder, SaaS Studio</span>
+      </div>
+      <div class="flex gap-3 mt-2">
+        <button class="px-5 py-2.5 rounded-full text-sm font-medium bg-[var(--ink)] text-white hover:bg-black transition-colors h-12 flex items-center">Read case study</button>
+        <button class="px-5 py-2.5 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line)] hover:bg-gray-50 transition-colors h-12 flex items-center">Visit site</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Highlight Panel -->
+  <section class="w-full max-w-[1200px] mt-24 rounded-2xl border border-[var(--line)] overflow-hidden flex flex-col md:flex-row bg-white reveal">
+    <div class="w-full md:w-1/2 diag-bg h-[240px] md:h-auto min-h-[300px]"><span class="placeholder-label">Export preview</span></div>
+    <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center gap-4">
+      <span class="tag">Workflow</span>
+      <h2 class="text-3xl md:text-4xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Move from URL to editable HTML in one flow.</h2>
+      <p class="text-[16px] text-[var(--muted)] leading-relaxed text-pretty">ResetUI captures the live page, generates a refreshed design, keeps each section editable, and exports clean front-end code when you are ready.</p>
+      <button class="mt-2 self-start px-5 py-2.5 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line)] hover:bg-gray-50 transition-colors flex items-center gap-2 h-12">Explore workflow <span>-></span></button>
+    </div>
+  </section>
+
+  <!-- Stats & Benefits -->
+  <section class="w-full max-w-[1200px] mt-24 flex flex-col items-center gap-16 reveal">
+    <div class="text-center flex flex-col gap-4">
+      <span class="tag">Why ResetUI</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Built for faster redesigns, designed for handoff.</h2>
+    </div>
+    
+    <!-- Stats -->
+    <div class="flex flex-col md:flex-row gap-6 w-full">
+      <div class="flex-1 rounded-2xl border border-[var(--line)] p-8 flex flex-col gap-2 bg-[var(--card)]">
+        <span class="text-6xl font-bold text-[var(--red)] font-mono">99.9%</span>
+        <p class="text-[15px] text-[var(--muted)] text-pretty">Reliable generation workspace for capturing, editing, and exporting landing-page redesigns.</p>
+      </div>
+      <div class="flex-1 rounded-2xl border border-[var(--line)] p-8 flex flex-col gap-2 bg-[var(--card)]">
+        <span class="text-6xl font-bold text-[var(--red)] font-mono">200+</span>
+        <p class="text-[15px] text-[var(--muted)] text-pretty">High-fidelity templates and prompts shaped for real landing-page redesign work.</p>
+      </div>
+    </div>
+
+    <!-- Benefits Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+      <div class="rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col">
+        <div class="diag-bg h-[180px]"><span class="placeholder-label">Benefit 01</span></div>
+        <div class="p-5 flex flex-col gap-2">
+          <h3 class="text-lg font-medium tracking-tight text-[var(--ink)]">Fast first draft</h3>
+          <p class="text-sm text-[var(--muted)] leading-relaxed text-pretty">Generate a complete direction quickly from the page context you already have.</p>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col">
+        <div class="diag-bg h-[180px]"><span class="placeholder-label">Benefit 02</span></div>
+        <div class="p-5 flex flex-col gap-2">
+          <h3 class="text-lg font-medium tracking-tight text-[var(--ink)]">Project memory</h3>
+          <p class="text-sm text-[var(--muted)] leading-relaxed text-pretty">Keep generated HTML, chat edits, and committed design versions connected.</p>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col">
+        <div class="diag-bg h-[180px]"><span class="placeholder-label">Benefit 03</span></div>
+        <div class="p-5 flex flex-col gap-2">
+          <h3 class="text-lg font-medium tracking-tight text-[var(--ink)]">Clean export</h3>
+          <p class="text-sm text-[var(--muted)] leading-relaxed text-pretty">Download standalone HTML that is ready to edit, host, or hand off.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Export / How It Works -->
+  <section id="enterprise" class="w-full max-w-[1200px] mt-24 flex flex-col items-center gap-12 reveal">
+    <div class="text-center flex flex-col gap-4">
+      <span class="tag">Export</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Reset a page without losing the source intent.</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+      <!-- Left Steps -->
+      <div class="flex flex-col gap-8">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-lg bg-white border border-[var(--line)] shadow-sm flex items-center justify-center shrink-0 text-[var(--ink)]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h3 class="font-medium tracking-tight text-[var(--ink)]">1. Capture the URL</h3>
+            <p class="text-sm text-[var(--muted)] text-pretty">Paste a landing-page URL and let ResetUI read the structure, copy, media, and brand signals.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-lg bg-white border border-[var(--line)] shadow-sm flex items-center justify-center shrink-0 text-[var(--ink)]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h3 class="font-medium tracking-tight text-[var(--ink)]">2. Describe the direction</h3>
+            <p class="text-sm text-[var(--muted)] text-pretty">Add the design style, audience, and conversion goals you want the new page to follow.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Center Image -->
+      <div class="diag-bg rounded-2xl min-h-[300px] w-full h-full"><span class="placeholder-label">Export Dashboard</span></div>
+      <!-- Right Steps -->
+      <div class="flex flex-col gap-8">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-lg bg-white border border-[var(--line)] shadow-sm flex items-center justify-center shrink-0 text-[var(--ink)]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h3 class="font-medium tracking-tight text-[var(--ink)]">3. Edit with chat</h3>
+            <p class="text-sm text-[var(--muted)] text-pretty">Ask for targeted section changes while preserving the generated page context.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-lg bg-white border border-[var(--line)] shadow-sm flex items-center justify-center shrink-0 text-[var(--ink)]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h3 class="font-medium tracking-tight text-[var(--ink)]">4. Export and ship</h3>
+            <p class="text-sm text-[var(--muted)] text-pretty">Export clean HTML and keep versions available for future iteration.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Builder Stories Carousel -->
+  <section id="stories" class="w-full mt-24 flex flex-col items-center gap-12 reveal">
+    <div class="text-center flex flex-col gap-4">
+      <span class="tag">Builder Stories</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Used by builders who need sharper redesigns.</h2>
+    </div>
+    
+    <div class="w-full overflow-x-auto no-scrollbar pb-4">
+      <div class="flex gap-4 px-[5%] md:px-[10%] w-max">
+        <!-- Card 1 -->
+        <div class="w-[320px] h-[320px] shrink-0 rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col shadow-sm">
+          <div class="diag-bg h-[140px]"><span class="placeholder-label">Logo</span></div>
+          <div class="p-4 flex flex-col justify-between flex-1">
+            <p class="text-sm text-[var(--ink)] leading-relaxed line-clamp-4 text-pretty">"ResetUI helped us keep the original message, but gave the page a stronger visual system in one pass."</p>
+            <div class="flex flex-col gap-0.5 mt-3">
+              <span class="text-sm font-medium text-[var(--ink)]">Alex Rivera</span>
+              <span class="text-xs text-[var(--dim)]">Design Lead, LaunchOps</span>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="w-[320px] h-[320px] shrink-0 rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col shadow-sm">
+          <div class="diag-bg h-[140px]"><span class="placeholder-label">Logo</span></div>
+          <div class="p-4 flex flex-col justify-between flex-1">
+            <p class="text-sm text-[var(--ink)] leading-relaxed line-clamp-4 text-pretty">"The exported HTML was easy to inspect and customize, which made handoff painless."</p>
+            <div class="flex flex-col gap-0.5 mt-3">
+              <span class="text-sm font-medium text-[var(--ink)]">Maria Garcia</span>
+              <span class="text-xs text-[var(--dim)]">Founder, Buildlane</span>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="w-[320px] h-[320px] shrink-0 rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col shadow-sm">
+          <div class="diag-bg h-[140px]"><span class="placeholder-label">Logo</span></div>
+          <div class="p-4 flex flex-col justify-between flex-1">
+            <p class="text-sm text-[var(--ink)] leading-relaxed line-clamp-4 text-pretty">"Chat edits made the generated page feel collaborative instead of disposable."</p>
+            <div class="flex flex-col gap-0.5 mt-3">
+              <span class="text-sm font-medium text-[var(--ink)]">David Kim</span>
+              <span class="text-xs text-[var(--dim)]">Product Designer, Northstar</span>
+            </div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="w-[320px] h-[320px] shrink-0 rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col shadow-sm">
+          <div class="diag-bg h-[140px]"><span class="placeholder-label">Logo</span></div>
+          <div class="p-4 flex flex-col justify-between flex-1">
+            <p class="text-sm text-[var(--ink)] leading-relaxed line-clamp-4 text-pretty">"We tried a few redesign tools, but ResetUI understood the source page context best."</p>
+            <div class="flex flex-col gap-0.5 mt-3">
+              <span class="text-sm font-medium text-[var(--ink)]">Sarah Jenkins</span>
+              <span class="text-xs text-[var(--dim)]">Growth Lead, Vanta Labs</span>
+            </div>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="w-[320px] h-[320px] shrink-0 rounded-2xl border border-[var(--line)] overflow-hidden bg-white flex flex-col shadow-sm">
+          <div class="diag-bg h-[140px]"><span class="placeholder-label">Logo</span></div>
+          <div class="p-4 flex flex-col justify-between flex-1">
+            <p class="text-sm text-[var(--ink)] leading-relaxed line-clamp-4 text-pretty">"Version history let us compare directions without losing the best parts of earlier drafts."</p>
+            <div class="flex flex-col gap-0.5 mt-3">
+              <span class="text-sm font-medium text-[var(--ink)]">James Lee</span>
+              <span class="text-xs text-[var(--dim)]">CTO, Framebase</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Navigation -->
+    <div class="flex items-center gap-4 w-full max-w-[1200px] px-4">
+      <div class="progress-bar active"><div class="progress-fill"></div></div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <div class="flex gap-2 ml-2">
+        <button id="prev-btn" aria-label="Previous story" class="w-10 h-10 rounded-full border border-[var(--line)] flex items-center justify-center hover:bg-gray-50 transition-colors text-[var(--ink)]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button id="next-btn" aria-label="Next story" class="w-10 h-10 rounded-full border border-[var(--line)] bg-[var(--ink)] text-white flex items-center justify-center hover:bg-black transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="w-full max-w-[1200px] mt-24 flex flex-col items-center gap-12 reveal">
+    <div class="text-center flex flex-col gap-4">
+      <span class="tag">Pricing</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Simple, transparent pricing.</h2>
+      <p class="text-[17px] text-[var(--muted)] max-w-[500px] text-pretty">Choose the plan that fits how often you redesign, export, and iterate.</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+      <!-- Starter -->
+      <div class="rounded-2xl border border-[var(--line)] p-8 flex flex-col gap-6 bg-[var(--card)]">
+        <div class="flex flex-col gap-2">
+          <span class="font-mono text-sm text-[var(--dim)] uppercase">Starter</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium text-[var(--ink)]">$0</span>
+            <span class="text-sm text-[var(--dim)]">/month</span>
+          </div>
+          <p class="text-sm text-[var(--muted)]">For trying URL capture and first-page redesigns.</p>
+        </div>
+        <button class="w-full py-2.5 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line-strong)] hover:bg-gray-100 transition-colors h-12">Get Started</button>
+        <ul class="flex flex-col gap-3 text-sm text-[var(--muted)]">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 3 projects</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Basic exports</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Community support</li>
+        </ul>
+      </div>
+      
+      <!-- Pro (Featured) -->
+      <div class="rounded-2xl border border-[var(--ink)] bg-[var(--ink)] text-white p-8 flex flex-col gap-6 relative shadow-lg">
+        <div class="absolute -top-3 left-8 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[var(--red)] text-white uppercase">Popular</div>
+        <div class="flex flex-col gap-2">
+          <span class="font-mono text-sm text-gray-400 uppercase">Pro</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium">$12</span>
+            <span class="text-sm text-gray-400">/user/month</span>
+          </div>
+          <p class="text-sm text-gray-300">For teams shipping more page redesigns.</p>
+        </div>
+        <button class="w-full py-2.5 rounded-full text-sm font-medium bg-white text-black hover:bg-gray-200 transition-colors h-12">Start Free Trial</button>
+        <ul class="flex flex-col gap-3 text-sm text-gray-300">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-white/20 text-white flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited projects</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-white/20 text-white flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced generations</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-white/20 text-white flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Priority support</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-white/20 text-white flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>SSO & SAML</li>
+        </ul>
+      </div>
+
+      <!-- Export -->
+      <div class="rounded-2xl border border-[var(--line)] p-8 flex flex-col gap-6 bg-[var(--card)]">
+        <div class="flex flex-col gap-2">
+          <span class="font-mono text-sm text-[var(--dim)] uppercase">Export</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium text-[var(--ink)]">Custom</span>
+          </div>
+          <p class="text-sm text-[var(--muted)]">For agencies and teams with higher export needs.</p>
+        </div>
+        <button class="w-full py-2.5 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line-strong)] hover:bg-gray-100 transition-colors h-12">Contact Sales</button>
+        <ul class="flex flex-col gap-3 text-sm text-[var(--muted)]">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated support</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Custom SLAs</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated account manager</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Audit logs</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="w-full max-w-[800px] mt-24 flex flex-col items-center gap-12 reveal">
+    <div class="text-center flex flex-col gap-4">
+      <span class="tag">FAQ</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-balance text-[var(--ink)]">Frequently asked questions.</h2>
+    </div>
+    <div class="w-full flex flex-col">
+      <div class="faq-item border-b border-[var(--line)] py-5 flex flex-col gap-4">
+        <div class="flex justify-between items-center cursor-pointer w-full">
+          <span class="text-lg font-medium tracking-tight text-[var(--ink)]">How does ResetUI capture a page?</span>
+          <div class="faq-icon w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center transition-all text-[var(--ink)] shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+        <div class="faq-content text-[15px] text-[var(--muted)] leading-relaxed text-pretty">Paste a landing-page URL and ResetUI reads the public page structure, copy, visuals, and brand cues so the redesign starts with real context.</div>
+      </div>
+      <div class="faq-item border-b border-[var(--line)] py-5 flex flex-col gap-4">
+        <div class="flex justify-between items-center cursor-pointer w-full">
+          <span class="text-lg font-medium tracking-tight text-[var(--ink)]">Can I edit the generated design?</span>
+          <div class="faq-icon w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center transition-all text-[var(--ink)] shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+        <div class="faq-content text-[15px] text-[var(--muted)] leading-relaxed text-pretty">Yes. Use chat edits for section-level changes, keep project memory intact, and export again whenever the page is ready.</div>
+      </div>
+      <div class="faq-item border-b border-[var(--line)] py-5 flex flex-col gap-4">
+        <div class="flex justify-between items-center cursor-pointer w-full">
+          <span class="text-lg font-medium tracking-tight text-[var(--ink)]">What can I export?</span>
+          <div class="faq-icon w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center transition-all text-[var(--ink)] shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+        <div class="faq-content text-[15px] text-[var(--muted)] leading-relaxed text-pretty">ResetUI exports clean standalone HTML that you can inspect, host, edit further, or hand off to your team.</div>
+      </div>
+      <div class="faq-item border-b border-[var(--line)] py-5 flex flex-col gap-4">
+        <div class="flex justify-between items-center cursor-pointer w-full">
+          <span class="text-lg font-medium tracking-tight text-[var(--ink)]">Can I reuse a generated direction?</span>
+          <div class="faq-icon w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center transition-all text-[var(--ink)] shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+        <div class="faq-content text-[15px] text-[var(--muted)] leading-relaxed text-pretty">Yes. Keep versions connected to the project and return to earlier directions when you want to branch or refine the design.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="w-full max-w-[1200px] mt-24 rounded-2xl overflow-hidden relative reveal">
+    <div class="absolute inset-0" style="background: linear-gradient(135deg, var(--red) 0%, var(--red-light) 48%, var(--red-dark) 100%);"></div>
+    <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(135deg, rgba(0,0,0,0.1) 0 1px, transparent 1px 16px);"></div>
+    <div class="relative p-12 md:p-16 flex flex-col items-center gap-6 text-center">
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.76px] text-white text-balance max-w-[600px]">Ready to reset your landing page?</h2>
+      <p class="text-[17px] text-white/90 max-w-[500px] text-pretty">Capture your current page, generate a sharper direction, and export clean HTML when it feels right.</p>
+      <button class="mt-4 px-8 py-3.5 rounded-full text-sm font-medium bg-white text-[var(--ink)] hover:bg-gray-100 transition-colors h-12 flex items-center">Get started for free</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="w-full max-w-[1200px] mt-24 pb-12 flex flex-col gap-12 reveal">
+    <div class="flex flex-col md:flex-row justify-between gap-8">
+      <div class="flex flex-col gap-4">
+        <div class="font-bold flex items-center gap-2 text-[var(--ink)]">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-6 h-6 rounded-full object-cover">
+      ResetUI
+    </div>
+        <div class="flex gap-2">
+          <a href="#" aria-label="Twitter" class="w-9 h-9 rounded-full border border-[var(--line)] flex items-center justify-center text-[var(--muted)] hover:bg-gray-50 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" aria-label="GitHub" class="w-9 h-9 rounded-full border border-[var(--line)] flex items-center justify-center text-[var(--muted)] hover:bg-gray-50 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full border border-[var(--line)] flex items-center justify-center text-[var(--muted)] hover:bg-gray-50 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="flex flex-col gap-3">
+          <span class="font-mono text-xs uppercase text-[var(--dim)]">Product</span>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Features</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Workflow</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Pricing</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Changelog</a>
+        </div>
+        <div class="flex flex-col gap-3">
+          <span class="font-mono text-xs uppercase text-[var(--dim)]">Company</span>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">About</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Careers</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Blog</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Contact</a>
+        </div>
+        <div class="flex flex-col gap-3">
+          <span class="font-mono text-xs uppercase text-[var(--dim)]">Resources</span>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Docs</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Community</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Support</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Status</a>
+        </div>
+        <div class="flex flex-col gap-3">
+          <span class="font-mono text-xs uppercase text-[var(--dim)]">Legal</span>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Privacy</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Terms</a>
+          <a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors">Security</a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-[var(--line)] pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <span class="text-xs text-[var(--dim)] font-mono">(c) 2026 ResetUI. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a href="#" class="text-xs text-[var(--dim)] hover:text-[var(--muted)] transition-colors">Privacy Policy</a>
+        <a href="#" class="text-xs text-[var(--dim)] hover:text-[var(--muted)] transition-colors">Terms of Service</a>
+        <a href="#" class="text-xs text-[var(--dim)] hover:text-[var(--muted)] transition-colors">Cookie Settings</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // FAQ Accordion
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const header = item.querySelector('.flex.justify-between');
+    header.addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+  });
+
+  // Carousel
+  const track = document.querySelector('.no-scrollbar > .flex');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const progressBars = document.querySelectorAll('.progress-bar');
+  
+  let currentSlide = 0;
+  const totalSlides = progressBars.length;
+
+  function updateCarousel() {
+    if (!track) return;
+    const cardWidth = track.querySelector('div').offsetWidth + 16; // width + gap
+    track.scrollTo({ left: currentSlide * cardWidth, behavior: 'smooth' });
+    
+    progressBars.forEach((bar, idx) => {
+      if (idx === currentSlide) {
+        bar.classList.add('active');
+      } else {
+        bar.classList.remove('active');
+      }
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    });
+  }
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    });
+  }
+
+  progressBars.forEach((bar, idx) => {
+    bar.addEventListener('click', () => {
+      currentSlide = idx;
+      updateCarousel();
+    });
+  });
+
+  // Reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
