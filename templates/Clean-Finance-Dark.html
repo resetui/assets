@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clean Finance | Dark</title>
+<meta name="description" content="ResetUI captures an existing landing page, applies your design direction, and exports clean production-ready HTML.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['Geist Mono', 'ui-monospace', 'monospace'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --surface-1: #0f0f12;
+    --surface-2: #131318;
+    --surface-3: #17171d;
+    --surface-4: #1c1c24;
+    --text: #ededf0;
+    --muted: #a3a3ad;
+    --dim: #6e6e7a;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --accent: oklch(0.62 0.22 295);
+    --accent-2: oklch(0.72 0.20 305);
+    --accent-glow: oklch(0.62 0.22 295 / 0.55);
+    --accent-soft: oklch(0.62 0.22 295 / 0.18);
+    --green: oklch(0.72 0.18 145);
+    --red: oklch(0.68 0.22 25);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Eyebrow */
+  .eyebrow {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Diagonal striped placeholder */
+  .diag-bg {
+    background-color: var(--surface-3);
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px);
+  }
+  .diag-bg-2 {
+    background-color: var(--surface-4);
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 14px);
+  }
+
+  /* Dot grid background */
+  .dot-grid {
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: center;
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background: linear-gradient(180deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 10px 40px -10px var(--accent-glow);
+    transition: all .25s ease;
+    font-weight: 500;
+  }
+  .btn-primary:hover {
+    background: var(--accent-2);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.12) inset, 0 14px 50px -10px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* Ghost button */
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition: all .25s ease;
+    font-weight: 500;
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--border-strong);
+  }
+
+  /* Glass card */
+  .glass-card {
+    background: rgba(20,20,26,0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    transition: all .3s ease;
+  }
+  .card:hover {
+    background: var(--surface-3);
+    border-color: var(--border-strong);
+  }
+  .card-sm {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: all .3s ease;
+  }
+  .card-sm:hover {
+    background: var(--surface-3);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+
+  /* Icon bubble */
+  .icon-bubble {
+    background: linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.025));
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 12px 30px rgba(0,0,0,0.22);
+  }
+  .icon-bubble svg {
+    filter: drop-shadow(0 0 10px oklch(0.72 0.20 305 / 0.25));
+  }
+
+  /* Eyebrow with em-dash prefix */
+  .eyebrow-prefix::before {
+    content: "— ";
+    color: var(--muted);
+  }
+
+  /* Selection */
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  /* Focus */
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Hero glow */
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .hero-glow::before {
+    content: "";
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, -10%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+    filter: blur(60px);
+    opacity: 0.6;
+  }
+
+  /* Numbered bubble */
+  .num-bubble {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  /* Featured pricing */
+  .pricing-featured {
+    background: linear-gradient(180deg, oklch(0.62 0.22 295 / 0.10) 0%, var(--surface-2) 50%);
+    border: 1px solid oklch(0.62 0.22 295 / 0.35);
+  }
+
+  /* FAQ */
+  .faq-item { transition: all .3s ease; }
+  .faq-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+  }
+  .faq-item.open .faq-content { max-height: 300px; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+  .faq-item.open .faq-icon-bg { background: var(--accent-soft); }
+  .faq-icon { transition: transform .3s ease, color .3s ease; }
+  .faq-icon-bg { transition: background .3s ease; }
+
+  /* CTA gradient */
+  .cta-bg {
+    background:
+      radial-gradient(circle at 50% 100%, oklch(0.62 0.22 295 / 0.25) 0%, transparent 60%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 16px),
+      linear-gradient(180deg, #16121f 0%, #0a0a0c 100%);
+  }
+
+  /* Animations */
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .float-slow { animation: float-slow 6s ease-in-out infinite; }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer-bar {
+    background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      transition: opacity .7s ease-out, transform .7s ease-out;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+    .float-slow, .pulse-dot, .shimmer-bar { animation: none !important; }
+  }
+
+  /* Nav scrolled state */
+  .nav-inner { transition: all .3s ease; }
+
+  /* Carousel */
+  .carousel-track { transition: transform .5s ease; }
+  #quote-dots button {
+    min-height: 0;
+    height: 8px;
+    padding: 0;
+  }
+  .dot-active { width: 20px; border-radius: 999px; background: var(--accent-2); box-shadow: 0 0 16px var(--accent-glow); }
+  .dot-idle { width: 8px; border-radius: 999px; background: rgba(255,255,255,0.24); }
+
+  /* Toggle */
+  .toggle-pill { background: var(--surface-3); border: 1px solid var(--border); }
+  .toggle-thumb {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    box-shadow: 0 10px 30px -12px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.14) inset;
+    transition: transform .3s ease;
+  }
+  .toggle-pill.annual .toggle-thumb { transform: translateX(100%); }
+
+  /* Sparkline */
+  .spark-line { stroke: var(--accent); stroke-width: 2; fill: none; }
+  .spark-area { fill: url(#sparkGrad); }
+
+  /* Touch targets */
+  button, a[role="button"] { min-height: 44px; }
+  .nav-link { min-height: auto; }
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR NAVIGATION ============ -->
+<div class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="nav-inner glass-card w-full max-w-[1200px] flex items-center justify-between h-16 px-6 rounded-full">
+    <!-- Logo -->
+    <a href="#top" class="flex items-center gap-2.5 shrink-0">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-8 h-8 rounded-full object-cover">
+      <span class="font-semibold text-[17px] tracking-tight">ResetUI</span>
+    </a>
+
+    <!-- Center links -->
+    <div class="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+      <a href="#benefits" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Overview</a>
+      <a href="#features" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Features</a>
+      <a href="#how" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Workflow</a>
+      <a href="#pricing" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Pricing</a>
+      <a href="#faq" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">FAQ</a>
+    </div>
+
+    <!-- Right -->
+    <div class="flex items-center gap-2">
+      <a href="#" class="hidden sm:inline-flex btn-ghost px-5 py-2 text-sm">Sign in</a>
+      <a href="#cta" class="btn-primary px-5 py-2 text-sm">Get started</a>
+      <button id="menu-toggle" aria-label="Open menu" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col items-center justify-center bg-[#0a0a0c]/95 backdrop-blur-lg" role="dialog" aria-modal="true">
+  <button id="menu-close" aria-label="Close menu" class="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-full border border-[var(--border)]">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <nav class="flex flex-col items-center gap-6">
+    <a href="#benefits" class="mobile-link text-3xl font-medium tracking-tight">Overview</a>
+    <a href="#features" class="mobile-link text-3xl font-medium tracking-tight">Features</a>
+    <a href="#how" class="mobile-link text-3xl font-medium tracking-tight">Workflow</a>
+    <a href="#pricing" class="mobile-link text-3xl font-medium tracking-tight">Pricing</a>
+    <a href="#faq" class="mobile-link text-3xl font-medium tracking-tight">FAQ</a>
+    <a href="#cta" class="mobile-link btn-primary px-8 py-3 mt-4 text-base">Get started</a>
+  </nav>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="relative pt-36 pb-24 lg:pt-44 lg:pb-32 overflow-hidden">
+  <!-- Dot grid + glow background -->
+  <div class="hero-glow"></div>
+  <div class="absolute inset-0 dot-grid opacity-60" style="mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%);"></div>
+
+  <div class="relative max-w-[1200px] mx-auto px-6 lg:px-10 text-center">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2.5 p-1.5 pr-4 border border-[var(--border)] rounded-full text-sm text-[var(--muted)] mb-8 glass-card reveal">
+      <span class="bg-[var(--accent-soft)] text-[var(--accent-2)] px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+        New
+      </span>
+      <span>ResetUI capture and export workflow is live - read the changelog</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="text-[44px] sm:text-[64px] lg:text-[88px] leading-[1.02] font-medium tracking-[-0.035em] mb-6 text-balance reveal" style="text-wrap: balance;">
+      Redesign your landing page<br>
+      <span class="text-gradient">from real context.</span>
+    </h1>
+
+    <p class="text-lg lg:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed reveal" style="text-wrap: balance;">
+      ResetUI captures your current landing page, applies your design direction, and generates an editable page you can export as clean HTML.
+    </p>
+
+    <!-- CTAs -->
+    <div class="flex flex-wrap items-center justify-center gap-3 mb-20 reveal">
+      <a href="#cta" class="btn-primary px-7 py-3 text-sm flex items-center gap-2">
+        Start free
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#benefits" class="btn-ghost px-7 py-3 text-sm flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+        Watch demo
+      </a>
+    </div>
+
+    <!-- Canvas mockup -->
+    <div class="relative max-w-[1200px] mx-auto reveal">
+      <!-- Glow under mockup -->
+      <div class="absolute -inset-4 rounded-[40px] opacity-50" style="background: radial-gradient(ellipse at 50% 40%, var(--accent-glow) 0%, transparent 60%); filter: blur(30px);"></div>
+
+      <!-- Outer frame -->
+      <div class="relative rounded-[28px] border border-[var(--border)] p-3 shadow-2xl" style="background: linear-gradient(180deg, #131318 0%, #0f0f12 100%); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);">
+        <!-- Inner frame -->
+        <div class="rounded-[20px] border border-[var(--border)] overflow-hidden" style="background: #0f0f12;">
+          <!-- Top bar -->
+          <div class="flex items-center justify-between px-5 py-3 border-b border-[var(--border)] bg-[var(--surface-2)]">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface-4)] border border-[var(--border)] text-xs text-[var(--dim)] font-mono">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              app.resetui.com/project
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-[var(--surface-4)] border border-[var(--border)]"></div>
+              <div class="w-7 h-7 rounded-full" style="background: linear-gradient(135deg, var(--accent), var(--accent-2));"></div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="flex min-h-[420px]">
+            <!-- Sidebar -->
+            <aside class="hidden md:flex flex-col gap-1 p-4 w-52 border-r border-[var(--border)] bg-[var(--surface-1)]">
+              <div class="px-3 py-2 mb-2">
+                <div class="text-[10px] uppercase tracking-widest text-[var(--dim)] font-mono">Workspace</div>
+                <div class="text-sm font-medium mt-1 flex items-center gap-2">ResetUI Project
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="h-px bg-[var(--border)] my-1"></div>
+              <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm bg-[var(--accent-soft)] text-[var(--accent-2)] font-medium">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Canvas
+              </a>
+              <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:bg-white/5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 12l4-4 4 4 5-5"/></svg>
+                Pages
+              </a>
+              <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:bg-white/5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
+                Versions
+              </a>
+              <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:bg-white/5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Exports
+              </a>
+              <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:bg-white/5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+              </a>
+              <div class="mt-auto p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
+                <div class="text-xs text-[var(--muted)] mb-2">Generated pages</div>
+                <div class="text-2xl font-semibold">1,284</div>
+                <div class="text-xs text-[var(--green)] flex items-center gap-1 mt-1">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>
+                  +12.4% this week
+                </div>
+              </div>
+            </aside>
+
+            <!-- Main panel -->
+            <div class="flex-1 p-5 lg:p-6">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <div class="text-[10px] uppercase tracking-widest text-[var(--dim)] font-mono mb-1">Overview</div>
+                  <div class="text-xl font-medium tracking-tight">Welcome back, Alex</div>
+                </div>
+                <div class="hidden sm:flex items-center gap-2">
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--surface-3)] border border-[var(--border)] text-xs text-[var(--muted)]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--green)] pulse-dot"></span>
+                    Live
+                  </div>
+                  <div class="px-3 py-1.5 rounded-full bg-[var(--accent)] text-white text-xs font-medium">New redesign</div>
+                </div>
+              </div>
+
+              <!-- KPI cards -->
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+                <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
+                  <div class="text-[10px] uppercase tracking-widest text-[var(--dim)] font-mono mb-2">Sections</div>
+                  <div class="text-xl font-semibold tracking-tight">12</div>
+                  <div class="text-xs text-[var(--green)] mt-1 flex items-center gap-1"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>+18.2%</div>
+                </div>
+                <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
+                  <div class="text-[10px] uppercase tracking-widest text-[var(--dim)] font-mono mb-2">Exports</div>
+                  <div class="text-xl font-semibold tracking-tight">428</div>
+                  <div class="text-xs text-[var(--green)] mt-1 flex items-center gap-1"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>+7.1%</div>
+                </div>
+                <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
+                  <div class="text-[10px] uppercase tracking-widest text-[var(--dim)] font-mono mb-2">Edit speed</div>
+                  <div class="text-xl font-semibold tracking-tight">42ms</div>
+                  <div class="text-xs text-[var(--red)] mt-1 flex items-center gap-1"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>-3.4%</div>
+                </div>
+                <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
+                  <div class="text-[10px] uppercase tracking-widest text-[var(--dim)] font-mono mb-2">Uptime</div>
+                  <div class="text-xl font-semibold tracking-tight">99.98%</div>
+                  <div class="text-xs text-[var(--muted)] mt-1">30-day</div>
+                </div>
+              </div>
+
+              <!-- Chart + side cards -->
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <!-- Chart -->
+                <div class="lg:col-span-2 p-5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <div class="text-sm font-medium">Generation progress</div>
+                      <div class="text-xs text-[var(--muted)]">Last 24 hours</div>
+                    </div>
+                    <div class="flex gap-1.5">
+                      <div class="px-2.5 py-1 rounded-full bg-[var(--accent-soft)] text-[var(--accent-2)] text-[10px] font-mono">24H</div>
+                      <div class="px-2.5 py-1 rounded-full text-[var(--dim)] text-[10px] font-mono">7D</div>
+                      <div class="px-2.5 py-1 rounded-full text-[var(--dim)] text-[10px] font-mono">30D</div>
+                    </div>
+                  </div>
+                  <!-- Chart -->
+                  <div class="h-40 relative">
+                    <svg viewBox="0 0 400 160" class="w-full h-full" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="oklch(0.62 0.22 295)" stop-opacity="0.35"/>
+                          <stop offset="100%" stop-color="oklch(0.62 0.22 295)" stop-opacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <path class="spark-area" d="M0,120 L30,110 L60,90 L90,100 L120,70 L150,80 L180,50 L210,60 L240,40 L270,50 L300,30 L330,40 L360,25 L400,35 L400,160 L0,160 Z"/>
+                      <path class="spark-line" d="M0,120 L30,110 L60,90 L90,100 L120,70 L150,80 L180,50 L210,60 L240,40 L270,50 L300,30 L330,40 L360,25 L400,35"/>
+                      <circle cx="360" cy="25" r="4" fill="oklch(0.62 0.22 295)"/>
+                      <circle cx="360" cy="25" r="8" fill="oklch(0.62 0.22 295 / 0.3)"/>
+                    </svg>
+                  </div>
+                </div>
+                <!-- Side card -->
+                <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] flex flex-col justify-between">
+                  <div>
+                    <div class="text-sm font-medium mb-1">Versions health</div>
+                    <div class="text-xs text-[var(--muted)] mb-4">All systems nominal</div>
+                  </div>
+                  <div class="space-y-3">
+                    <div>
+                      <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-[var(--muted)]">Capture</span>
+                        <span class="text-[var(--green)]">98%</span>
+                      </div>
+                      <div class="h-1.5 rounded-full bg-[var(--surface-4)] overflow-hidden">
+                        <div class="h-full rounded-full" style="width:98%; background: linear-gradient(90deg, var(--accent), var(--green));"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-[var(--muted)]">Generation</span>
+                        <span class="text-[var(--accent-2)]">87%</span>
+                      </div>
+                      <div class="h-1.5 rounded-full bg-[var(--surface-4)] overflow-hidden">
+                        <div class="h-full rounded-full" style="width:87%; background: linear-gradient(90deg, var(--accent), var(--accent-2));"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-[var(--muted)]">Sync</span>
+                        <span class="text-[var(--green)]">94%</span>
+                      </div>
+                      <div class="h-1.5 rounded-full bg-[var(--surface-4)] overflow-hidden">
+                        <div class="h-full rounded-full" style="width:94%; background: linear-gradient(90deg, var(--accent), var(--green));"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust bar -->
+    <div class="mt-20 reveal">
+      <p class="eyebrow mb-6">— Trusted by builders at</p>
+      <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 opacity-60">
+        <span class="text-lg font-medium tracking-tight text-[var(--muted)]">VECTORA</span>
+        <span class="text-lg font-medium tracking-tight text-[var(--muted)]">Northwind</span>
+        <span class="text-lg font-medium tracking-tight text-[var(--muted)]">LUMEN</span>
+        <span class="text-lg font-medium tracking-tight text-[var(--muted)]">Apex Capital</span>
+        <span class="text-lg font-medium tracking-tight text-[var(--muted)]">ResetUI</span>
+        <span class="text-lg font-medium tracking-tight text-[var(--muted)]">Quantix</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFITS (BENTO GRID) ============ -->
+<section id="benefits" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">Benefits</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Everything your team needs to <span class="text-gradient">move faster</span>.
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 reveal">
+      <!-- Wide card -->
+      <div class="card p-7 lg:col-span-2 flex flex-col">
+        <div class="flex flex-col sm:flex-row items-start gap-6 mb-6">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style="background: var(--accent-soft);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Real-time automation</h3>
+            <p class="text-[var(--muted)] leading-relaxed max-w-md">Start from a live page URL and keep the original copy, hierarchy, media, and brand signals available while you redesign.</p>
+          </div>
+        </div>
+        <div class="diag-bg h-44 rounded-2xl border border-[var(--border)] flex items-center justify-center mt-auto">
+          <span class="eyebrow text-[var(--dim)]">Versions flow diagram</span>
+        </div>
+      </div>
+
+      <!-- Narrow card -->
+      <div class="card p-7 flex flex-col">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: var(--accent-soft);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3 class="text-2xl font-medium tracking-tight mb-2">SOC 2 compliant</h3>
+        <p class="text-[var(--muted)] leading-relaxed mb-6">Project memory keeps generated HTML, chat edits, and committed design versions connected from first draft to final export.</p>
+        <div class="diag-bg h-32 rounded-2xl border border-[var(--border)] flex items-center justify-center mt-auto">
+          <span class="eyebrow text-[var(--dim)]">Security badge</span>
+        </div>
+      </div>
+
+      <!-- Narrow card -->
+      <div class="card p-7 flex flex-col">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: var(--accent-soft);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3 class="text-2xl font-medium tracking-tight mb-2">Live generation</h3>
+        <p class="text-[var(--muted)] leading-relaxed mb-6">See every metric the moment it changes. Custom widgets, instant queries, zero lag.</p>
+        <div class="diag-bg h-32 rounded-2xl border border-[var(--border)] flex items-center justify-center mt-auto">
+          <span class="eyebrow text-[var(--dim)]">Canvas preview</span>
+        </div>
+      </div>
+
+      <!-- Wide card -->
+      <div class="card p-7 lg:col-span-2 flex flex-col">
+        <div class="flex flex-col sm:flex-row items-start gap-6 mb-6">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style="background: var(--accent-soft);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">One surface, every source</h3>
+            <p class="text-[var(--muted)] leading-relaxed max-w-md">Turn captured context into a full landing-page redesign section by section, then refine the page with chat.</p>
+          </div>
+        </div>
+        <div class="diag-bg h-44 rounded-2xl border border-[var(--border)] flex items-center justify-center mt-auto">
+          <span class="eyebrow text-[var(--dim)]">Integrations grid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES GRID ============ -->
+<section id="features" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">Features</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Built for the way <span class="text-gradient">teams actually ship</span>.
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 reveal">
+      <!-- Feature 1 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">URL capture workflow</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">React to webhooks, DB changes, or schedules. Branch, transform, and route without writing glue code.</p>
+      </div>
+      <!-- Feature 2 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Unified data layer</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Query across every source as if it were one database. No ETL bottlenecks, no sync delays.</p>
+      </div>
+      <!-- Feature 3 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Versioned by default</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Every generated direction can be committed, restored, and refined without losing the project context.</p>
+      </div>
+      <!-- Feature 4 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Global edge</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Deployed across 14 regions. Sub-50ms p99 latency from wherever your users are.</p>
+      </div>
+      <!-- Feature 5 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Smart schemas</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">ResetUI learns from the captured page shape and suggests cleaner sections before export.</p>
+      </div>
+      <!-- Feature 6 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Proactive alerts</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Get notified in Slack, email, or PagerDuty the moment something drifts out of bounds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HIGHLIGHTS / SPLIT SECTION ============ -->
+<section class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center reveal">
+      <!-- Text -->
+      <div>
+        <span class="eyebrow eyebrow-prefix">Showcase</span>
+        <h2 class="text-[36px] sm:text-[48px] lg:text-[56px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 mb-5 text-balance" style="text-wrap: balance;">
+          Pages that <span class="text-gradient">redesign themselves</span>.
+        </h2>
+        <p class="text-lg text-[var(--muted)] leading-relaxed mb-8 max-w-lg">
+          Describe the direction in plain English. ResetUI generates the redesign, keeps sections editable, and prepares clean HTML for review.
+        </p>
+        <ul class="space-y-3 mb-9">
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="text-[var(--text)]">Natural-language redesign builder</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="text-[var(--text)]">Auto-suggested transforms and joins</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="text-[var(--text)]">One-click promote to production</span>
+          </li>
+        </ul>
+        <a href="#cta" class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm">
+          Explore the platform
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <!-- Visual -->
+      <div class="diag-bg h-[380px] rounded-[22px] border border-[var(--border)] flex items-center justify-center relative overflow-hidden">
+        <span class="eyebrow text-[var(--dim)]">Redesign builder interface</span>
+        <div class="absolute top-4 right-4 px-3 py-1.5 rounded-full glass-card text-xs text-[var(--muted)] flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] pulse-dot"></span>
+          Generating
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">Workflow</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        From zero to production in <span class="text-gradient">four steps</span>.
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 reveal">
+      <!-- Step 1 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">1</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Connect</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Paste a live landing-page URL. ResetUI captures copy, media, links, hierarchy, and brand signals.</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">2</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Describe</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Tell ResetUI what visual direction you want, or start from high-fidelity templates and prompts.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">3</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Refine</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Review the generated page in a visual canvas. Tweak sections, branch ideas, or extend with chat.</p>
+      </div>
+      <!-- Step 4 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">4</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Deploy</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Export standalone HTML when ready. Keep versions for future iteration and handoff.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE & AUTOMATION ============ -->
+<section class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-4 reveal">
+      <!-- Card 1 -->
+      <div class="card p-7 flex flex-col">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-12 h-12 rounded-xl icon-bubble flex items-center justify-center shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Canvass that explain themselves</h3>
+            <p class="text-[var(--muted)] leading-relaxed">Every chart, every metric, every anomaly — annotated automatically. Your team spends time acting, not investigating.</p>
+          </div>
+        </div>
+        <div class="diag-bg h-56 rounded-2xl border border-[var(--border)] flex items-center justify-center mt-auto">
+          <span class="eyebrow text-[var(--dim)]">Canvas showcase</span>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card p-7 flex flex-col">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-12 h-12 rounded-xl icon-bubble flex items-center justify-center shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Versions that handles the edge cases</h3>
+            <p class="text-[var(--muted)] leading-relaxed">ResetUI does not stop at a screenshot. It keeps sections editable, versions restorable, and exported code ready to inspect.</p>
+          </div>
+        </div>
+        <div class="diag-bg h-56 rounded-2xl border border-[var(--border)] flex items-center justify-center mt-auto">
+          <span class="eyebrow text-[var(--dim)]">Versions flow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">Testimonials</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Loved by <span class="text-gradient">builders</span>.
+      </h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto reveal">
+      <!-- Card -->
+      <div class="card p-8 lg:p-12 text-center relative">
+        <svg class="absolute top-6 left-8 opacity-10" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/></svg>
+        <p id="quote-text" class="text-xl lg:text-2xl font-medium leading-relaxed tracking-tight mb-8 text-balance" style="text-wrap: balance;">
+          "ResetUI gave us a polished redesign from our existing page and left us with HTML we could actually edit."
+        </p>
+        <div class="flex items-center justify-center gap-3">
+          <div class="w-12 h-12 rounded-full" style="background: linear-gradient(135deg, var(--accent), var(--accent-2));"></div>
+          <div class="text-left">
+            <div id="quote-name" class="font-medium">Sarah Chen</div>
+            <div id="quote-role" class="text-sm text-[var(--muted)]">VP Engineering, Vectora</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center justify-center gap-5 mt-8">
+        <button id="prev-quote" aria-label="Previous testimonial" class="w-11 h-11 rounded-full border border-[var(--border)] bg-[var(--surface-2)] flex items-center justify-center hover:bg-[var(--surface-3)] transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div id="quote-dots" class="flex items-center gap-2"></div>
+        <button id="next-quote" aria-label="Next testimonial" class="w-11 h-11 rounded-full border border-[var(--border)] bg-[var(--surface-2)] flex items-center justify-center hover:bg-[var(--surface-3)] transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-10 reveal">
+      <span class="eyebrow eyebrow-prefix">Pricing</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Pricing that <span class="text-gradient">scales with you</span>.
+      </h2>
+    </div>
+
+    <!-- Toggle -->
+    <div class="flex items-center justify-center gap-4 mb-12 reveal">
+      <div id="billing-toggle" class="toggle-pill flex items-center p-1 rounded-full relative">
+        <button id="btn-monthly" class="px-5 py-2 text-sm font-medium relative z-10 transition-colors text-[var(--text)]">Monthly</button>
+        <button id="btn-annual" class="px-5 py-2 text-sm font-medium relative z-10 transition-colors text-[var(--muted)]">Yearly</button>
+        <div class="toggle-thumb absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full"></div>
+      </div>
+      <span class="text-xs px-3 py-1 rounded-full" style="background: var(--accent-soft); color: var(--accent-2);">Save 20%</span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-4 reveal">
+      <!-- Starter -->
+      <div class="card p-8 flex flex-col">
+        <div class="mb-6">
+          <div class="text-sm text-[var(--muted)] mb-2">Starter</div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium tracking-tight price" data-monthly="$29" data-annual="$23">$29</span>
+            <span class="text-sm text-[var(--muted)]">/mo</span>
+          </div>
+          <p class="text-sm text-[var(--muted)] mt-2">For solo builders shipping their first redesign.</p>
+        </div>
+        <a href="#cta" class="btn-ghost w-full text-center py-3 text-sm mb-8">Start free</a>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>3 active projects</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>10 exports / month</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>5 captured pages</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Community support</li>
+        </ul>
+      </div>
+
+      <!-- Featured -->
+      <div class="pricing-featured p-8 rounded-[22px] flex flex-col relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-medium text-white" style="background: var(--accent);">POPULAR</div>
+        <div class="mb-6">
+          <div class="text-sm text-[var(--accent-2)] mb-2">Pro</div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium tracking-tight price" data-monthly="$99" data-annual="$79">$99</span>
+            <span class="text-sm text-[var(--muted)]">/mo</span>
+          </div>
+          <p class="text-sm text-[var(--muted)] mt-2">For teams scaling landing-page redesigns.</p>
+        </div>
+        <a href="#cta" class="btn-primary w-full text-center py-3 text-sm mb-8">Start free trial</a>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited projects</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>100 exports / month</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited captured pages</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Priority support</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>SSO + audit logs</li>
+        </ul>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="card p-8 flex flex-col">
+        <div class="mb-6">
+          <div class="text-sm text-[var(--muted)] mb-2">Enterprise</div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium tracking-tight">Custom</span>
+          </div>
+          <p class="text-sm text-[var(--muted)] mt-2">For agencies and teams with custom volume needs.</p>
+        </div>
+        <a href="#cta" class="btn-ghost w-full text-center py-3 text-sm mb-8">Contact sales</a>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Pro</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated infrastructure</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Custom SLAs</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Custom export support</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated success manager</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[760px] mx-auto px-6 lg:px-10">
+    <div class="text-center mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">FAQ</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[56px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Questions, <span class="text-gradient">answered</span>.
+      </h2>
+    </div>
+
+    <div class="reveal">
+      <!-- FAQ 1 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">How does ResetUI capture an existing page?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">ResetUI reads the public landing page URL and extracts copy, links, structure, media, colors, fonts, and brand signals before generating a new direction.</p>
+        </div>
+      </div>
+      <!-- FAQ 2 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">Is my data secure?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">ResetUI keeps your project context, generated HTML, and chat edits together so you can revise and export without rebuilding from scratch.</p>
+        </div>
+      </div>
+      <!-- FAQ 3 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">Can I edit the generated page?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Yes. Ask for targeted section changes, adjust copy and layout, restore versions, and export the updated HTML whenever the page is ready.</p>
+        </div>
+      </div>
+      <!-- FAQ 4 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">What happens if I want another direction?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Create another generation from the same captured context, compare versions, and keep the direction that fits your brand best.</p>
+        </div>
+      </div>
+      <!-- FAQ 5 -->
+      <div class="faq-item border-t border-b border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">How long does setup take?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Most first drafts are ready in minutes: capture a URL, describe the design direction, review the generated page, then export clean HTML.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="cta" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="cta-bg rounded-[28px] border border-[var(--border)] p-10 lg:p-20 text-center relative overflow-hidden reveal">
+      <!-- Glow -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-40 pointer-events-none" style="background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%); filter: blur(40px);"></div>
+
+      <div class="relative">
+        <span class="eyebrow eyebrow-prefix">Get started</span>
+        <h2 class="text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.02] font-medium tracking-[-0.035em] mt-4 mb-5 text-balance" style="text-wrap: balance;">
+          Reset your first page<br>
+          <span class="text-gradient">in 10 minutes</span>.
+        </h2>
+        <p class="text-lg text-[var(--muted)] max-w-xl mx-auto mb-10 leading-relaxed">
+          Start from a live URL, generate a sharper page, and export clean HTML when it is ready.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a href="#" class="btn-primary px-7 py-3 text-sm flex items-center gap-2">
+            Start free
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#" class="btn-ghost px-7 py-3 text-sm">Book a demo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-[var(--border)] py-16 mt-10">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+      <!-- Brand -->
+      <div class="col-span-2">
+        <a href="#top" class="flex items-center gap-2.5 mb-5">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="w-8 h-8 rounded-full object-cover">
+      <span class="font-semibold text-[17px] tracking-tight">ResetUI</span>
+        </a>
+        <p class="text-sm text-[var(--muted)] leading-relaxed max-w-xs mb-6">Capture a live landing page, generate a refreshed design, and export editable HTML.</p>
+        <div class="flex items-center gap-3">
+          <a href="#" aria-label="Twitter" class="w-9 h-9 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" aria-label="GitHub" class="w-9 h-9 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Columns -->
+      <div>
+        <h4 class="eyebrow mb-4">Product</h4>
+        <ul class="space-y-3">
+          <li><a href="#features" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Features</a></li>
+          <li><a href="#how" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">How it works</a></li>
+          <li><a href="#pricing" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Pricing</a></li>
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="eyebrow mb-4">Resources</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Docs</a></li>
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">API reference</a></li>
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Status</a></li>
+          <li><a href="#faq" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="eyebrow mb-4">Company</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">About</a></li>
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Careers</a></li>
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Contact</a></li>
+          <li><a href="#" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Legal</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-[var(--border)] mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-[var(--dim)] font-mono">© 2025 ResetUI Project All rights reserved.</p>
+      <div class="flex items-center gap-5">
+        <a href="#" class="text-xs text-[var(--dim)] font-mono hover:text-[var(--muted)] transition-colors">Privacy</a>
+        <a href="#" class="text-xs text-[var(--dim)] font-mono hover:text-[var(--muted)] transition-colors">Terms</a>
+        <a href="#" class="text-xs text-[var(--dim)] font-mono hover:text-[var(--muted)] transition-colors">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Mobile menu
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuClose = document.getElementById('menu-close');
+
+  function openMenu() {
+    mobileMenu.classList.remove('hidden');
+    mobileMenu.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileMenu.classList.add('hidden');
+    mobileMenu.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+  menuToggle.addEventListener('click', openMenu);
+  menuClose.addEventListener('click', closeMenu);
+  document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) closeMenu();
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item = trigger.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+
+  // Pricing toggle
+  const billingToggle = document.getElementById('billing-toggle');
+  const btnMonthly = document.getElementById('btn-monthly');
+  const btnAnnual = document.getElementById('btn-annual');
+
+  function setBilling(isAnnual) {
+    if (isAnnual) {
+      billingToggle.classList.add('annual');
+      btnAnnual.classList.replace('text-[var(--muted)]', 'text-[var(--text)]');
+      btnMonthly.classList.replace('text-[var(--text)]', 'text-[var(--muted)]');
+    } else {
+      billingToggle.classList.remove('annual');
+      btnMonthly.classList.replace('text-[var(--muted)]', 'text-[var(--text)]');
+      btnAnnual.classList.replace('text-[var(--text)]', 'text-[var(--muted)]');
+    }
+    document.querySelectorAll('.price').forEach(el => {
+      const val = isAnnual ? el.dataset.annual : el.dataset.monthly;
+      if (val) el.textContent = val;
+    });
+  }
+  btnMonthly.addEventListener('click', () => setBilling(false));
+  btnAnnual.addEventListener('click', () => setBilling(true));
+
+  // Testimonials carousel
+  const quotes = [
+    { text: "ResetUI gave us a polished redesign from our existing page and left us with HTML we could actually edit.", name: "Sarah Chen", role: "VP Engineering, Vectora" },
+    { text: "Chat edits are reliable enough to use mid-project. We changed a whole pricing section without losing the rest of the page.", name: "Marcus Webb", role: "Head of Data, Northwind" },
+    { text: "We used ResetUI across six projects in a week. Landing pages that took days to rework now start with a usable first draft.", name: "Priya Nair", role: "CTO, Apex Capital" },
+    { text: "ResetUI caught inconsistencies between our old page and new positioning before we exported the final HTML.", name: "David Okoye", role: "VP Platform, Lumen" },
+  ];
+
+  let currentQuote = 0;
+  const quoteText = document.getElementById('quote-text');
+  const quoteName = document.getElementById('quote-name');
+  const quoteRole = document.getElementById('quote-role');
+  const dotsContainer = document.getElementById('quote-dots');
+
+  // Build dots
+  quotes.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'h-1.5 transition-all duration-300';
+    dot.style.borderRadius = '999px';
+    dot.setAttribute('aria-label', `Go to testimonial ${i + 1}`);
+    dot.addEventListener('click', () => showQuote(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function showQuote(idx) {
+    currentQuote = idx;
+    const q = quotes[idx];
+    quoteText.style.opacity = '0';
+    quoteName.style.opacity = '0';
+    quoteRole.style.opacity = '0';
+    setTimeout(() => {
+      quoteText.textContent = `"${q.text}"`;
+      quoteName.textContent = q.name;
+      quoteRole.textContent = q.role;
+      quoteText.style.opacity = '1';
+      quoteName.style.opacity = '1';
+      quoteRole.style.opacity = '1';
+    }, 200);
+    // Update dots
+    Array.from(dotsContainer.children).forEach((dot, i) => {
+      if (i === idx) {
+        dot.classList.add('dot-active');
+        dot.classList.remove('dot-idle');
+      } else {
+        dot.classList.remove('dot-active');
+        dot.classList.add('dot-idle');
+      }
+    });
+  }
+
+  // Init dots
+  Array.from(dotsContainer.children).forEach((dot, i) => {
+    if (i === 0) { dot.classList.add('dot-active'); }
+    else { dot.classList.add('dot-idle'); }
+  });
+
+  // Apply transitions
+  [quoteText, quoteName, quoteRole].forEach(el => {
+    el.style.transition = 'opacity 0.2s ease';
+  });
+
+  document.getElementById('prev-quote').addEventListener('click', () => {
+    showQuote((currentQuote - 1 + quotes.length) % quotes.length);
+  });
+  document.getElementById('next-quote').addEventListener('click', () => {
+    showQuote((currentQuote + 1) % quotes.length);
+  });
+
+  // Auto-rotate (reduced-motion safe)
+  let autoRotate;
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    autoRotate = setInterval(() => {
+      showQuote((currentQuote + 1) % quotes.length);
+    }, 6000);
+  }
+
+  // Reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Smooth scroll offset
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
