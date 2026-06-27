@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mono Chrome | Dark</title>
+  <meta name="description" content="ResetUI captures an existing landing page, applies your design direction, and exports clean production-ready HTML." />
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0A0A0C',
+            surface: '#121215',
+            'surface-2': '#18181C',
+            line: '#26262C',
+            'line-dim': '#1B1B20',
+            fg: '#FAFAFA',
+            muted: '#A1A1AA',
+            faint: '#767680', /* Adjusted slightly for AA on bg */
+            'c-com': '#686872',
+            'c-kw': '#B7B2E0',
+            'c-str': '#A6C2A3',
+            'c-num': '#D9C19A',
+          },
+          fontFamily: {
+            sans: ['Geist', '"Inter Tight"', 'system-ui', 'sans-serif'],
+            mono: ['"Geist Mono"', '"JetBrains Mono"', 'monospace'],
+          },
+          maxWidth: {
+            page: '1200px',
+            content: '1200px',
+          },
+        },
+      },
+    };
+  </script>
+  
+  <style>
+    @keyframes scan {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(100vh); } /* scan full viewport height approx */
+    }
+    .scan-line { animation: scan 1.8s ease-out 1; }
+    
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .reveal { opacity: 0; }
+    .reveal.in { animation: rise .5s ease-out forwards; }
+    
+    :focus-visible {
+      outline: 2px solid #FAFAFA;
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      .scan-line { display: none; }
+      .reveal { opacity: 1 !important; animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+    
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+
+<body class="bg-bg font-sans text-fg antialiased">
+
+  <div class="relative mx-auto max-w-page bg-bg">
+    
+    <!-- §SIGNATURE: vertical guide resetui (full content height) -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 flex justify-center">
+      <div class="relative h-full w-full max-w-content border-x border-line">
+        <!-- one-time load scan on the left guide -->
+        <span class="scan-line absolute left-0 top-0 h-32 w-px bg-gradient-to-b from-transparent via-fg/70 to-transparent"></span>
+      </div>
+    </div>
+
+    <!-- Content sits above the resetui -->
+    <div class="relative z-10">
+
+      <!-- ============ §01 NAV ============ -->
+      <header class="sticky top-0 z-30 border-b border-line-dim bg-bg/80 backdrop-blur">
+        <nav class="mx-auto flex max-w-content items-center justify-between px-5 py-4 lg:px-10">
+          <a href="#" class="font-mono text-sm font-medium tracking-tight flex items-center gap-2"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-8 w-8 rounded-full object-cover"><span>ResetUI</span></a>
+          <div class="hidden items-center gap-7 font-mono text-xs uppercase tracking-[0.06em] text-muted md:flex">
+            <a href="#quickstart" class="transition-colors hover:text-fg">Workflow</a>
+            <a href="#models" class="transition-colors hover:text-fg">Templates</a>
+            <a href="#pricing" class="transition-colors hover:text-fg">Pricing</a>
+            <a href="#" class="transition-colors hover:text-fg">Export</a>
+          </div>
+          <a href="#" class="rounded-lg bg-fg px-4 py-2 font-mono text-xs font-medium text-bg transition-opacity hover:opacity-90">Start free</a>
+        </nav>
+      </header>
+
+      <main>
+        <!-- ============ §02 HERO ============ -->
+        <section class="mx-auto max-w-content px-5 py-20 lg:px-10 lg:py-28">
+          <div class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:items-center">
+            <div class="reveal lg:col-span-6">
+              <p class="font-mono text-xs uppercase tracking-[0.06em] text-faint">§02 / URL CAPTURE</p>
+              <h1 class="mt-5 text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.025em]">
+                Reset landing pages<br />without starting over.
+              </h1>
+              <p class="mt-6 max-w-[48ch] text-base leading-relaxed text-muted">
+                Capture a live landing page, describe the direction, generate an editable redesign, and export clean HTML.
+              </p>
+              <div class="mt-9 flex flex-wrap gap-3">
+                <a href="#" class="rounded-lg bg-fg px-5 py-3 font-mono text-sm font-medium text-bg transition-opacity hover:opacity-90">Start free</a>
+                <a href="#quickstart" class="rounded-lg border border-line px-5 py-3 font-mono text-sm text-fg transition-colors hover:border-muted">View workflow</a>
+              </div>
+            </div>
+
+            <!-- floating hero code card -->
+            <div class="reveal lg:col-span-6">
+              <div class="overflow-hidden rounded-[10px] border border-line bg-surface shadow-[0_24px_60px_-28px_rgba(0,0,0,.85)] [box-shadow:inset_0_1px_0_rgba(255,255,255,.05),0_24px_60px_-28px_rgba(0,0,0,.85)]">
+                <div class="flex items-center justify-between border-b border-line bg-surface-2 px-4 py-2.5">
+                  <span class="font-mono text-xs text-faint">resetui-flow.ts</span>
+                  <button data-copy="#hero-code" class="font-mono text-xs text-muted transition-colors hover:text-fg" aria-label="Copy code">Copy</button>
+                </div>
+                <pre id="hero-code" class="overflow-x-auto px-4 py-4 font-mono text-[0.875rem] leading-[1.65]"><code><span class="text-c-kw">import</span> { ResetUI } <span class="text-c-kw">from</span> <span class="text-c-str">"resetui"</span>
+
+<span class="text-c-kw">const</span> resetui = <span class="text-c-kw">new</span> <span class="text-fg">ResetUI</span>(process.env.<span class="text-c-num">RESETUI_KEY</span>)
+
+<span class="text-c-kw">const</span> res = <span class="text-c-kw">await</span> resetui.<span class="text-fg">generate</span>({
+  url: <span class="text-c-str">"https://example.com"</span>,
+  prompt: <span class="text-c-str">"Clean SaaS redesign"</span>,
+  export: <span class="text-c-str">"html"</span>,
+})</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §03 TRUSTED BY ============ -->
+        <section class="border-y border-line-dim">
+          <div class="mx-auto flex max-w-content flex-wrap items-center justify-center gap-8 px-5 py-6 lg:gap-12 lg:px-10">
+            <span class="font-mono text-xs uppercase tracking-[0.06em] text-faint">§03 / Used for</span>
+            <span class="font-mono text-sm text-faint transition-colors hover:text-fg">URL Capture</span>
+            <span class="font-mono text-sm text-faint transition-colors hover:text-fg">AI Redesign</span>
+            <span class="font-mono text-sm text-faint transition-colors hover:text-fg">Chat Edits</span>
+            <span class="font-mono text-sm text-faint transition-colors hover:text-fg">Version History</span>
+            <span class="font-mono text-sm text-faint transition-colors hover:text-fg">HTML Export</span>
+          </div>
+        </section>
+
+        <!-- ============ §04 QUICKSTART ============ -->
+        <section id="quickstart" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§04 / Workflow</p>
+          <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">From URL to export in one flow.</h2>
+
+          <div class="reveal mt-8 overflow-hidden rounded-[10px] border border-line bg-surface">
+            <div class="flex items-center gap-1 border-b border-line bg-surface-2 px-2 py-2" role="tablist" aria-label="Workflow language">
+              <button data-tab="curl" class="tab rounded-md px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:text-fg" role="tab" aria-selected="true">cURL</button>
+              <button data-tab="py" class="tab rounded-md px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:text-fg" role="tab" aria-selected="false">Python</button>
+              <button data-tab="ts" class="tab rounded-md px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:text-fg" role="tab" aria-selected="false">TypeScript</button>
+              <button data-copy=".panel.is-active code" class="ml-auto rounded-md px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:text-fg" aria-label="Copy code">Copy</button>
+            </div>
+            <div class="panel is-active px-4 py-4" data-panel="curl" role="tabpanel">
+              <pre class="overflow-x-auto font-mono text-[0.875rem] leading-[1.65]"><code><span class="text-c-com"># capture source page</span>
+curl https://api.resetui.com/v1/projects \
+  -H <span class="text-c-str">"authorization: Bearer $RESETUI_KEY"</span> \
+  -d <span class="text-c-str">'{"url":"https://example.com","prompt":"clean SaaS redesign"}'</span></code></pre>
+            </div>
+            <div class="panel hidden px-4 py-4" data-panel="py" role="tabpanel">
+              <pre class="overflow-x-auto font-mono text-[0.875rem] leading-[1.65]"><code><span class="text-c-kw">from</span> resetui <span class="text-c-kw">import</span> ResetUI
+resetui = ResetUI(key=<span class="text-c-str">"..."</span>)
+<span class="text-fg">print</span>(resetui.generate(url=<span class="text-c-str">"https://example.com"</span>, prompt=<span class="text-c-str">"clean SaaS redesign"</span>))</code></pre>
+            </div>
+            <div class="panel hidden px-4 py-4" data-panel="ts" role="tabpanel">
+              <pre class="overflow-x-auto font-mono text-[0.875rem] leading-[1.65]"><code><span class="text-c-kw">const</span> resetui = <span class="text-c-kw">new</span> ResetUI(<span class="text-c-str">"..."</span>)
+<span class="text-c-kw">await</span> resetui.generate({ url: <span class="text-c-str">"https://example.com"</span>, prompt: <span class="text-c-str">"hi"</span> })</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §05 FEATURES ============ -->
+        <section id="features" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§05 — Features</p>
+          <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Everything you need to reset a page.</h2>
+          
+          <div class="reveal mt-12 grid grid-cols-1 border-t border-l border-line-dim md:grid-cols-2 lg:grid-cols-3">
+            <div class="border-b border-r border-line-dim p-6 transition-colors hover:bg-surface">
+              <p class="font-mono text-xs text-faint">01</p>
+              <h3 class="mt-3 text-[1.1875rem] font-semibold">URL capture</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Extract copy, links, hierarchy, media, fonts, colors, and brand signals from a live landing page.</p>
+            </div>
+            <div class="border-b border-r border-line-dim p-6 transition-colors hover:bg-surface">
+              <p class="font-mono text-xs text-faint">02</p>
+              <h3 class="mt-3 text-[1.1875rem] font-semibold">Prompt-led redesign</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Describe the new direction and generate a complete editable page from the captured context.</p>
+            </div>
+            <div class="border-b border-r border-line-dim p-6 transition-colors hover:bg-surface">
+              <p class="font-mono text-xs text-faint">03</p>
+              <h3 class="mt-3 text-[1.1875rem] font-semibold">Live generation</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Generate sections into the canvas quickly, then refine the page with chat edits.</p>
+            </div>
+            <div class="border-b border-r border-line-dim p-6 transition-colors hover:bg-surface md:border-b-0">
+              <p class="font-mono text-xs text-faint">04</p>
+              <h3 class="mt-3 text-[1.1875rem] font-semibold">Version history</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Commit, compare, and restore directions without losing your project context.</p>
+            </div>
+            <div class="border-b border-r border-line-dim p-6 transition-colors hover:bg-surface md:border-b-0">
+              <p class="font-mono text-xs text-faint">05</p>
+              <h3 class="mt-3 text-[1.1875rem] font-semibold">Clean HTML export</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Download standalone HTML that is ready to edit, host, inspect, or hand off.</p>
+            </div>
+            <div class="border-r border-line-dim p-6 transition-colors hover:bg-surface">
+              <p class="font-mono text-xs text-faint">06</p>
+              <h3 class="mt-3 text-[1.1875rem] font-semibold">Project memory</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Generated HTML, chat edits, and saved versions stay connected in one project.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §06 HOW IT WORKS ============ -->
+        <section id="how" class="border-t border-line-dim">
+          <div class="mx-auto max-w-content px-5 py-24 lg:px-10">
+            <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§06 — How it works</p>
+            <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">The workflow.</h2>
+            
+            <div class="reveal mt-12 grid grid-cols-1 border-t border-b border-line md:grid-cols-3">
+              <div class="border-b border-line p-8 md:border-b-0 md:border-r">
+                <span class="font-mono text-xs text-faint">01 / CAPTURE</span>
+                <h3 class="mt-3 text-lg font-semibold">POST /v1/projects</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">Submit a live URL and design prompt to create a project from real page context.</p>
+              </div>
+              <div class="border-b border-line p-8 md:border-b-0 md:border-r">
+                <span class="font-mono text-xs text-faint">02 / GENERATION</span>
+                <h3 class="mt-3 text-lg font-semibold">ResetUI Canvas</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">The captured page becomes a refreshed direction section by section.</p>
+              </div>
+              <div class="p-8">
+                <span class="font-mono text-xs text-faint">03 / EXPORT</span>
+                <h3 class="mt-3 text-lg font-semibold">HTML / Versions</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">Export clean HTML and keep versions ready for future iteration.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §07 CODE DEEP-DIVE ============ -->
+        <section id="deep-dive" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§07 — Project deep-dive</p>
+          <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Prompt-led redesign from captured page context.</h2>
+          
+          <div class="reveal mt-12 grid grid-cols-1 gap-8 lg:grid-cols-12">
+            <div class="space-y-6 lg:col-span-4">
+              <div class="border-l-2 border-fg pl-4">
+                <span class="font-mono text-xs uppercase tracking-[0.06em] text-faint">01 / Capture</span>
+                <p class="mt-1 text-sm leading-relaxed text-muted">Keep source copy, media, and hierarchy attached to the project.</p>
+              </div>
+              <div class="border-l-2 border-line pl-4">
+                <span class="font-mono text-xs uppercase tracking-[0.06em] text-faint">02 / Live generation</span>
+                <p class="mt-1 text-sm leading-relaxed text-muted">Ask for targeted section changes without regenerating the entire page.</p>
+              </div>
+              <div class="border-l-2 border-line pl-4">
+                <span class="font-mono text-xs uppercase tracking-[0.06em] text-faint">03 / Export</span>
+                <p class="mt-1 text-sm leading-relaxed text-muted">Ship standalone HTML that remains readable and easy to hand off.</p>
+              </div>
+            </div>
+            <div class="lg:col-span-8">
+              <div class="overflow-hidden rounded-[10px] border border-line bg-surface shadow-[0_24px_60px_-28px_rgba(0,0,0,.85)] [box-shadow:inset_0_1px_0_rgba(255,255,255,.05),0_24px_60px_-28px_rgba(0,0,0,.85)]">
+                <div class="flex items-center justify-between border-b border-line bg-surface-2 px-4 py-2.5">
+                  <span class="font-mono text-xs text-faint">project.ts</span>
+                  <button data-copy="#deep-code" class="font-mono text-xs text-muted transition-colors hover:text-fg" aria-label="Copy code">Copy</button>
+                </div>
+                <pre id="deep-code" class="overflow-x-auto px-4 py-4 font-mono text-[0.875rem] leading-[1.65]"><code><span class="text-c-kw">import</span> { ResetUI } <span class="text-c-kw">from</span> <span class="text-c-str">"resetui"</span>
+
+<span class="text-c-kw">const</span> resetui = <span class="text-c-kw">new</span> <span class="text-fg">ResetUI</span>()
+
+<span class="text-c-kw">const</span> res = <span class="text-c-kw">await</span> resetui.<span class="text-fg">create</span>({
+  url: <span class="text-c-str">"https://example.com"</span>,
+  prompt: <span class="text-c-str">"Bold monochrome SaaS redesign"</span>,
+  source: <span class="text-c-str">"https://example.com"</span>,
+    export: <span class="text-c-str">"html"</span>,
+    versions: <span class="text-c-num">true</span>,
+  }),
+  
+})
+
+<span class="text-c-kw">for await</span> (<span class="text-c-kw">const</span> chunk <span class="text-c-kw">of</span> res) {
+  <span class="text-c-com">// yields sections, edits, and export metadata</span>
+  process.stdout.<span class="text-fg">write</span>(chunk.text)
+}</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §08 MODELS / SPEC SHEET ============ -->
+        <section id="models" class="border-t border-line-dim">
+          <div class="mx-auto max-w-content px-5 py-24 lg:px-10">
+            <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§08 — Templates</p>
+            <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Output sheet.</h2>
+            
+            <div class="reveal mt-8 overflow-x-auto border border-line">
+              <table class="w-full text-left font-mono text-sm">
+                <thead class="bg-surface-2 text-faint text-xs uppercase tracking-[0.06em]">
+                  <tr>
+                    <th class="px-4 py-3 font-medium">Output</th>
+                    <th class="px-4 py-3 font-medium">Context</th>
+                    <th class="px-4 py-3 font-medium">Draft state</th>
+                    <th class="px-4 py-3 font-medium">Export</th>
+                    <th class="px-4 py-3 font-medium">Use</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-line-dim">
+                  <tr class="bg-surface font-semibold text-fg">
+                    <td class="px-4 py-4">Clean SaaS</td>
+                    <td class="px-4 py-4">Full page</td>
+                    <td class="px-4 py-4">Ready</td>
+                    <td class="px-4 py-4">HTML</td>
+                    <td class="px-4 py-4">Landing</td>
+                  </tr>
+                  <tr class="text-muted">
+                    <td class="px-4 py-4">Startup Minimal</td>
+                    <td class="px-4 py-4">Sections</td>
+                    <td class="px-4 py-4">Draft</td>
+                    <td class="px-4 py-4">HTML</td>
+                    <td class="px-4 py-4">Iteration</td>
+                  </tr>
+                  <tr class="text-muted">
+                    <td class="px-4 py-4">Visual Refresh</td>
+                    <td class="px-4 py-4">Brand cues</td>
+                    <td class="px-4 py-4">Review</td>
+                    <td class="px-4 py-4">HTML</td>
+                    <td class="px-4 py-4">Redesign</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §09 BENCHMARKS ============ -->
+        <section id="benchmarks" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§09 — Workflow metrics</p>
+          <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Measured progress.</h2>
+          
+          <div class="reveal mt-12 grid grid-cols-1 gap-px border border-line-dim bg-line-dim md:grid-cols-2">
+            <div class="bg-bg p-8">
+              <div class="mb-4 flex items-baseline justify-between">
+                <span class="font-mono text-xs text-muted">Capture</span>
+                <span class="font-mono text-lg font-semibold text-fg">88.4%</span>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-16 font-mono text-xs text-faint">capture</span>
+                  <div class="h-2 flex-1 bg-line-dim">
+                    <div class="h-full w-[88%] bg-fg"></div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-16 font-mono text-xs text-faint">draft</span>
+                  <div class="h-2 flex-1 bg-line-dim">
+                    <div class="h-full w-[82%] bg-faint"></div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-16 font-mono text-xs text-faint">export</span>
+                  <div class="h-2 flex-1 bg-line-dim">
+                    <div class="h-full w-[79%] bg-faint"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-bg p-8">
+              <div class="mb-4 flex items-baseline justify-between">
+                <span class="font-mono text-xs text-muted">Export</span>
+                <span class="font-mono text-lg font-semibold text-fg">92.1%</span>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-16 font-mono text-xs text-faint">capture</span>
+                  <div class="h-2 flex-1 bg-line-dim">
+                    <div class="h-full w-[92%] bg-fg"></div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-16 font-mono text-xs text-faint">draft</span>
+                  <div class="h-2 flex-1 bg-line-dim">
+                    <div class="h-full w-[85%] bg-faint"></div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-16 font-mono text-xs text-faint">export</span>
+                  <div class="h-2 flex-1 bg-line-dim">
+                    <div class="h-full w-[81%] bg-faint"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §10 INTEGRATIONS / Exports ============ -->
+        <section id="integrations" class="border-t border-line-dim">
+          <div class="mx-auto max-w-content px-5 py-24 lg:px-10">
+            <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§10 — Exports</p>
+            <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Use the output anywhere.</h2>
+            
+            <div class="reveal mt-8 grid grid-cols-2 border-t border-l border-line-dim md:grid-cols-3 lg:grid-cols-4">
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">TypeScript</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Python</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Go</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Rust</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Ruby</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Elixir</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Java</div>
+              <div class="border-b border-r border-line-dim p-6 font-mono text-sm text-muted transition-colors hover:bg-surface hover:text-fg">Swift</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §11 SECURITY & COMPLIANCE ============ -->
+        <section id="security" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§11 — Security</p>
+          <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Ready for serious handoff.</h2>
+          
+          <div class="reveal mt-8 grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-3">
+            <div class="bg-bg p-8">
+              <h3 class="text-[1.1875rem] font-semibold">SOC 2 Type II</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">Audited annually. Reports available under NDA.</p>
+            </div>
+            <div class="bg-bg p-8">
+              <h3 class="text-[1.1875rem] font-semibold">Encryption</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">AES-256 at rest, TLS 1.3 in transit. Customer-managed keys available.</p>
+            </div>
+            <div class="bg-bg p-8">
+              <h3 class="text-[1.1875rem] font-semibold">Data Residency</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">US and EU regions. Data never leaves the region it was processed in.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §12 TESTIMONIALS ============ -->
+        <section id="testimonials" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§12 — Testimonials</p>
+          <div class="reveal mt-8 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+            <blockquote class="border-l-2 border-fg pl-6">
+              <p class="text-xl font-medium tracking-tight text-fg">"ResetUI gave us a clean redesign from an existing page and left us with HTML we could actually edit."</p>
+              <footer class="mt-4 font-mono text-xs uppercase tracking-[0.06em] text-faint">Dev Shah / CTO, AI Redesign</footer>
+            </blockquote>
+            <blockquote class="border-l-2 border-line pl-6">
+              <p class="text-xl font-medium tracking-tight text-fg">"Prompt-led redesign just works. We changed the page direction without losing the original context."</p>
+              <footer class="mt-4 font-mono text-xs uppercase tracking-[0.06em] text-faint">Sarah Jenkins / Lead Engineer, Chat Edits</footer>
+            </blockquote>
+          </div>
+        </section>
+
+        <!-- ============ §13 PRICING ============ -->
+        <section id="pricing" class="border-y border-line bg-surface">
+          <div class="mx-auto max-w-content px-5 py-24 lg:px-10">
+            <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§13 — Pricing</p>
+            <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Simple plans for more page resets.</h2>
+            
+            <div class="reveal mt-12 grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-3">
+              <div class="flex flex-col bg-bg p-8">
+                <h3 class="font-mono text-sm text-muted">HOBBY</h3>
+                <p class="mt-4 text-4xl font-semibold">$0</p>
+                <p class="mt-2 font-mono text-xs text-faint">For testing</p>
+                <ul class="mt-6 space-y-2 font-mono text-sm text-muted">
+                  <li>3 captured pages</li>
+                  <li>Basic exports</li>
+                  <li>Community support</li>
+                </ul>
+                <a href="#" class="mt-8 rounded-lg border border-line px-4 py-2.5 text-center font-mono text-sm text-fg transition-colors hover:border-muted">Start free</a>
+              </div>
+              <div class="flex flex-col bg-fg p-8 text-bg">
+                <h3 class="font-mono text-sm text-bg/60">PRO</h3>
+                <p class="mt-4 text-4xl font-semibold">$49<span class="text-lg font-normal text-bg/60">/mo</span></p>
+                <p class="mt-2 font-mono text-xs text-bg/60">For production</p>
+                <ul class="mt-6 space-y-2 font-mono text-sm text-bg/80">
+                  <li>100 exports / month</li>
+                  <li>All templates</li>
+                  <li>Priority generation</li>
+                  <li>Email support</li>
+                </ul>
+                <a href="#" class="mt-8 rounded-lg bg-bg px-4 py-2.5 text-center font-mono text-sm text-fg transition-opacity hover:opacity-90">Start free</a>
+              </div>
+              <div class="flex flex-col bg-bg p-8">
+                <h3 class="font-mono text-sm text-muted">ENTERPRISE</h3>
+                <p class="mt-4 text-4xl font-semibold">Custom</p>
+                <p class="mt-2 font-mono text-xs text-faint">For scale</p>
+                <ul class="mt-6 space-y-2 font-mono text-sm text-muted">
+                  <li>Unlimited projects</li>
+                  <li>Dedicated support</li>
+                  <li>SSO & audit logs</li>
+                  <li>Priority support</li>
+                </ul>
+                <a href="#" class="mt-8 rounded-lg border border-line px-4 py-2.5 text-center font-mono text-sm text-fg transition-colors hover:border-muted">Contact sales</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §14 FAQ ============ -->
+        <section id="faq" class="mx-auto max-w-content px-5 py-24 lg:px-10">
+          <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§14 — FAQ</p>
+          <h2 class="reveal mt-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-tight">Questions.</h2>
+          
+          <div class="reveal mt-8 border-t border-line-dim">
+            <div class="border-b border-line-dim">
+              <button data-acc class="flex w-full items-center gap-4 py-5 text-left" aria-expanded="false">
+                <span class="font-mono text-xs text-faint">01</span>
+                <span class="flex-1 text-lg font-medium">How does ResetUI capture a page?</span>
+                <span class="font-mono text-faint" data-acc-icon>+</span>
+              </button>
+              <div data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                <p class="pb-5 pl-9 text-sm leading-relaxed text-muted max-w-[60ch]">Paste a public landing-page URL and ResetUI extracts visible copy, links, layout hierarchy, media references, colors, fonts, and brand signals before generation.</p>
+              </div>
+            </div>
+            <div class="border-b border-line-dim">
+              <button data-acc class="flex w-full items-center gap-4 py-5 text-left" aria-expanded="false">
+                <span class="font-mono text-xs text-faint">02</span>
+                <span class="flex-1 text-lg font-medium">Can I edit the generated design?</span>
+                <span class="font-mono text-faint" data-acc-icon>+</span>
+              </button>
+              <div data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                <p class="pb-5 pl-9 text-sm leading-relaxed text-muted max-w-[60ch]">Yes. Use chat to change specific sections, restore saved versions, try new directions, and export again without losing page context.</p>
+              </div>
+            </div>
+            <div class="border-b border-line-dim">
+              <button data-acc class="flex w-full items-center gap-4 py-5 text-left" aria-expanded="false">
+                <span class="font-mono text-xs text-faint">03</span>
+                <span class="flex-1 text-lg font-medium">What does ResetUI export?</span>
+                <span class="font-mono text-faint" data-acc-icon>+</span>
+              </button>
+              <div data-panel class="max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out">
+                <p class="pb-5 pl-9 text-sm leading-relaxed text-muted max-w-[60ch]">ResetUI exports standalone HTML that you can inspect, edit, host, or hand off. The project keeps generated versions for future refinement.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ §15 FINAL CTA + FOOTER ============ -->
+        <section id="cta" class="border-t border-line-dim">
+          <div class="mx-auto max-w-content px-5 py-32 text-center lg:px-10">
+            <p class="reveal font-mono text-xs uppercase tracking-[0.06em] text-faint">§15 — End</p>
+            <h2 class="reveal mt-6 text-[clamp(3rem,6vw,5rem)] font-semibold leading-none tracking-tighter">Reset your next page.</h2>
+            <div class="mt-10 flex justify-center gap-4">
+              <a href="#" class="rounded-lg bg-fg px-6 py-3 font-mono text-sm text-bg transition-opacity hover:opacity-90">Start free</a>
+            </div>
+            <pre class="reveal mt-16 inline-block overflow-x-auto bg-surface px-4 py-3 text-left font-mono text-xs text-muted border border-line"><span class="text-faint">$</span> export resetui-page.html</pre>
+          </div>
+        </section>
+
+        <footer class="border-t border-line-dim">
+          <div class="mx-auto grid max-w-content grid-cols-2 gap-8 px-5 py-12 font-mono text-xs text-faint md:grid-cols-4 lg:px-10">
+            <div class="col-span-2 md:col-span-1">
+              <a href="#" class="text-fg font-medium flex items-center gap-2"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="h-8 w-8 rounded-full object-cover"><span>ResetUI</span></a>
+              <p class="mt-2 text-faint">URL capture, AI redesign, and clean HTML export.</p>
+            </div>
+            <div class="space-y-2">
+              <p class="text-muted uppercase tracking-[0.06em]">Product</p>
+              <a href="#features" class="block transition-colors hover:text-fg">Features</a>
+              <a href="#models" class="block transition-colors hover:text-fg">Templates</a>
+              <a href="#pricing" class="block transition-colors hover:text-fg">Pricing</a>
+            </div>
+            <div class="space-y-2">
+              <p class="text-muted uppercase tracking-[0.06em]">Resources</p>
+              <a href="#" class="block transition-colors hover:text-fg">Export</a>
+              <a href="#" class="block transition-colors hover:text-fg">Changelog</a>
+              <a href="#" class="block transition-colors hover:text-fg">Status</a>
+            </div>
+            <div class="space-y-2">
+              <p class="text-muted uppercase tracking-[0.06em]">Company</p>
+              <a href="#" class="block transition-colors hover:text-fg">About</a>
+              <a href="#" class="block transition-colors hover:text-fg">Careers</a>
+              <a href="#" class="block transition-colors hover:text-fg">Contact</a>
+            </div>
+          </div>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ============ ONE INLINE SCRIPT: reveal + tabs + copy + accordion + reduced-motion ============ -->
+  <script>
+    (function () {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // 1. Reveal on scroll
+      const r = document.querySelectorAll('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        r.forEach(e => e.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver((es) => es.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        }), { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        r.forEach(e => io.observe(e));
+      }
+
+      // 2. Tabs
+      const tabs = document.querySelectorAll('.tab');
+      const panels = document.querySelectorAll('.panel');
+      tabs.forEach((t) => t.addEventListener('click', () => {
+        tabs.forEach(x => { x.setAttribute('aria-selected','false'); x.classList.remove('bg-surface-2','text-fg'); });
+        t.setAttribute('aria-selected','true'); t.classList.add('bg-surface-2','text-fg');
+        const key = t.dataset.tab;
+        panels.forEach(p => {
+          const on = p.dataset.panel === key;
+          p.classList.toggle('hidden', !on);
+          p.classList.toggle('is-active', on);
+        });
+      }));
+
+      // 3. Copy buttons
+      document.querySelectorAll('[data-copy]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const el = document.querySelector(btn.dataset.copy);
+          if (!el) return;
+          try {
+            await navigator.clipboard.writeText(el.innerText.trim());
+            const prev = btn.textContent; btn.textContent = 'Copied';
+            setTimeout(() => (btn.textContent = prev), 1400);
+          } catch (_) {}
+        });
+      });
+
+      // 4. Accordion
+      document.querySelectorAll('[data-acc]').forEach((btn) => {
+        const panel = btn.nextElementSibling;
+        const icon = btn.querySelector('[data-acc-icon]');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.addEventListener('click', () => {
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!open));
+          if (panel) {
+            panel.style.maxHeight = open ? '0px' : panel.scrollHeight + 'px';
+          }
+          if (icon) {
+            icon.textContent = open ? '+' : '-';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
