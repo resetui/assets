@@ -109,10 +109,10 @@
             <div class="reveal lg:col-span-6">
               <p class="font-mono text-xs uppercase tracking-[0.06em] text-faint">§02 / URL CAPTURE</p>
               <h1 class="mt-5 text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.025em]">
-                Reset landing pages<br />without starting over.
+                Design landing pages<br />from a single prompt.
               </h1>
               <p class="mt-6 max-w-[48ch] text-base leading-relaxed text-muted">
-                Capture a live landing page, describe the direction, generate an editable redesign, and export clean HTML.
+                Describe the page, set the direction, generate an editable design, and export clean HTML.
               </p>
               <div class="mt-9 flex flex-wrap gap-3">
                 <a href="#" class="rounded-lg bg-fg px-5 py-3 font-mono text-sm font-medium text-bg transition-opacity hover:opacity-90">Start free</a>
@@ -132,8 +132,7 @@
 <span class="text-c-kw">const</span> resetui = <span class="text-c-kw">new</span> <span class="text-fg">ResetUI</span>(process.env.<span class="text-c-num">RESETUI_KEY</span>)
 
 <span class="text-c-kw">const</span> res = <span class="text-c-kw">await</span> resetui.<span class="text-fg">generate</span>({
-  url: <span class="text-c-str">"https://example.com"</span>,
-  prompt: <span class="text-c-str">"Clean SaaS redesign"</span>,
+  prompt: <span class="text-c-str">"Clean SaaS design"</span>,
   export: <span class="text-c-str">"html"</span>,
 })</code></pre>
               </div>

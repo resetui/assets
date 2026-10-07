@@ -163,10 +163,10 @@
   <section class="flex flex-col items-center text-center gap-8 w-full max-w-[860px] reveal">
     <div class="inline-flex items-center gap-2 px-2 py-1 rounded-full border border-[var(--line)] bg-[var(--card)] text-sm font-medium text-[var(--muted)]">
       <span class="bg-[var(--red)] text-white px-2 py-0.5 rounded-full text-xs">New</span>
-      URL capture and AI redesign
+      Prompt-led AI design
     </div>
-    <h1 class="text-[48px] md:text-[67px] leading-[60px] md:leading-[70px] font-medium tracking-[-1.4px] text-balance text-[var(--ink)]">Redesign your landing page from real context.</h1>
-    <p class="text-[17px] text-[var(--muted)] max-w-[600px] text-pretty">Paste your current landing-page URL, describe the direction you want, and let ResetUI generate a refreshed, editable, production-ready page.</p>
+    <h1 class="text-[48px] md:text-[67px] leading-[60px] md:leading-[70px] font-medium tracking-[-1.4px] text-balance text-[var(--ink)]">Design your landing page from a single prompt.</h1>
+    <p class="text-[17px] text-[var(--muted)] max-w-[600px] text-pretty">Describe the page and the direction you want, and let ResetUI generate a polished, editable, production-ready page.</p>
     <div class="flex gap-3">
       <button class="px-6 py-3 rounded-full text-sm font-medium bg-[var(--ink)] text-white hover:bg-black transition-colors h-12 flex items-center">Start for free</button>
       <button class="px-6 py-3 rounded-full text-sm font-medium text-[var(--ink)] border border-[var(--line)] hover:bg-gray-50 transition-colors flex items-center gap-2 h-12">
@@ -184,39 +184,7 @@
       <div class="w-3 h-3 rounded-full bg-green-500"></div>
     </div>
     <div class="absolute top-11 left-2 right-2 bottom-2 bg-white rounded-xl overflow-hidden relative">
-      <!-- Overlapping UI Card -->
-      <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[470px] max-w-[85%] bg-white rounded-xl border border-[var(--line)] shadow-lg p-4 z-10">
-        <div class="flex items-center justify-between border-b border-[var(--line)] pb-3 mb-3">
-          <span class="font-semibold text-sm text-[var(--ink)]">Generated Sections</span>
-          <span class="text-xs text-[var(--dim)] font-mono">3 ready</span>
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center gap-3 text-sm text-[var(--muted)]">
-            <div class="w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs shrink-0">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <span class="flex-1 text-left">Capture source page</span>
-            <span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono border border-[var(--line)] text-[var(--dim)]">⌘ R</span>
-          </div>
-          <div class="flex items-center gap-3 text-sm text-[var(--muted)]">
-            <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs shrink-0">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </div>
-            <span class="flex-1 text-left">Apply design direction</span>
-            <span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono border border-[var(--line)] text-[var(--dim)]">⌘ B</span>
-          </div>
-          <div class="flex items-center gap-3 text-sm text-[var(--muted)]">
-            <div class="w-5 h-5 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-            </div>
-            <span class="flex-1 text-left">Export clean HTML</span>
-            <span class="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono border border-[var(--line)] text-[var(--dim)]">⌘ M</span>
-          </div>
-        </div>
-      </div>
-      <div class="w-full h-full diag-bg">
-        <span class="placeholder-label">ResetUI page preview</span>
-      </div>
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Obsidian-Dark-Dashboard.png" alt="Product dashboard preview" class="block w-full h-full object-cover rounded-xl">
     </div>
   </div>
 
@@ -735,5 +703,99 @@
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 </script>
 
+<!-- Placeholder fill: striped image tiles get a Pexels photograph, striped icon tiles get an inline SVG icon. Mirrors src/lib/placeholder-images.ts. -->
+<script>
+(function () {
+  var photo = function (id, w, h) {
+    return 'https://images.pexels.com/photos/' + id + '/pexels-photo-' + id + '.jpeg?auto=compress&cs=tinysrgb&w=' + w + '&h=' + h + '&fit=crop&dpr=2';
+  };
+  var LIGHT = ['3184291', '3183150', '1103970', '3182812', '3861958', '1323550', '3184465', '7688336', '1181467', '3183197', '1287145', '1181406', '3184418', '669615', '3182773', '3225517', '1181244', '590022'];
+  var DARK = ['577585', '2387793', '3861969', '2531709'];
+  var SCREENS = ['265087', '577210', '574071', '186461', '546819', '270348'];
+  var PEOPLE = ['774909', '220453', '1239291', '1222271', '733872', '614810', '415829', '91227'];
+  var GLYPHS = [
+    '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+    '<path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/>',
+    '<path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+    '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M2 20h20"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
+    '<path d="M12 3v4"/><path d="M12 17v4"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="m6 6 2.5 2.5"/><path d="m15.5 15.5 2.5 2.5"/><path d="m18 6-2.5 2.5"/><path d="m8.5 15.5-2.5 2.5"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+  ];
+  var SKIP = /\b(logos?|wordmarks?|favicon|brand ?marks?|monogram|badges?|chips?|maps?|qr|signatures?|flags?|emoji)\b/i;
+  var SCREEN = /\b(screenshots?|dashboards?|ui|interface|app (preview|screen|ui)|product (preview|screen|view|shot)|mock-?ups?|charts?|graphs?|analytics|code|terminal|editor|canvas|diagrams?)\b/i;
+  var PERSON = /\b(avatars?|portraits?|headshots?|person|people|profile|founder|author|team member|customer photo)\b/i;
+  var TEXT_TAGS = { SPAN: 1, P: 1, SMALL: 1, STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, CODE: 1, LABEL: 1 };
+
+  var bg = getComputedStyle(document.body).backgroundColor.match(/\d+/g) || [255, 255, 255];
+  var dark = (0.299 * bg[0] + 0.587 * bg[1] + 0.114 * bg[2]) < 128;
+  var scenes = dark ? DARK.concat(LIGHT) : LIGHT.concat(DARK);
+  var next = { scene: 0, screen: 0, person: 0, icon: 0 };
+
+  function fill() {
+    var all = document.querySelectorAll('div, span, figure');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.getAttribute('data-filled')) continue;
+      if (el.closest('nav, footer')) continue;
+      var cs = getComputedStyle(el);
+      if (cs.backgroundImage.indexOf('repeating-linear-gradient') === -1) continue;
+
+      var plain = true;
+      for (var c = 0; c < el.children.length; c++) {
+        if (!TEXT_TAGS[el.children[c].tagName]) { plain = false; break; }
+      }
+      if (!plain) continue;
+
+      var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text.length > 80) continue;
+      var label = (el.getAttribute('aria-label') || text || '').trim();
+      if (label && SKIP.test(label)) continue;
+
+      var w = el.offsetWidth, h = el.offsetHeight;
+      var round = w > 0 && Math.abs(w - h) < 4 && parseFloat(cs.borderTopLeftRadius) >= Math.min(w, h) / 2;
+      var iconSized = w >= 16 && h >= 16 && Math.max(w, h) <= 120 && w / h >= 0.75 && w / h <= 1.34;
+      var avatarClass = /avatar|author|portrait|person|profile/i.test(String(el.className));
+      var isIcon = iconSized && ((!label && !round && !avatarClass) || /\b(icons?|glyphs?)\b/i.test(label));
+
+      if (!isIcon && !label && !round && !avatarClass) continue;
+      if (cs.position === 'static') el.style.position = 'relative';
+
+      if (isIcon) {
+        var size = Math.max(12, Math.round(Math.min(w, h) * 0.5));
+        el.style.backgroundImage = 'none';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset:0;margin:auto;display:block;pointer-events:none">' + GLYPHS[next.icon++ % GLYPHS.length] + '</svg>';
+        el.setAttribute('data-filled', 'icon');
+        continue;
+      }
+
+      if (w && h && Math.max(w, h) < 32) continue;
+      if (w && h && h < 48 && w / h > 2) continue;
+
+      var id;
+      if (!label || avatarClass || (PERSON.test(label) && (round || Math.max(w, h) <= 400))) id = PEOPLE[next.person++ % PEOPLE.length];
+      else if (SCREEN.test(label)) id = SCREENS[next.screen++ % SCREENS.length];
+      else id = scenes[next.scene++ % scenes.length];
+
+      var img = document.createElement('img');
+      img.src = photo(id, Math.min(1600, w || 1200), Math.min(1600, h || 800));
+      img.alt = label;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center;display:block;border-radius:inherit;z-index:1;pointer-events:none';
+      el.style.overflow = 'hidden';
+      el.style.isolation = 'isolate';
+      el.appendChild(img);
+      el.setAttribute('data-filled', 'photo');
+    }
+  }
+
+  // Tailwind's runtime writes its stylesheet after parse, so tile sizes are
+  // only real once the page has loaded. The second pass catches late layout.
+  if (document.readyState === 'complete') fill(); else window.addEventListener('load', fill);
+  setTimeout(fill, 800);
+})();
+</script>
 </body>
 </html>

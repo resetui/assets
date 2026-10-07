@@ -172,20 +172,20 @@
     <div class="rail text-center">
       <div class="reveal mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-[12px] font-medium text-ink/70 shadow-[0_6px_20px_rgba(0,0,0,.05)] in">
         <span class="h-2 w-2 rounded-full bg-yellow"></span>
-        Agentic landing-page redesign
+        Agentic landing-page design
       </div>
       <h1 class="reveal font-display font-light text-ink leading-[0.98] tracking-[-0.01em] text-[78px] md:text-[87px] in">
-        Redesign your landing page<br>with AI agents.
+        Design your landing page<br>with AI agents.
       </h1>
       <p class="reveal d1 mx-auto mt-6 max-w-[568px] text-[16px] leading-[26px] text-ink/80 in">
-        ResetUI captures your existing page, plans a new visual direction, generates the full redesign, and exports production-ready front-end code.
+        ResetUI reads your prompt, plans the visual direction, generates the full design, and exports production-ready front-end code.
       </p>
 
       <!-- CTA -->
       <div class="reveal d3 mt-10 flex justify-center in">
         <a href="#pricing" class="hero-cta inline-flex">
           <span class="relative inline-flex items-center rounded-full bg-[#1C1C1C] pl-5 pr-1 h-14 text-white">
-            <span class="text-[16px] font-medium pr-5">Start your redesign</span>
+            <span class="text-[16px] font-medium pr-5">Start your design</span>
             <span class="ml-1 grid place-items-center w-12 h-12 rounded-full bg-white">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
             </span>
@@ -213,8 +213,8 @@
         </div>
       </div>
       <div class="reveal d2 relative p-12 in">
-        <div style="width:1052px;max-width:100%;height:520px;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)">
-            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">ResetUI project canvas</span>
+        <div style="width:1052px;max-width:100%;height:520px;border-radius:12px;background-color:#e8e8e6;overflow:hidden;margin:0 auto;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)">
+            <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Obsidian-Dark-Dashboard.png" alt="Product dashboard preview" style="display:block;width:100%;height:100%;object-fit:cover;object-position:top center">
         </div>
       </div>
     </div>
@@ -734,4 +734,98 @@
 
 
 
+<!-- Placeholder fill: striped image tiles get a Pexels photograph, striped icon tiles get an inline SVG icon. Mirrors src/lib/placeholder-images.ts. -->
+<script>
+(function () {
+  var photo = function (id, w, h) {
+    return 'https://images.pexels.com/photos/' + id + '/pexels-photo-' + id + '.jpeg?auto=compress&cs=tinysrgb&w=' + w + '&h=' + h + '&fit=crop&dpr=2';
+  };
+  var LIGHT = ['3184291', '3183150', '1103970', '3182812', '3861958', '1323550', '3184465', '7688336', '1181467', '3183197', '1287145', '1181406', '3184418', '669615', '3182773', '3225517', '1181244', '590022'];
+  var DARK = ['577585', '2387793', '3861969', '2531709'];
+  var SCREENS = ['265087', '577210', '574071', '186461', '546819', '270348'];
+  var PEOPLE = ['774909', '220453', '1239291', '1222271', '733872', '614810', '415829', '91227'];
+  var GLYPHS = [
+    '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+    '<path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/>',
+    '<path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+    '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M2 20h20"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
+    '<path d="M12 3v4"/><path d="M12 17v4"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="m6 6 2.5 2.5"/><path d="m15.5 15.5 2.5 2.5"/><path d="m18 6-2.5 2.5"/><path d="m8.5 15.5-2.5 2.5"/>',
+    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+  ];
+  var SKIP = /\b(logos?|wordmarks?|favicon|brand ?marks?|monogram|badges?|chips?|maps?|qr|signatures?|flags?|emoji)\b/i;
+  var SCREEN = /\b(screenshots?|dashboards?|ui|interface|app (preview|screen|ui)|product (preview|screen|view|shot)|mock-?ups?|charts?|graphs?|analytics|code|terminal|editor|canvas|diagrams?)\b/i;
+  var PERSON = /\b(avatars?|portraits?|headshots?|person|people|profile|founder|author|team member|customer photo)\b/i;
+  var TEXT_TAGS = { SPAN: 1, P: 1, SMALL: 1, STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, CODE: 1, LABEL: 1 };
+
+  var bg = getComputedStyle(document.body).backgroundColor.match(/\d+/g) || [255, 255, 255];
+  var dark = (0.299 * bg[0] + 0.587 * bg[1] + 0.114 * bg[2]) < 128;
+  var scenes = dark ? DARK.concat(LIGHT) : LIGHT.concat(DARK);
+  var next = { scene: 0, screen: 0, person: 0, icon: 0 };
+
+  function fill() {
+    var all = document.querySelectorAll('div, span, figure');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.getAttribute('data-filled')) continue;
+      if (el.closest('nav, footer')) continue;
+      var cs = getComputedStyle(el);
+      if (cs.backgroundImage.indexOf('repeating-linear-gradient') === -1) continue;
+
+      var plain = true;
+      for (var c = 0; c < el.children.length; c++) {
+        if (!TEXT_TAGS[el.children[c].tagName]) { plain = false; break; }
+      }
+      if (!plain) continue;
+
+      var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text.length > 80) continue;
+      var label = (el.getAttribute('aria-label') || text || '').trim();
+      if (label && SKIP.test(label)) continue;
+
+      var w = el.offsetWidth, h = el.offsetHeight;
+      var round = w > 0 && Math.abs(w - h) < 4 && parseFloat(cs.borderTopLeftRadius) >= Math.min(w, h) / 2;
+      var iconSized = w >= 16 && h >= 16 && Math.max(w, h) <= 120 && w / h >= 0.75 && w / h <= 1.34;
+      var avatarClass = /avatar|author|portrait|person|profile/i.test(String(el.className));
+      var isIcon = iconSized && ((!label && !round && !avatarClass) || /\b(icons?|glyphs?)\b/i.test(label));
+
+      if (!isIcon && !label && !round && !avatarClass) continue;
+      if (cs.position === 'static') el.style.position = 'relative';
+
+      if (isIcon) {
+        var size = Math.max(12, Math.round(Math.min(w, h) * 0.5));
+        el.style.backgroundImage = 'none';
+        el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset:0;margin:auto;display:block;pointer-events:none">' + GLYPHS[next.icon++ % GLYPHS.length] + '</svg>';
+        el.setAttribute('data-filled', 'icon');
+        continue;
+      }
+
+      if (w && h && Math.max(w, h) < 32) continue;
+      if (w && h && h < 48 && w / h > 2) continue;
+
+      var id;
+      if (!label || avatarClass || (PERSON.test(label) && (round || Math.max(w, h) <= 400))) id = PEOPLE[next.person++ % PEOPLE.length];
+      else if (SCREEN.test(label)) id = SCREENS[next.screen++ % SCREENS.length];
+      else id = scenes[next.scene++ % scenes.length];
+
+      var img = document.createElement('img');
+      img.src = photo(id, Math.min(1600, w || 1200), Math.min(1600, h || 800));
+      img.alt = label;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center;display:block;border-radius:inherit;z-index:1;pointer-events:none';
+      el.style.overflow = 'hidden';
+      el.style.isolation = 'isolate';
+      el.appendChild(img);
+      el.setAttribute('data-filled', 'photo');
+    }
+  }
+
+  // Tailwind's runtime writes its stylesheet after parse, so tile sizes are
+  // only real once the page has loaded. The second pass catches late layout.
+  if (document.readyState === 'complete') fill(); else window.addEventListener('load', fill);
+  setTimeout(fill, 800);
+})();
+</script>
 </body></html>
